@@ -28,4 +28,6 @@ export default {
 
 .chat
   background-color: $chat_bg_color
+  // 為了蓋過 MapView.vue 裡的外凸 scrollbar
+  z-index: 100
 </style>

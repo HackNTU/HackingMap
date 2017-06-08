@@ -61,8 +61,8 @@ export default {
 .hackingmap
   background-color: $hackingmap_bg_color
   position: relative
-  overflow-y: scroll
-  overflow-x: hidden
+  height: 100%
+  width: 100%
   z-index: 10
 
 #plusBtn

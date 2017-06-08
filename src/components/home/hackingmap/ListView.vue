@@ -53,5 +53,6 @@ export default {
 
 .listview
   background-color: $list_bg_color
-  height: auto
+  height: 100%
+  overflow-y: scroll
 </style>

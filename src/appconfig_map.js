@@ -1,8 +1,11 @@
 /* eslint-disable */
 const map = {
+
+  name: '花博公園',
+
   /* 地圖長寬（以下單位皆為公尺） */
-  map_width: 106,
-  map_height: 60,
+  map_width: 842,
+  map_height: 1286,
 
   /* 場地輪廓 */
   border: {
