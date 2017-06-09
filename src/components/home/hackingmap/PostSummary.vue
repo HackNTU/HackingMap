@@ -1,17 +1,13 @@
 <template>
-  <div class="card">
+  <div class="postsummary">
 
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span><b>{{ title }}</b></span>
-        <i @click="toggleStar" style="float: right;" :class="{'el-icon-star-off': !isStaredByMe, 'el-icon-star-on': isStaredByMe }"></i>
-        <span style="float:right">{{ starCount }}</span>
-      </div>
-      <div>{{ description }}</div>
-      <!-- <code>{{ stars }}</code> -->
-      <!-- <code>{{ isStaredByMe }}</code> -->
-      <el-tag v-for="t in Object.keys(tags)" key="t.id" type="primary">{{ t }}</el-tag>
-    </el-card>
+    <i @click="toggleStar" style="float: right;" :class="{'el-icon-star-off': !isStaredByMe, 'el-icon-star-on': isStaredByMe }"></i>
+    <span style="float:right">{{ starCount }}</span>
+    <h3>{{ title }}</h3>
+    <h5>{{ subtitle }}</h5>
+    <p>{{ description }}</p>
+
+    <el-tag v-for="t in Object.keys(tags)" key="t.id" type="primary">{{ t }}</el-tag>
 
   </div>
 </template>
@@ -19,7 +15,7 @@
 <script>
 import { VueFireDB, FirebaseApp } from '@/service/firebase'
 export default {
-  name: 'card',
+  name: 'postsummary',
   data () {
     return {
       isLoved: false,
@@ -37,6 +33,10 @@ export default {
   },
   props: {
     title: {
+      type: String,
+      default: 'No title'
+    },
+    subtitle: {
       type: String,
       default: 'No title'
     },
@@ -125,22 +125,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.text
-  font-size: 14px
+h3, h5, i, span
+  margin: 0.1rem
 
-.item
-  padding: 18px 0
+p
+  margin: 0.5rem 0 0.5rem 0
 
-.clearfix:before,
-.clearfix:after
-  display: table
-  content: ""
-
-.clearfix:after
-  clear: bot
-
-.box-card
-  // width: 16rem
-  text-align: left
-  margin: 0.5em
+.el-tag
+  margin: 0 0.3rem 0 0
 </style>

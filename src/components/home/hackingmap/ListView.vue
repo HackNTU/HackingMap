@@ -5,14 +5,17 @@
     <el-row>
       <el-col v-for="p in posts" :span="6" :gutter="20" :key="p.id">
         <!-- <div class="grid-content bg-purple"> {{p}} </div> -->
-        <card
-          :title="p.name + ' by ' + p.author.split('@')[0]"
+        <el-card class="box-card">
+          <postsummary
+          :title="p.name"
+          :subtitle="p.author.split('@')[0]"
           :description="p.desc + ' ('+p.table+'桌)'"
           :postKey="p['.key']"
           :authorId="p.uid"
           :starCount="p.starCount"
           :stars="p.stars"
-          ></card>
+          ></postsummary>
+        </el-card>
       </el-col>
     </el-row>
 
@@ -21,7 +24,7 @@
 
 <script>
 import { FirebaseApp, VueFireDB } from '@/service/firebase'
-import Card from '@/components/home/hackingmap/card'
+import PostSummary from '@/components/home/hackingmap/postsummary'
 
 export default {
   name: 'listview',
@@ -43,7 +46,7 @@ export default {
     posts: VueFireDB.ref('/posts/')
   },
   components: {
-    card: Card
+    postsummary: PostSummary
   }
 }
 </script>
@@ -54,5 +57,12 @@ export default {
 .listview
   background-color: $list_bg_color
   height: 100%
+  position: relative
   overflow-y: scroll
+  right: -17px
+
+.box-card
+  // width: 16rem
+  text-align: left
+  margin: 0.5em
 </style>

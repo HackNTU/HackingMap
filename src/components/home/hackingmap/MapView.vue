@@ -1,6 +1,7 @@
 <template>
   <div class="mapview">
 
+    <!-- 縮放（TODO: 改成scroll放大） -->
     <div class="block">
       <el-slider v-model="scale" :max="3" :step="0.1" :format-tooltip="formatTooltip"></el-slider>
     </div>
@@ -16,20 +17,27 @@
 
     <!-- SVG容器 -->
     <svg id="canvas" xmlns="http://www.w3.org/2000/svg" version="1.1" :width="map.map_width * scale" :height="map.map_height * scale">
-
       <!-- 地圖 -->
       <image xlink:href="../../../assets/flora_expo_park.png" x="0" y="0" :width="map.map_width * scale" :height="map.map_height * scale" />
 
       <template v-for="table in map.table_coor">
 
         <!-- 有專案的桌子 -->
-        <template v-if="indexedPosts[table.index]">
+        <template v-if="posts[table.index]">
           <el-tooltip placement="top" effect="light">
             <!-- 專案說明方塊 -->
             <div slot="content">
-              <h3>{{ indexedPosts[table.index].name }}</h3>
-              <p>{{ indexedPosts[table.index].desc }}</p>
-              <el-button>加入</el-button>
+              <postsummary
+                :title="posts[table.index].name"
+                :subtitle="posts[table.index].author.split('@')[0]"
+                :description="posts[table.index].desc + ' ('+posts[table.index].table+'桌)'"
+                :postKey="posts[table.index]['.key']"
+                :authorId="posts[table.index].uid"
+                :starCount="posts[table.index].starCount"
+                :stars="posts[table.index].stars"
+                style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
+                ></postsummary>
+                
             </div>
             <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="occupied-table statue_proposal"/>
           </el-tooltip>
@@ -49,6 +57,7 @@
 <script>
 import appconfig from '../../../appconfig'
 import { VueFireDB } from '@/service/firebase'
+import PostSummary from '@/components/home/hackingmap/postsummary'
 
 export default {
   name: 'mapview',
@@ -60,23 +69,24 @@ export default {
     }
   },
   firebase: {
-    posts: {
-      source: VueFireDB.ref('posts')
-    }
+    postsData: VueFireDB.ref('posts')
   },
   computed: {
-    indexedPosts () {
-      let indexed = {}
-      this.posts.forEach((post) => {
-        if (post['table']) {
-          indexed[post['table']] = post
+    posts () {
+      let posts = {}
+      this.postsData.forEach((data) => {
+        if (data['table']) {
+          posts[data['table']] = data
         }
       })
-      return indexed
+      return posts
     }
   },
   methods: {
     formatTooltip: (val) => String(parseInt(val * 100)) + ' %'
+  },
+  components: {
+    postsummary: PostSummary
   }
 }
 </script>
