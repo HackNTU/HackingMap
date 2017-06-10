@@ -3,13 +3,13 @@
 
     <a href="https://www.facebook.com/hackNTU/" target="_blank"><img src="../assets/hackntu-logo-title.png" alt="hackntu_logo"></a>
     <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtn }}</el-button>
+
     <el-dialog
       :visible.sync="visible"
       title="登入 HackingMap"
       :modal='false'
       :close-on-click-modal='false'>
-      <p>登入</p>
-      <signup></signup>
+      <signup v-on:closeDialog="visible = false"></signup>
     </el-dialog>
 
   </div>

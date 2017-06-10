@@ -1,64 +1,36 @@
 <template lang='html'>
   <div class='signup'>
 
-    <h1 class="page-header">研討會註冊</h1>
-
-    <!-- 1. 登入時顯示：歡迎咨訊、登出按鈕 -->
+    <!-- 登入時顯示 -->
     <template v-if="user !== null">
-      <div class="panel panel-default">
-        <div class="panel-heading">登入成功</div>
-        <div class="panel-body">
-          <h5>哈囉, {{user.email}}</h5>
-          <el-button @click="logout" type="button" class="btn btn-primary">登出</el-button>
-        </div>
-      </div>
+      <p>哈囉, {{user.email}}</p>
+      <el-button @click="logout">登出</el-button>
     </template>
 
-    <!-- 2. 未登入時顯示：Email、密碼登入框 -->
+    <!-- 未登入時顯示 -->
     <template v-if="user === null">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div class="form-group">
-            <label for="email">Email address:</label>
-            <input v-model.trim="email" type="email" class="form-control" id="email">
-          </div>
-          <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input v-model="pwd" type="password" class="form-control" id="pwd">
-          </div>
+      <el-form label-width="80px" :model="signInForm" ref="signInForm" label-position="right">
 
-          <!-- 登入錯誤提示 -->
-          <div class="panel panel-danger" v-show="showWarning">
-            <div class="panel-heading">登入發生問題</div>
-            <div class="panel-body">
-              <p v-html="warningMsg">
-                <code>DEFAULT MESSAGE, NEVER SHOWN.</code>
-                發生未預期的錯誤，懇請通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms
-              </p>
-            </div>
-          </div>
+        <el-form-item label="Email" prop="email">
+          <el-input v-model.trim="signInForm.email" :disabled="showResetBtn"></el-input>
+        </el-form-item>
 
+        <el-form-item label="密碼" prop="password">
+          <el-input type="password" v-model="signInForm.password" :disabled="showResetBtn"></el-input>
           <!-- 顯示/隱藏「重設密碼」按鈕 -->
-          <p @click="showResetBtn = !showResetBtn" class="text-right"><u>登入遇到問題？</u></p>
+          <span @click="showResetBtn = !showResetBtn" style="float:right"><u>忘記密碼？</u></span>
+          <el-input v-if="showResetBtn" :value.once="signInForm.email" placeholder="接收驗證信的email信箱">
+            <el-button slot="append" @click="sendResetMail(signInForm.email)" :loading="loadingSendResetMail">取得驗證信</el-button>
+          </el-input>
+        </el-form-item>
 
-          <!-- 「登入」及「註冊」按鈕 -->
-          <el-button @click="login" type="button" class="btn btn-primary">登入</el-button>
-          <el-button @click="signup" type="button" class="btn btn-default">註冊</el-button>
-        </div>
-      </div>
+        <el-form-item v-show="!showResetBtn">
+          <el-button @click="submitForm('signInForm')" :loading="loadingSignIn">登入</el-button>
+          <el-button @click="signup" :loading="loadingSignup">註冊</el-button>
+        </el-form-item>
+
+      </el-form>
     </template>
-
-    <!-- 「重設密碼」 -->
-    <div v-show="showResetBtn" class="panel panel-default">
-      <div class="panel-body">
-        <div class="input-group">
-          <input v-model="email" type="text" class="form-control" placeholder="請輸入可正常收信的 email 地址">
-          <span class="input-group-btn">
-            <el-button @click="sendResetMail" class="btn btn-primary" type="button">取得密碼重設連結</el-button>
-          </span>
-        </div><!-- /input-group -->
-      </div>
-    </div>
 
   </div>
 </template>
@@ -70,102 +42,121 @@ export default {
   name: 'signup',
   data () {
     return {
-      email: 'lawrencechou1024@gmail.com',
-      pwd: 'asdfghjkl',
       user: null,
-      showWarning: false,
+      signInForm: {
+        email: 'lawrencechou1024@gmail.com',
+        password: 'asdfghjkl'
+      },
       showResetBtn: false,
-      warningMsg: '發生未預期的錯誤，懇請通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms'
+      loadingSendResetMail: false,
+      loadingSignup: false,
+      loadingSignIn: false
     }
   },
-  // 元件渲染完成後：
   created () {
-    console.log('[Signup.vue] created()')
     // 登入狀態切換時要做的事
     FirebaseApp.auth().onAuthStateChanged((user) => {
-      this.showWarning = false
       this.showResetBtn = false
       if (user) {
-        console.log('[Signup.vue] 使用者登入了: ', user.email, user.uid)
-        this.setUser(user.uid, user.email, user.displayName, user.photoURL)
+        this.setUserToDatabase(user.uid, user.email, user.displayName, user.photoURL)
         this.user = user
+        console.log('[Signup.vue] 使用者登入了: ', user.email)
+        // 彈出提示訊息並關掉登入小視窗
+        this.$message({message: '觀迎登入 ' + user.email.split('@')[0], type: 'success'})
+        this.$emit('closeDialog')
       } else {
-        console.log('[Signup.vue] 使用者登出了')
         this.user = null
+        console.log('[Signup.vue] 使用者未登入')
       }
     })
   },
   methods: {
-    setUser (uid, email, displayName, photoURL) {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.signIn(this.signInForm.email, this.signInForm.password)
+          console.log('submitted')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    setUserToDatabase (uid, email, displayName, photoURL) {
       if (!displayName) {
         // email 註冊者沒有使用者名稱，取email帳號
         displayName = email.split('@')[0]
       }
       // 將使用者資料寫入 Firebase Databse
       FirebaseApp.database().ref('users/' + uid).set({
-        username: displayName,
+        uid: uid,
+        displayName: displayName,
         email: email,
-        profile_picture: photoURL
+        photoURL: photoURL
       })
     },
-    login () {
-      const promise = FirebaseApp.auth().signInWithEmailAndPassword(this.email, this.pwd)
-      this.showWarning = false
-      promise.catch((err) => {
-        // 登入錯誤處理
+    signIn (email, password) {
+      this.loadingSignIn = true
+      const promise = FirebaseApp.auth().signInWithEmailAndPassword(email, password)
+      promise.then(() => {
+        this.loadingSignIn = false
+      }).catch((err) => {
+        // 登入的錯誤處理
+        this.loadingSignIn = false
         console.log('[Signup.vue] 登入出錯了：', err)
-        this.showWarning = true
+        this.$message.error('[Signup.vue] 註冊出錯了：', err.message)
         switch (err.code) {
-          case 'auth/wrong-password':this.warningMsg = '抱歉，您提供的email或密碼不正確。，若須重設密碼請點選右下角的「登入遇到問題？」。'; break
-          case 'auth/invalid-email':this.warningMsg = '抱歉，您提供的email無效，請填入有效的email。'; break
-          case 'auth/user-disabled':this.warningMsg = '抱歉，您的帳號已被暫時停用，詳情請聯絡 lawrencechou1024「AT」gmail.com '; break
-          case 'auth/user-not-found':this.warningMsg = '抱歉，資料庫中並沒有使用者紀錄，請先註冊。'; break
+          case 'auth/wrong-password': this.$message({message: '抱歉，您提供的email或密碼不正確。若須重設密碼請點選右下角的「忘記密碼」。', type: 'warning'}); break
+          case 'auth/invalid-email': this.$message({message: '抱歉，您提供的email無效，請填入有效的email。', type: 'warning'}); break
+          case 'auth/user-disabled': this.$message({message: '抱歉，您的帳號已被暫時停用，詳情請聯絡 lawrencechou1024「AT」gmail.com ', type: 'warning'}); break
+          case 'auth/user-not-found': this.$message({message: '抱歉，資料庫中並沒有使用者紀錄，請先註冊。', type: 'warning'}); break
           default:
-            this.warningMsg = err + '登入發生未預期的錯誤，懇請協助通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms'
-            console.log(err + '登入發生未預期的錯誤，懇請協助通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms')
+            this.$message.error({message: '登入發生未預期的錯誤' + err})
         }
       })
     },
     signup () {
-      const promise = FirebaseApp.auth().createUserWithEmailAndPassword(this.email, this.pwd)
-      this.showWarning = false
-      promise.catch((err) => {
-        // 登入錯誤處理
-        console.log('[Signup.vue] 註冊出錯了：', err)
-        this.showWarning = true
+      this.loadingSignup = true
+      const promise = FirebaseApp.auth().createUserWithEmailAndPassword(this.signInForm.email, this.signInForm.password)
+      promise.then(() => {
+        this.loadingSignup = false
+      }).catch((err) => {
+        // 註冊的錯誤處理
+        this.loadingSignup = false
+        console.error('[Signup.vue] 註冊出錯了：', err)
+        this.$message.error('註冊出錯了： ', err.message)
         switch (err.code) {
-          case 'auth/email-already-in-use': this.warningMsg = '此Email帳號已註冊，若須重設密碼請點選右下角的「登入遇到問題？」。'; break
-          case 'auth/invalid-email': this.warningMsg = '抱歉，您提供的email無效，請填入有效的email。'; break
-          case 'auth/operation-not-allowed': this.warningMsg = 'Email註冊服務已終止，詳情請聯絡 lawrencechou1024「AT」gmail.com '; break
-          case 'auth/weak-password': this.warningMsg = '密碼強度過低，請嘗試更複雜的密碼。'; break
+          case 'auth/email-already-in-use': this.$message({message: '此Email帳號已註冊，若須重設密碼請點選右下角的「忘記密碼」。', type: 'warning'}); break
+          case 'auth/invalid-email': this.$message({message: '抱歉，您提供的email無效，請填入有效的email。', type: 'warning'}); break
+          case 'auth/operation-not-allowed': this.$message({message: 'Email註冊服務已終止，詳情請聯絡 lawrencechou1024「AT」gmail.com ', type: 'warning'}); break
+          case 'auth/weak-password': this.$message({message: '密碼強度過低，請嘗試更複雜的密碼。', type: 'warning'}); break
           default:
-            this.warningMsg = err + '註冊發生未預期的錯誤，懇請協助通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms'
-            console.log(err + '註冊發生未預期的錯誤，懇請協助通知 b02611002「AT」ntu.edu.tw 幫助我們馬上修正，或直接以備用表單註冊：https://airtable.com/shr7OtxNhNOQ4a6ms')
+            this.$message.error({message: '登入發生未預期的錯誤' + err.message})
         }
       })
     },
     logout () {
       FirebaseApp.auth().signOut()
-      this.email = ''
-      this.pwd = ''
+      this.signInForm.email = ''
+      this.signInForm.password = ''
     },
-    sendResetMail () {
-      const promise = FirebaseApp.auth().sendPasswordResetEmail(this.email)
+    sendResetMail (email) {
+      this.loadingSendResetMail = true
+      const promise = FirebaseApp.auth().sendPasswordResetEmail(email)
       promise.then(() => {
-        alert('密碼重置連結已寄到' + this.email + '，請前往確認。')
-        console.log('[Signup.vue] 密碼重置連結已寄到', this.email)
+        this.loadingSendResetMail = false
+        this.$message('密碼重置連結已寄往' + this.signInForm.email + '，請前往確認。')
       }).catch((err) => {
-        console.log('>> sendPasswordResetEmail()出錯了：', err)
+        this.loadingSendResetMail = false
+        console.error('[Signup.vue] 重設密碼出錯了：', err)
         switch (err.code) {
-          case 'auth/invalid-email': alert('無效的email'); break
-          case 'auth/user-not-found': alert('此email尚未註冊'); break
-          default: alert(err)
+          case 'auth/invalid-email': this.$message.error('無效的email'); break
+          case 'auth/user-not-found': this.$message.error('此email尚未註冊'); break
+          default: this.$message.error('重設密碼請求失敗： ' + err.message)
         }
       })
     }
   },
-  components: {
-  }
 }
 </script>
 
