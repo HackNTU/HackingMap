@@ -3,7 +3,7 @@
 
     <!-- 登入時顯示 -->
     <template v-if="user !== null">
-      <p>哈囉, {{user.email}}</p>
+      <p>哈囉, {{ user.displayName }}</p>
       <el-button @click="logout">登出</el-button>
     </template>
 
@@ -58,11 +58,15 @@ export default {
     FirebaseApp.auth().onAuthStateChanged((user) => {
       this.showResetBtn = false
       if (user) {
+        if (!user.displayName) {
+          // email 註冊者沒有使用者名稱，取email帳號
+          user.displayName = user.email.split('@')[0]
+        }
         this.setUserToDatabase(user.uid, user.email, user.displayName, user.photoURL)
         this.user = user
         console.log('[Signup.vue] 使用者登入了: ', user.email)
         // 彈出提示訊息並關掉登入小視窗
-        this.$message({message: '觀迎登入 ' + user.email.split('@')[0], type: 'success'})
+        this.$message({message: '歡迎登入 ' + user.displayName, type: 'success'})
         this.$emit('closeDialog')
       } else {
         this.user = null
@@ -83,10 +87,6 @@ export default {
       })
     },
     setUserToDatabase (uid, email, displayName, photoURL) {
-      if (!displayName) {
-        // email 註冊者沒有使用者名稱，取email帳號
-        displayName = email.split('@')[0]
-      }
       // 將使用者資料寫入 Firebase Databse
       FirebaseApp.database().ref('users/' + uid).set({
         uid: uid,
@@ -156,7 +156,7 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 
