@@ -23,21 +23,21 @@
       <template v-for="table in map.table_coor">
 
         <!-- 有專案的桌子 -->
-        <template v-if="posts[table.index]">
+        <template v-if="posts[table.no]">
           <el-tooltip placement="top" effect="light">
             <!-- 專案說明方塊 -->
             <div slot="content">
               <postsummary
-                :title="posts[table.index].name"
-                :subtitle="posts[table.index].author.split('@')[0]"
-                :description="posts[table.index].desc + ' ('+posts[table.index].table+'桌)'"
-                :postKey="posts[table.index]['.key']"
-                :authorId="posts[table.index].uid"
-                :starCount="posts[table.index].starCount"
-                :stars="posts[table.index].stars"
+                :title="posts[table.no].name"
+                :subtitle="posts[table.no].author.split('@')[0]"
+                :description="posts[table.no].desc + ' ('+posts[table.no].table+'桌)'"
+                :postKey="posts[table.no]['.key']"
+                :authorId="posts[table.no].uid"
+                :starCount="posts[table.no].starCount"
+                :stars="posts[table.no].stars"
                 style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
                 ></postsummary>
-                
+
             </div>
             <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="occupied-table statue_proposal"/>
           </el-tooltip>
@@ -65,7 +65,7 @@ export default {
     return {
       msg: 'MapView.vue',
       scale: 1.0,
-      map: appconfig.venue.map
+      map: appconfig.map
     }
   },
   firebase: {

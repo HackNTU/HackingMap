@@ -54,7 +54,7 @@ export default {
   name: 'editor',
   data () {
     return {
-      tables: appconfig.venue.avalibleTables,
+      tables: Object.keys(appconfig.map.table_coor),
       latest: 'N/A',
       isLoading: true,
       newPost: {
