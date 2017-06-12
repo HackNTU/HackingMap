@@ -78,7 +78,7 @@ export default {
         desc: null,
         table: null,
         status: null,
-        tags: null
+        tags: []
       },
       rules: {
         name: [

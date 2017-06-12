@@ -40,13 +40,14 @@
                 ></postsummary>
 
             </div>
-            <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="occupied-table statue_proposal"/>
+            <circle :cx="table.x * scale" :cy="table.y * scale" r="7" :class="getStatusColor(posts[table.no].status)"/>
           </el-tooltip>
         </template>
 
         <!-- 沒專案的桌子 -->
         <template v-else>
-          <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="status_avalible"/>
+          <!-- 沒專案的桌子就不顯示圓點 -->
+          <!-- <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="status_avalible"/> -->
         </template>
       </template>
 
@@ -84,7 +85,23 @@ export default {
     }
   },
   methods: {
-    formatTooltip: (val) => String(parseInt(val * 100)) + ' %'
+    formatTooltip: (val) => String(parseInt(val * 100)) + ' %',
+    getStatusColor: (status) => {
+      switch (status) {
+        case '提案':
+          return 'statue_proposal'
+        case '徵人':
+          return 'statue_recruit'
+        case '趕工':
+          return 'statue_hacking'
+        case '展示':
+          return 'statue_demo'
+        case '放棄':
+          return 'statue_giveup'
+        default:
+          return 'status_avalible'
+      }
+    }
   },
   components: {
     postsummary: PostSummary
