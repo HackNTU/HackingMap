@@ -7,7 +7,7 @@
     <h5>{{ subtitle }}</h5>
     <p>{{ description }}</p>
 
-    <el-tag v-for="t in Object.keys(tags)" key="t.id" type="primary">{{ t }}</el-tag>
+    <el-tag v-for="t in tags" key="t.id" type="gray">{{ t }}</el-tag>
 
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
     },
     subtitle: {
       type: String,
-      default: 'No title'
+      default: 'No subtitle'
     },
     description: {
       type: String,
@@ -58,14 +58,7 @@ export default {
       type: Number
     },
     tags: {
-      type: Object,
-      default () {
-        return {
-          'tag': true,
-          'not': true,
-          'found': true
-        }
-      }
+      type: Array
     }
   },
   computed: {

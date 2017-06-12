@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="editor">
 
-    <code>you are editing {{ postkey }}</code>
+    <!-- <code>[dev] you are editing {{ postkey }}</code> -->
 
     <el-form
       :model="newPost"
@@ -10,34 +10,51 @@
       label-width="100px"
       class="demo-newPost"
       v-loading="isLoading"
-      element-loading-text="Loading~~~~~">
+      element-loading-text="Loading...">
+
+      <!-- 專案名稱 -->
       <el-form-item label="專案名稱" prop="name">
         <el-input v-model="newPost.name"></el-input>
       </el-form-item>
 
-      <el-form-item label="專案簡介" prop="desc">
+      <!-- 專案描述 -->
+      <el-form-item label="簡介" prop="desc">
         <el-input type="textarea" v-model="newPost.desc"></el-input>
       </el-form-item>
 
-      <el-form-item label="所在桌號" prop="table">
+      <!-- 標籤 -->
+      <el-form-item label="標籤" prop="tags">
+        <el-tag :key="tag" v-for="tag in newPost.tags" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTag(tag)"
+        >{{tag}}</el-tag>
+        <el-input class="input-new-tag" v-if="inputVisible" v-model="inputNewTag" ref="saveTagInput" size="mini" v-show="newPost.tags.length < 3" @keyup.enter.native="handleNewTagConfirm" @blur="handleNewTagConfirm"></el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showNewTagInput" v-show="newPost.tags.length < 3">+ New Tag</el-button>
+      </el-form-item>
+
+      <!-- 專案所在位置 -->
+      <el-form-item label="位置" prop="table">
         <el-select v-model="newPost.table" placeholder="請選擇目前所在桌號">
           <el-option label="尋找中" value="0"></el-option>
           <el-option v-for="i in tables" :label="i + '桌'" :value="String(i)" :key="i"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="專案狀態" prop="status">
+      <!-- 專案狀態 -->
+      <el-form-item label="進度狀態" prop="status">
         <el-radio-group v-model="newPost.status">
-          <el-radio label="討論中"></el-radio>
-          <el-radio label="Hacking"></el-radio>
-          <el-radio label="歡迎參觀"></el-radio>
+          <el-radio label="提案"></el-radio>
+          <el-radio label="徵人"></el-radio>
+          <el-radio label="趕工"></el-radio>
+          <el-radio label="展示"></el-radio>
+          <el-radio label="放棄"></el-radio>
         </el-radio-group>
       </el-form-item>
 
+      <!-- 更新按鈕 -->
       <el-form-item>
         <el-button type="primary" @click="submitPost()">更新</el-button>
         <el-button @click="resetForm('newPost')">清空</el-button>
       </el-form-item>
+
     </el-form>
 
   </div>
@@ -55,18 +72,18 @@ export default {
   data () {
     return {
       tables: Object.keys(appconfig.map.table_coor),
-      latest: 'N/A',
-      isLoading: true,
+      postData: null,
       newPost: {
-        name: '',
-        desc: '',
-        table: '',
-        status: ''
+        name: null,
+        desc: null,
+        table: null,
+        status: null,
+        tags: null
       },
       rules: {
         name: [
-          { required: true, message: '請輸入活動名稱', trigger: 'blur' },
-          { min: 3, max: 20, message: '長度在 3 到 20 個字符', trigger: 'blur' }
+          { required: true, message: '請輸入專案名稱', trigger: 'blur' },
+          { min: 3, max: 10, message: '長度在 3 到 10 個字', trigger: 'blur' }
         ],
         table: [
           { required: true, message: '請選擇專案所在位置', trigger: 'change' }
@@ -75,9 +92,13 @@ export default {
           { required: true, message: '請選擇專案目前狀態', trigger: 'change' }
         ],
         desc: [
-          { required: true, message: '請簡單介紹專案內容', trigger: 'blur' }
+          { required: true, message: '請簡單介紹專案內容(約20字)', trigger: 'blur' }
         ]
-      }
+      },
+      inputNewTag: '',
+      inputVisible: false,
+      isLoading: true,
+      loadingUpdate: false
     }
   },
   props: {
@@ -101,7 +122,7 @@ export default {
         source: postsRef.child(this.postkey),
         asObject: true,
         readyCallback () {
-          this.latest = this.userLatestPosts
+          this.postData = this.userLatestPosts
           this.restoreForm(this.userLatestPosts)
         },
         cancelCallback () {
@@ -115,23 +136,31 @@ export default {
   },
   methods: {
 
-    restoreForm (latestVer) {
-      console.log('[Editor] 載入post舊資料', latestVer.name)
-      this.newPost.name = latestVer.name
-      this.newPost.desc = latestVer.desc
-      this.newPost.table = latestVer.table
-      this.newPost.status = latestVer.status
+    restoreForm (postData) {
+      console.log('[Editor] 載入post舊資料', postData.name)
+      this.newPost.name = postData.name
+      this.newPost.desc = postData.desc
+      this.newPost.table = postData.table
+      this.newPost.status = postData.status
+      this.newPost.tags = postData.tags
       this.isLoading = false
     },
 
     submitPost () {
+      this.loadingUpdate = true
       let p = this.newPost
-      this.updatePostForCurrentUser(this.postkey, p.name, p.desc, p.table, p.status).then(() => {
+      let promise = this.updatePostForCurrentUser(this.postkey, p.name, p.desc, p.table, p.status, p.tags)
+      promise.then(() => {
+        this.loadingUpdate = false
+        this.$message({message: '更新成功', type: 'success'})
         console.log('[Editor.vue] post成功更新', this.postkey)
+      }).catch((err) => {
+        this.loadingUpdate = false
+        this.$message.error('更新發生錯誤' + err.message)
       })
     },
 
-    updatePostForCurrentUser (postKey, name, desc, table, status) {
+    updatePostForCurrentUser (postKey, name, desc, table, status, tags) {
       let u = FirebaseApp.auth().currentUser
       if (!u.uid || !postKey) {
         throw new Error('Invalid currentUser or postkey', u, postKey)
@@ -147,6 +176,8 @@ export default {
         updates[path2 + 'table'] = table
         updates[path1 + 'status'] = status
         updates[path2 + 'status'] = status
+        updates[path1 + 'tags'] = tags
+        updates[path2 + 'tags'] = tags
 
         return db.ref().update(updates)
       }
@@ -154,6 +185,26 @@ export default {
 
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+
+    handleDeleteTag (tag) {
+      this.newPost.tags.splice(this.newPost.tags.indexOf(tag), 1)
+    },
+
+    showNewTagInput () {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+
+    handleNewTagConfirm () {
+      let inputNewTag = this.inputNewTag
+      if (inputNewTag) {
+        this.newPost.tags.push(inputNewTag.slice(0, 10))
+      }
+      this.inputVisible = false
+      this.inputNewTag = ''
     }
   }
 }
@@ -162,4 +213,10 @@ export default {
 <style lang="sass">
 .editor
   z-index: 9999
+
+.input-new-tag, .button-new-tag
+  width: 5rem
+
+.el-tag
+  margin-left: 4px
 </style>

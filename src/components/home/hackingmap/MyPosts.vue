@@ -74,6 +74,8 @@ export default {
     newPostForCurrentUser () {
       let u = FirebaseApp.auth().currentUser
       if (this.newPostTitle && u) {
+        let teammateInit = {}
+        teammateInit[u.uid] = true
         let postData = {
           name: this.newPostTitle,
           uid: u.uid,
@@ -83,7 +85,9 @@ export default {
           version: 1,
           desc: '超酷project',
           table: 0,
-          status: 'Hacking'
+          status: '提案',
+          tags: ['標籤1', '標籤2'],
+          teammate: teammateInit
         }
         let newPostKey = userPostsRef.push().key
         let updates = {}
@@ -115,18 +119,6 @@ export default {
   },
   components: {
     editor: Editor
-  },
-  beforeCreate () {
-    console.log('[MyPosts] beforeCreate ()', this.user, this.userPosts)
-  },
-  created () {
-    console.log('[MyPosts] created ()', this.user, this.userPosts)
-  },
-  beforeMount () {
-    console.log('[MyPosts] beforeMount ()', this.user, this.userPosts)
-  },
-  mounted () {
-    console.log('[MyPosts] mounted ()', this.user, this.userPosts)
   }
 }
 </script>

@@ -14,6 +14,7 @@
           :authorId="p.uid"
           :starCount="p.starCount"
           :stars="p.stars"
+          :tags="p.tags"
           ></postsummary>
         </el-card>
       </el-col>
