@@ -102,7 +102,9 @@ export default {
       if (domReady) {
         // 為#svg元素加上縮放功能
         SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
-        console.log('setSvgPanZoom()')
+        console.log('[MapView] setSvgPanZoom() TRUE')
+      } else {
+        console.log('[MapView] setSvgPanZoom() FALSE')
       }
     },
     getX (table) {
@@ -114,7 +116,11 @@ export default {
       return y || 10
     },
     getFocusStatus (table) {
-      return (Number(table) === Number(this.focus))
+      let isFocus = (Number(table) === Number(this.focus))
+      if (isFocus) {
+        console.log('[MapView] getFocusStatus(' + table + ') -> TRUE')
+      }
+      return isFocus
     },
     getColor (status) {
       switch (status) {
@@ -141,6 +147,8 @@ export default {
 
 <style lang="sass" scoped>
 @import "../../../style_config.sass"
+
+// TODO: popper-class 無效
 .mypopper
   border: 1px green solid
   background-color: red

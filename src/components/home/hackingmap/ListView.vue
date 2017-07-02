@@ -1,7 +1,7 @@
 <template>
   <div class="listview">
 
-    <code> {{ msg }}</code>
+    <code>{{ msg }}</code>
     <el-row>
       <el-col v-for="p in posts" :span="6" :gutter="20" :key="p.id">
         <!-- <div class="grid-content bg-purple"> {{p}} </div> -->
@@ -10,6 +10,7 @@
           :title="p.name"
           :subtitle="p.author.split('@')[0]"
           :description="p.desc + ' ('+p.table+'桌)'"
+          :table="Number(p.table)"
           :postKey="p['.key']"
           :authorId="p.uid"
           :starCount="p.starCount"
@@ -24,7 +25,7 @@
 </template>
 
 <script>
-import { FirebaseApp, VueFireDB } from '@/service/firebase'
+import firebase from 'firebase'
 import PostSummary from '@/components/home/hackingmap/postsummary'
 
 export default {
@@ -34,8 +35,11 @@ export default {
       msg: 'Login to vote!'
     }
   },
+  firebase: {
+    posts: firebase.database().ref('/posts/')
+  },
   created () {
-    FirebaseApp.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.msg = ''
       } else {
@@ -43,8 +47,8 @@ export default {
       }
     })
   },
-  firebase: {
-    posts: VueFireDB.ref('/posts/')
+  mounted () {
+    console.log('[ListView] mounted')
   },
   components: {
     postsummary: PostSummary

@@ -13,7 +13,10 @@
 </template>
 
 <script>
-import { VueFireDB, FirebaseApp } from '@/service/firebase'
+import firebase from 'firebase'
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
+
 export default {
   name: 'postsummary',
   data () {
@@ -23,7 +26,7 @@ export default {
     }
   },
   created () {
-    FirebaseApp.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.currentUser = user
       } else {
@@ -43,6 +46,10 @@ export default {
     description: {
       type: String,
       default: 'No description'
+    },
+    table: {
+      type: Number,
+      required: false
     },
     postKey: {
       type: String
@@ -75,14 +82,17 @@ export default {
     }
   },
   methods: {
+    goMap (tableNo) {
+      this.$router.push('/map?focus=' + tableNo)
+    },
     toggleStar () {
       // 檢查登入
       if (!this.currentUser) {
         alert('Please login first') // TODO: 導向登入視窗
         return
       }
-      let globalPostRef = VueFireDB.ref('/posts/' + this.postKey)
-      let userPostRef = VueFireDB.ref('/user-posts/' + this.authorId + '/' + this.postKey)
+      let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
+      let userPostRef = firebase.database().ref('/user-posts/' + this.authorId + '/' + this.postKey)
       let uid = this.currentUser.uid
       this.togglePostStarForCurrentUser(globalPostRef, uid)
       this.togglePostStarForCurrentUser(userPostRef, uid)
@@ -113,6 +123,9 @@ export default {
         // console.log(snapshot.val())  // stars更新以後的post
       })
     }
+  },
+  components: {
+    Icon
   }
 }
 </script>
