@@ -1,46 +1,46 @@
 <template>
   <section class="mapview">
 
-    <!-- SVG -->
+    <!-- SVG容器 -->
     <svg ref="svg" id="svg-map" class=".svg-pan-zoom_viewport" :viewBox="'0 0 '+map.map_width+' '+map.map_height">
-      <rect x="0" y="0" fill="none" stroke="#EB7B2D" stroke-width="2" :width="map.map_width" :height="map.map_height" />
 
       <!-- 地圖 -->
-      <image xlink:href="../../../assets/flora_expo_park.png"
-      :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
+      <image xlink:href="../../../assets/flora_expo_park.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
+      <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
-      <!-- 桌子 -->
-      <template v-for="table in map.table_coor">
-        <template v-if="posts[table.no]">
-          <el-tooltip placement="top" effect="light">
-            <div slot="content">
-              <postsummary
-              :title="posts[table.no].name"
-              :subtitle="posts[table.no].author.split('@')[0]"
-              :description="posts[table.no].desc + ' ('+posts[table.no].table+'桌)'"
-              :postKey="posts[table.no]['.key']"
-              :authorId="posts[table.no].uid"
-              :starCount="posts[table.no].starCount"
-              :stars="posts[table.no].stars"
-              :tags="posts[table.no].tags"
-              style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
-              ></postsummary>
-            </div>
-            <circle :cx="table.x" :cy="table.y" r="7" :class="getStatusColor(posts[table.no].status)"/>
-          </el-tooltip>
-        </template>
-        <template v-else>
-          <!-- 沒專案的桌子就不顯示圓點 -->
-          <!-- <circle :cx="table.x * scale" :cy="table.y * scale" r="7" class="status_avalible"/> -->
-        </template>
+      <template v-for="post in postsData">
+        <!-- popper -->
+        <el-tooltip
+          :value="getFocusStatus(post.table)"
+          placement="top"
+          effect="light"
+          popper-class="mypopper">
+
+          <!-- 專案卡片 -->
+          <div slot="content">
+            <postsummary
+            :title="post.name"
+            :subtitle="post.author.split('@')[0]"
+            :description="post.desc + ' ('+post.table+'桌)'"
+            :postKey="post['.key']"
+            :authorId="post.uid"
+            :starCount="post.starCount"
+            :stars="post.stars"
+            :tags="post.tags"
+            style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
+            ></postsummary>
+          </div>
+
+          <!-- 桌子圖點 -->
+          <circle ref="circle" :v-popover="post.table" :cx="getX(post.table)" :cy="getY(post.table)" :class="getColor(post.status)" r="7"/>
+        </el-tooltip>
       </template>
-
     </svg>
 
     <!-- 圖例 -->
     <div class="legand">
       <svg v-for="symble in ['提案', '徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em">
-        <circle :class="getStatusColor(symble)" cx="1em" cy="0.7em" :r="7"/>
+        <circle :class="getColor(symble)" cx="1em" cy="0.7em" :r="7"/>
         <text x="2em" y="1em">{{ symble }}</text>
       </svg>
     </div>
@@ -50,7 +50,7 @@
 
 <script>
 import appconfig from '../../../appconfig'
-import { VueFireDB } from '@/service/firebase'
+import firebase from 'firebase'
 import SvgPanZoom from 'svg-pan-zoom'
 import PostSummary from '@/components/home/hackingmap/postsummary'
 
@@ -59,7 +59,6 @@ export default {
   data () {
     return {
       map: appconfig.map,
-      panZoomMap: null,
       svgPanZoomOpt: {
         viewportSelector: '.svg-pan-zoom_viewport',
         panEnabled: true,
@@ -71,53 +70,53 @@ export default {
         minZoom: 0.9,
         maxZoom: 5,
         fit: true
-      },
-      isFetching: true,
-      isMounted: false
+      }
     }
   },
   firebase () {
     return {
-      postsData: { source: VueFireDB.ref('posts'),
-        asObject: false,
-        cancelCallback: null,
-        readyCallback: function () {
-          this.posts = this.format(this.postsData)
-          this.isFetching = false
-          console.log('fetched!')
-        }
+      postsData: {
+        source: firebase.database().ref('posts'),
+        asObject: false
       }
     }
   },
   mounted () {
-    console.log('mounted!')
-    this.isMounted = true
+    // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
+    console.log('[MapView] mounted')
+    this.setSvgPanZoom()
   },
   computed: {
-    posts () { return (this.postsData ? this.format(this.postsData) : ({})) },
-    fetchedAndMounted () { return ((!this.isFetching) && this.isMounted) }
+    focus () {
+      return this.$route.query.focus
+    }
   },
   updated () {
-    console.log('updated')
-    this.draw()
+    // case 1：初次造訪 /map 在 updated() 時才能加SvgPanZoom
+    console.log('[MapView] updated')
+    this.setSvgPanZoom()
   },
   methods: {
-    draw () {
-      console.log('draw()')
-      let element = this.$refs.svg
-      this.panZoomMap = SvgPanZoom(element, this.svgPanZoomOpt)
-    },
-    format () {
-      if (this.postsData) {
-        // console.log('formatting ', this.postsData)
-        let posts = {}
-        this.postsData
-          .filter(data => data['table'] !== 0)
-          .forEach((data) => { posts[data['table']] = data })
-        return posts
+    setSvgPanZoom () {
+      let domReady = (this.$refs.svg && this.$refs.circle)
+      if (domReady) {
+        // 為#svg元素加上縮放功能
+        SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
+        console.log('setSvgPanZoom()')
       }
     },
-    getStatusColor (status) {
+    getX (table) {
+      let x = this.map.table_coor[Number(table)].x
+      return x || 10
+    },
+    getY (table) {
+      let y = this.map.table_coor[Number(table)].y
+      return y || 10
+    },
+    getFocusStatus (table) {
+      return (Number(table) === Number(this.focus))
+    },
+    getColor (status) {
       switch (status) {
         case '提案':
           return 'statue_proposal'
@@ -142,6 +141,11 @@ export default {
 
 <style lang="sass" scoped>
 @import "../../../style_config.sass"
+.mypopper
+  border: 1px green solid
+  background-color: red
+  color: yellow
+
 .mapview
   position: relative
   z-index: -100

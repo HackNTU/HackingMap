@@ -10,13 +10,14 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', component: Home },
+    { path: '*', redirect: '/map' },
     {
-      path: '/project',
+      path: '/',
       component: Home,
       children: [
-        { path: '/project/map', component: MapView },
-        { path: '/project/all', component: ListView }
+        { path: 'map', component: MapView },
+        { path: 'projects', component: ListView },
+        { path: '', component: MapView }
       ]
     }
     // {

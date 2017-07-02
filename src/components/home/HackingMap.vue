@@ -2,8 +2,8 @@
   <div class="hackingmap">
 
     <el-button-group id="tabs">
-      <router-link to="/project/map" tag="el-button">地圖</router-link>
-      <router-link to="/project/all" tag="el-button">列表</router-link>
+      <router-link to="/map" tag="el-button">地圖</router-link>
+      <router-link to="/projects" tag="el-button">列表</router-link>
     </el-button-group>
 
     <router-view id="rv"></router-view>

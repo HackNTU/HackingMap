@@ -5745,7 +5745,7 @@ supports-color@^4.0.0:
   dependencies:
     has-flag "^2.0.0"
 
-svg-pan-zoom@ariutta/svg-pan-zoom:
+"svg-pan-zoom@github:ariutta/svg-pan-zoom":
   version "3.5.1"
   resolved "https://codeload.github.com/ariutta/svg-pan-zoom/tar.gz/ddbf517d5472eefa230b611561eb0b84b87d37f3"
 
@@ -6072,6 +6072,10 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-awesome@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/vue-awesome/-/vue-awesome-2.3.1.tgz#edd8f54a62af322df81f06ddf25c1ec2ae995b05"
+
 vue-hot-reload-api@^2.0.11:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.1.0.tgz#9ca58a6e0df9078554ce1708688b6578754d86de"
@@ -6092,6 +6096,10 @@ vue-loader@^11.3.4:
     vue-hot-reload-api "^2.0.11"
     vue-style-loader "^2.0.0"
     vue-template-es2015-compiler "^1.2.2"
+
+vue-popper@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/vue-popper/-/vue-popper-0.3.8.tgz#93d2c06cd2f20f0503a1509d6fcfc2c1ea7c8057"
 
 vue-router@^2.3.1:
   version "2.6.0"
