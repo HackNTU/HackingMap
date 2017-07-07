@@ -45,6 +45,19 @@
       </svg>
     </div>
 
+    <!-- 放大、縮小按鈕 -->
+    <div id="zoomBtnContainer">
+      <li><el-button id="zoomInBtn" @click="panZoomObj.zoomIn()">
+        <icon name="plus"></icon>
+      </el-button></li>
+      <li><el-button id="zoomOutBtn" @click="panZoomObj.zoomOut()">
+        <icon name="minus"></icon>
+      </el-button></li>
+      <li><el-button id="zoomResetBtn" @click="panZoomObj.resetZoom();panZoomObj.resetPan()">
+        <icon name="arrows-alt"></icon>
+      </el-button></li>
+    </div>
+
   </section>
 </template>
 
@@ -53,16 +66,18 @@ import appconfig from '../../../appconfig'
 import firebase from 'firebase'
 import SvgPanZoom from 'svg-pan-zoom'
 import PostSummary from '@/components/home/hackingmap/postsummary'
+import Icon from 'vue-awesome/components/Icon'
 
 export default {
   name: 'mapview',
   data () {
     return {
       map: appconfig.map,
+      panZoomObj: null,
       svgPanZoomOpt: {
         viewportSelector: '.svg-pan-zoom_viewport',
         panEnabled: true,
-        controlIconsEnabled: true,
+        controlIconsEnabled: false,
         dblClickZoomEnabled: true,
         mouseWheelZoomEnabled: true,
         preventMouseEventsDefault: true,
@@ -101,7 +116,7 @@ export default {
       let domReady = (this.$refs.svg && this.$refs.circle)
       if (domReady) {
         // 為#svg元素加上縮放功能
-        SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
+        this.panZoomObj = SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
         console.log('[MapView] setSvgPanZoom() TRUE')
       } else {
         console.log('[MapView] setSvgPanZoom() FALSE')
@@ -140,7 +155,8 @@ export default {
     }
   },
   components: {
-    postsummary: PostSummary
+    postsummary: PostSummary,
+    Icon
   }
 }
 </script>
@@ -187,5 +203,14 @@ export default {
   circle
     stroke: DarkSlateGrey
     stroke-width: 2
+
+  #zoomBtnContainer
+    // background-color: green
+    position: absolute
+    bottom: 1rem
+    left: 1rem
+    li
+      list-style-type: none
+      margin-top: 0.5rem
 
 </style>
