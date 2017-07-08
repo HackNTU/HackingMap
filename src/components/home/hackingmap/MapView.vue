@@ -25,7 +25,9 @@
             :postKey="post['.key']"
             :authorId="post.uid"
             :starCount="post.starCount"
+            :heartCount="post.heartCount"
             :stars="post.stars"
+            :hearts="post.hearts"
             :tags="post.tags"
             style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
             ></postsummary>

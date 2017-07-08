@@ -1,8 +1,18 @@
 <template>
   <div class="postsummary">
 
-    <i @click="toggleStar" style="float: right;" :class="{'el-icon-star-off': !isStaredByMe, 'el-icon-star-on': isStaredByMe }"></i>
-    <span style="float:right">{{ starCount }}</span>
+    <icon name="map-o" @click.native="goMap(table)" v-if="table"></icon>
+
+    <span style="float:right">
+      <icon @click.native="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')"></icon>
+      {{ starCount }}
+    </span>
+
+    <span style="float:right">
+      <icon @click.native="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')"></icon>
+      {{ heartCount }}
+    </span>
+
     <h3>{{ title }}</h3>
     <h5>{{ subtitle }}</h5>
     <p class="description">{{ description }}</p>
@@ -23,7 +33,6 @@ export default {
   name: 'postsummary',
   data () {
     return {
-      isLoved: false,
       currentUser: null
     }
   },
@@ -63,7 +72,14 @@ export default {
       type: Object,
       default: null
     },
+    hearts: {
+      type: Object,
+      default: null
+    },
     starCount: {
+      type: Number
+    },
+    heartCount: {
       type: Number
     },
     tags: {
@@ -81,12 +97,25 @@ export default {
         }
       }
       return false
+    },
+
+    isLovedByMe () {
+      // 檢查登入
+      if (this.currentUser) {
+        let uid = this.currentUser.uid
+        // 排除stars為null的狀況
+        if (this.hearts) {
+          return Object.keys(this.hearts).includes(uid)
+        }
+      }
+      return false
     }
   },
   methods: {
     goMap (tableNo) {
       this.$router.push('/map?focus=' + tableNo)
     },
+
     toggleStar () {
       // 檢查登入
       if (!this.currentUser) {
@@ -99,6 +128,20 @@ export default {
       this.togglePostStarForCurrentUser(globalPostRef, uid)
       this.togglePostStarForCurrentUser(userPostRef, uid)
     },
+
+    toggleHeart () {
+      // 檢查登入
+      if (!this.currentUser) {
+        alert('Please login first') // TODO: 導向登入視窗
+        return
+      }
+      let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
+      let userPostRef = firebase.database().ref('/user-posts/' + this.authorId + '/' + this.postKey)
+      let uid = this.currentUser.uid
+      this.togglePostHeartForCurrentUser(globalPostRef, uid)
+      this.togglePostHeartForCurrentUser(userPostRef, uid)
+    },
+
     togglePostStarForCurrentUser (postRef, uid) {
       postRef.transaction(function (post) {
         if (post) {
@@ -123,6 +166,33 @@ export default {
           console.log('[Card.vue] Star toggled for' + snapshot.val().name)
         }
         // console.log(snapshot.val())  // stars更新以後的post
+      })
+    },
+
+    togglePostHeartForCurrentUser (postRef, uid) {
+      postRef.transaction(function (post) {
+        if (post) {
+          if (post.hearts && post.hearts[uid]) {
+            post.heartCount--
+            post.hearts[uid] = null
+          } else {
+            post.heartCount++
+            if (!post.hearts) {
+              post.hearts = {}
+            }
+            post.hearts[uid] = true
+          }
+        }
+        return post
+      }, function (error, committed, snapshot) {
+        if (error) {
+          console.log('[Card.vue] Heart transaction failed abnormally!', error)
+        } else if (!committed) {
+          console.log('[Card.vue] Aborted the heart transaction.')
+        } else {
+          console.log('[Card.vue] Heart toggled for' + snapshot.val().name)
+        }
+        // console.log(snapshot.val())  // hearts更新以後的post
       })
     }
   },

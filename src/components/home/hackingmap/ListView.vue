@@ -15,6 +15,8 @@
           :authorId="p.uid"
           :starCount="p.starCount"
           :stars="p.stars"
+          :heartCount="p.heartCount"
+          :hearts="p.hearts"
           :tags="p.tags"
           ></postsummary>
         </el-card>

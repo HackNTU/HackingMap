@@ -81,6 +81,7 @@ export default {
           uid: u.uid,
           author: u.email,
           starCount: 0,
+          heartCount: 0,
           timestamp: new Date().toString(),
           version: 1,
           desc: '超酷project',
