@@ -2,14 +2,14 @@
   <div class="listview">
 
     <code>{{ msg }}</code>
-    <el-row>
-      <el-col v-for="p in posts" :span="6" :gutter="20" :key="p.id">
-        <!-- <div class="grid-content bg-purple"> {{p}} </div> -->
-        <el-card class="box-card">
+
+    <main class="flex-container">
+      <article v-for="p in posts" :span="6" :gutter="20" :key="p.id">
+        <el-card class="box-card" body-style="height: inherit;padding:0px">
           <postsummary
           :title="p.name"
-          :subtitle="p.author.split('@')[0]"
-          :description="p.desc + ' ('+p.table+'桌)'"
+          :subtitle="p.author.split('@')[0] + ' @ ' + p.table + '桌'"
+          :description="p.desc"
           :table="Number(p.table)"
           :postKey="p['.key']"
           :authorId="p.uid"
@@ -18,8 +18,8 @@
           :tags="p.tags"
           ></postsummary>
         </el-card>
-      </el-col>
-    </el-row>
+      </article>
+    </main>
 
   </div>
 </template>
@@ -64,10 +64,20 @@ export default {
   height: 100%
   position: relative
   overflow-y: scroll
-  right: -17px
+
+.flex-container
+  display: flex
+  flex-flow: row wrap
+  justify-content: center
+
+article
+  position: relative
 
 .box-card
-  // width: 16rem
+  width: 16em
+  // max-height: 16em
+  height: 13em
   text-align: left
   margin: 0.5em
+
 </style>

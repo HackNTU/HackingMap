@@ -5,9 +5,11 @@
     <span style="float:right">{{ starCount }}</span>
     <h3>{{ title }}</h3>
     <h5>{{ subtitle }}</h5>
-    <p>{{ description }}</p>
+    <p class="description">{{ description }}</p>
 
-    <el-tag v-for="t in tags" key="t.id" type="gray">{{ t }}</el-tag>
+    <span class="tags">
+      <el-tag v-for="t in tags" key="t.id" type="gray">{{ t }}</el-tag>
+    </span>
 
   </div>
 </template>
@@ -131,12 +133,24 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.postsummary
+  padding: 20px
+
 h3, h5, i, span
   margin: 0.1rem
 
 p
   margin: 0.5rem 0 0.5rem 0
 
-.el-tag
-  margin: 0 0.3rem 0 0
+.tags
+  position: absolute
+  bottom: 1.5rem
+
+// multiline ellipsis, only supports webkit.
+.description
+  overflow : hidden
+  text-overflow: ellipsis
+  display: -webkit-box
+  -webkit-line-clamp: 3
+  -webkit-box-orient: vertical
 </style>
