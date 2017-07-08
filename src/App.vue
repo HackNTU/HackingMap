@@ -2,7 +2,7 @@
   <div id="app">
 
     <banner></banner>
-    <router-view></router-view>
+    <router-view class="main"></router-view>
     <sponsor></sponsor>
 
   </div>
@@ -34,20 +34,22 @@ export default {
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
+  display: flex
+  flex-flow: column nowrap
 
 .banner
   background-color: $nav_bg_color
-  position: fixed
-  top: 0
-  right: 0
-  left: 0
-  height: $nav_height
+  flex: 0 $nav_height
+
+.main
+  flex: 1 auto
 
 .sponsor
   background-color: $footer_bg_color
-  position: fixed
-  right: 0
-  bottom: 0
-  left: 0
-  height: $footer_height
+  flex: 0 $footer_height
+  z-index: 10
+
+@media screen and (max-width: 768px)
+  .sponsor
+    display: none
 </style>

@@ -28,16 +28,19 @@ s
 @import "../../style_config.sass"
 
 .home
-  position: fixed
-  top: $nav_height
-  right: 0
-  bottom: $footer_height
-  left: 0
   display: flex
+  flex-flow: row nowrap
+  height: 100%
 
 .hackingmap
-  width: 70vw
+  flex: 7 0px
 
 .chat
-  width: 30vw
+  flex: 3 0px
+
+// Hide Chat in tablet/modile
+@media screen and (max-width: 768px)
+  .chat
+    display: none
+
 </style>
