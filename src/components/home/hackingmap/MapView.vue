@@ -166,11 +166,11 @@ export default {
 <style lang="sass" scoped>
 @import "../../../style_config.sass"
 
-// TODO: popper-class 無效
-.mypopper
-  border: 1px green solid
-  background-color: red
-  color: yellow
+// TODO: popper-class 無效 -> 移至 index.html
+// .mypopper, el-tooltip__popper
+//   border: 10px green solid !important
+//   background-color: red !important
+//   color: yellow !important
 
 .mapview
   position: relative

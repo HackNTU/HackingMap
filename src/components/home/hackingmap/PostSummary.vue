@@ -1,13 +1,16 @@
 <template>
   <div class="postsummary">
 
+    <!-- map icon -->
     <icon name="map-o" @click.native="goMap(table)" v-if="table"></icon>
 
+    <!-- star icon -->
     <span style="float:right">
       <icon @click.native="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')"></icon>
       {{ starCount }}
     </span>
 
+    <!-- heart icon -->
     <span style="float:right">
       <icon @click.native="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')"></icon>
       {{ heartCount }}
@@ -204,7 +207,9 @@ export default {
 
 <style lang="sass" scoped>
 .postsummary
-  padding: 20px
+  // border: 1px solid red
+  padding: 1rem
+  margin: 0
 
 h3, h5, i, span
   margin: 0.1rem
@@ -212,12 +217,9 @@ h3, h5, i, span
 p
   margin: 0.5rem 0 0.5rem 0
 
-.tags
-  position: absolute
-  bottom: 1.5rem
-
 // multiline ellipsis, only supports webkit.
 .description
+  // border: 1px solid yellow
   overflow : hidden
   text-overflow: ellipsis
   display: -webkit-box

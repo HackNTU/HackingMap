@@ -76,8 +76,8 @@ article
   position: relative
 
 .box-card
-  width: 16em
-  // max-height: 16em
+  width: 16rem
+  // max-height: 16rem
   height: 13em
   text-align: left
   margin: 0.5em
