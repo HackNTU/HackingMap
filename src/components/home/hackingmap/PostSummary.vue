@@ -206,23 +206,29 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .postsummary
   // border: 1px solid red
   padding: 1rem
   margin: 0
+  height: 100%
 
-h3, h5, i, span
-  margin: 0.1rem
+  .content
+    border: 1px solid Green
 
-p
-  margin: 0.5rem 0 0.5rem 0
+  h3, h5, i, span
+    margin: 0.1rem
 
-// multiline ellipsis, only supports webkit.
-.description
-  // border: 1px solid yellow
-  overflow : hidden
-  text-overflow: ellipsis
-  display: -webkit-box
-  -webkit-line-clamp: 3
-  -webkit-box-orient: vertical
+  p
+    margin: 0.5rem 0 0.5rem 0
+
+  // multiline ellipsis, only supports webkit.
+  .description
+    // border: 1px solid yellow
+    overflow : hidden
+    text-overflow: ellipsis
+    display: -webkit-box
+    -webkit-line-clamp: 3
+    -webkit-box-orient: vertical
+
 </style>

@@ -59,11 +59,10 @@ export default {
 @import "../../style_config.sass"
 
 .hackingmap
-  background-color: $hackingmap_bg_color
+  background-color: rgba(0, 0, 0, 0)
   position: relative
   height: 100%
   width: 100%
-  z-index: 10
 
 #plusBtn
   position: absolute
@@ -76,4 +75,6 @@ export default {
 
 #tabs
   margin: 0.5em
+  position: relative
+  z-index: 100
 </style>

@@ -44,7 +44,6 @@ export default {
 
 <style lang="sass" scoped>
 .banner
-  z-index: 999
 
 #loginBtn
   position: fixed

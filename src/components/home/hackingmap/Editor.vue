@@ -210,13 +210,14 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .editor
-  z-index: 9999
+  text-align: left
+  .url
+    width: 100%
+  .input-new-tag, .button-new-tag
+    width: 5rem
+  .el-tag
+    margin-left: 4px
 
-.input-new-tag, .button-new-tag
-  width: 5rem
-
-.el-tag
-  margin-left: 4px
 </style>

@@ -124,5 +124,8 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="sass">
+.myposts
+  .el-input
+    width: 10rem
 </style>

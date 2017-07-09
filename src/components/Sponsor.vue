@@ -32,8 +32,7 @@ export default {
 @import "../style_config.sass"
 
 .flex-container
-  // border: 1px blue solid
-  height: $footer_height - 1
+  height: $footer_height
   margin-top: auto
   margin-bottom: auto
   display: flex

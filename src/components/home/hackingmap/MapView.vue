@@ -174,7 +174,6 @@ export default {
 
 .mapview
   position: relative
-  z-index: -100
   top: -52px
   width: 100%
   height: 100%
@@ -204,7 +203,7 @@ export default {
     fill: white
   circle
     stroke: DarkSlateGrey
-    stroke-width: 2
+    stroke-width: 1
 
   #zoomBtnContainer
     // background-color: green
