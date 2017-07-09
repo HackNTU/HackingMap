@@ -97,7 +97,7 @@ export default {
         name: null,
         desc: null,
         iframe: null,
-        git: null,
+        git: '',
         table: null,
         status: null,
         tags: []
@@ -163,7 +163,7 @@ export default {
       this.newPost.name = postData.name
       this.newPost.desc = postData.desc
       this.newPost.iframe = postData.iframe
-      this.newPost.git = postData.git
+      this.newPost.git = postData.git || ''
       this.newPost.table = postData.table
       this.newPost.status = postData.status
       this.newPost.tags = postData.tags || []

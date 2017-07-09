@@ -1,32 +1,31 @@
 <template>
-  <section class="post-detail">
+  <section class="post-detail" id="wrap">
 
-    <p>status: {{ post.status }}</p>
-    <p>author: {{ post.author }}</p>
-    <p>table: {{ post.table }}</p>
-    <p>heartCount: {{ post.heartCount }}</p>
-    <p>desc: {{ post.desc }}</p>
-    <p>iframe: {{ post.iframe }}</p>
-    <p>git: {{ post.git }}</p>
-    <p>name: {{ post.name }}</p>
-    <p>starCount: {{ post.starCount }}</p>
-    <p>stars: {{ post.stars }}</p>
-    <p>tags: {{ post.tags }}</p>
-    <p>teammate: {{ post.teammate }}</p>
-    <p>timestamp: {{ post.timestamp }}</p>
-    <p>uid: {{ post.uid }}</p>
-    <p>version: {{ post.version }}</p>
-    <iframe :src="post.iframe"></iframe>
+    <p class="mb05">{{ post.desc }}</p>
+    <p class="mb05">
+      <span><icon name="link"></icon>
+        共編/作品:
+        <a :href="post.iframe" target="_blank">{{ post.iframe || 'N/A'}}</a>
+      </span>
+      &nbsp;&nbsp;&nbsp;
+      <span><icon name="github"></icon>
+        GitHub:
+        <a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
+        <span v-else>N/A</span>
+      </span>
+    </p>
+    <iframe :src="post.iframe || default_iframe" id="iframe" frameborder="0"></iframe>
 
   </section>
 </template>
 
 <script>
+import Icon from 'vue-awesome/components/Icon'
 export default {
   name: 'postdetail',
   data () {
     return {
-      iframe: 'https://bit.ly/hackingmap_starter'
+      default_iframe: 'https://bit.ly/hackingmap_get_started'
     }
   },
   props: {
@@ -34,11 +33,33 @@ export default {
       type: Object,
       required: true
     }
+  },
+  components: {
+    Icon
   }
 }
 </script>
 
 <style lang="sass" scoped>
 .post-detail
-  text-align: left
+
+.mb05
+  margin-top: 0
+  margin-bottom: 0.5em
+
+svg
+  position: relative
+  top: 0.2em
+
+#wrap
+  position: fixed
+  left: 0
+  width: 100%
+  top: 8%
+  height: 92%
+
+#iframe
+  outline: 1px solid Grey
+  width: 100%
+  height: 100%
 </style>

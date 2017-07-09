@@ -69,7 +69,7 @@ export default {
           timestamp: new Date().toString(),
           version: 1,
           desc: '超酷project',
-          iframe: 'http://bit.ly/hackingmap_starter',
+          iframe: 'http://bit.ly/hackingmap_get_started',
           git: '#',
           table: 0,
           status: '提案',

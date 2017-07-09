@@ -33,7 +33,7 @@
     <el-dialog
     :title="(posts[dialogPostKey] ? posts[dialogPostKey].name : null)"
     :visible.sync="dialogVisible"
-    size="large">
+    size="full">
     <postdetail :post="posts[dialogPostKey]"></postdetail>
   </el-dialog>
 
