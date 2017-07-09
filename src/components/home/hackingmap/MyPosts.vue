@@ -1,36 +1,20 @@
 <template lang="html">
   <div class="myposts">
-    <h3 v-if="user !== null">{{ user.email.split('@')[0] }}的 project</h3>
-    <p v-else>錯誤：請先登入！</p>
+    <template v-if="user !== null">
 
-    <!-- 限制使用者最多能發 1 篇 post -->
-    <span v-if="myPosts.length < 1">
-      <el-input
-      v-model.trim="newPostTitle"
-      placeholder="新增一個Project!"
-      >
-      <el-button @click="newPostForCurrentUser" slot="append">建立</el-button>
-      </el-input>
-    </span>
-
-    <div>
-      <div v-for="p in myPosts">
-
-        <h3>
-          {{ p.name }}
-          <i class="el-icon-edit" @click="toggleEditor(p['.key'])"></i>
-          <i class="el-icon-delete" @click="removePostForCurrentUser(p)"></i>
-        </h3>
-
-        <!-- Editor -->
-        <span v-if="editingPost == p['.key']">
-          <editor :postkey="editingPost"></editor>
-        </span>
-
+      <div v-if="isFetching">
+        <h5>isFetching...</h5>
       </div>
-    </div>
+      <div v-else-if="myPosts.length === 0"><!-- 限制使用者最多能發 1 篇 post -->
+        <el-input v-model.trim="newPostTitle" placeholder="新增一個Project!" @keyup.enter="newPostForCurrentUser"></el-input>
+        <el-button @click="newPostForCurrentUser">建立</el-button>
+      </div>
+      <div v-else>
+        <editor :postkey="myPosts[0]['.key']"></editor>
+      </div>
 
-
+    </template>
+    <p v-else>錯誤：請先登入！</p>
   </div>
 </template>
 
@@ -44,10 +28,10 @@ export default {
   name: 'myposts',
   data () {
     return {
-      msg: 'MyPosts.vue',
       user: FirebaseApp.auth().currentUser,
       newPostTitle: '',
-      editingPost: null
+      editingPost: null,
+      isFetching: true
     }
   },
   firebase: function () {
@@ -56,7 +40,7 @@ export default {
       myPosts: {
         source: userPostsRef.child(this.user.uid),
         readyCallback (_) {
-          console.log('[MyPsots] 載入使用者的posts', _)
+          this.isFetching = false
         }
       }
     }
@@ -85,6 +69,8 @@ export default {
           timestamp: new Date().toString(),
           version: 1,
           desc: '超酷project',
+          iframe: 'http://bit.ly/hackingmap_starter',
+          git: '#',
           table: 0,
           status: '提案',
           tags: ['標籤1', '標籤2'],

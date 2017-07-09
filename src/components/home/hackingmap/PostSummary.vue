@@ -2,17 +2,17 @@
   <div class="postsummary">
 
     <!-- map icon -->
-    <icon name="map-o" @click.native="goMap(table)" v-if="table"></icon>
+    <icon name="map-o" @click.native.stop="goMap(table)" v-if="table"></icon>
 
     <!-- star icon -->
     <span style="float:right">
-      <icon @click.native="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')"></icon>
+      <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')"></icon>
       {{ starCount }}
     </span>
 
     <!-- heart icon -->
     <span style="float:right">
-      <icon @click.native="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')"></icon>
+      <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')"></icon>
       {{ heartCount }}
     </span>
 
@@ -166,7 +166,7 @@ export default {
         } else if (!committed) {
           console.log('[Card.vue] Aborted the transaction.')
         } else {
-          console.log('[Card.vue] Star toggled for' + snapshot.val().name)
+          console.log('[Card.vue] Star toggled for' + snapshot.val())
         }
         // console.log(snapshot.val())  // stars更新以後的post
       })
@@ -193,7 +193,7 @@ export default {
         } else if (!committed) {
           console.log('[Card.vue] Aborted the heart transaction.')
         } else {
-          console.log('[Card.vue] Heart toggled for' + snapshot.val().name)
+          console.log('[Card.vue] Heart toggled for' + snapshot.val())
         }
         // console.log(snapshot.val())  // hearts更新以後的post
       })
@@ -206,15 +206,11 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
 .postsummary
   // border: 1px solid red
   padding: 1rem
   margin: 0
   height: 100%
-
-  .content
-    border: 1px solid Green
 
   h3, h5, i, span
     margin: 0.1rem

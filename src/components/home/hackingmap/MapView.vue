@@ -34,7 +34,13 @@
           </div>
 
           <!-- 桌子圖點 -->
-          <circle ref="circle" :v-popover="post.table" :cx="getX(post.table)" :cy="getY(post.table)" :class="getColor(post.status)" r="7"/>
+          <circle ref="circle"
+            :v-popover="post.table"
+            @click="onClick(post.table)"
+            :cx="getX(post.table)"
+            :cy="getY(post.table)"
+            :class="getColor(post.status)"
+            r="3"/>
         </el-tooltip>
       </template>
     </svg>
@@ -87,7 +93,8 @@ export default {
         minZoom: 0.9,
         maxZoom: 5,
         fit: true
-      }
+      },
+      clicked: null
     }
   },
   firebase () {
@@ -133,11 +140,15 @@ export default {
       return y || 10
     },
     getFocusStatus (table) {
-      let isFocus = (Number(table) === Number(this.focus))
+      let isFocus = (Number(table) === Number(this.focus)) || (Number(table) === Number(this.clicked))
       if (isFocus) {
         console.log('[MapView] getFocusStatus(' + table + ') -> TRUE')
       }
       return isFocus
+    },
+    onClick (tableNo) {
+      alert(tableNo)
+      this.clicked = tableNo
     },
     getColor (status) {
       switch (status) {

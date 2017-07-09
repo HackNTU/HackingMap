@@ -8,13 +8,14 @@
 
     <router-view id="rv"></router-view>
 
-    <template v-if="currentUser !== null">
+    <template v-if="user !== null">
       <el-button icon="edit" id="plusBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
       <el-dialog
+        :title="title"
         :visible.sync="showDialog"
-        :modal='false'
+        :modal='true'
         :close-on-click-modal='false'>
-        <!-- <editor :uid='currentUser.uid'></editor> -->
+        <!-- <editor :uid='user.uid'></editor> -->
         <myposts></myposts>
       </el-dialog>
     </template>
@@ -33,17 +34,21 @@ export default {
   name: 'hackingmap',
   data () {
     return {
-      msg: 'HackingMap.vue',
-      currentUser: null,
+      user: null,
       showDialog: false
+    }
+  },
+  computed: {
+    title () {
+      return (this.user.providerData[0].displayName || this.user.email.split('@')[0]) + '的專案'
     }
   },
   created () {
     FirebaseApp.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.currentUser = user
+        this.user = user
       } else {
-        this.currentUser = null
+        this.user = null
       }
     })
   },
