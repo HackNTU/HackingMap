@@ -42,7 +42,7 @@ export default {
   created () {
     this.syncAirtable()
     setInterval(this.syncAirtable, 10 * 60 * 1000) // sync every 10 mins
-    setInterval(this.updateCurrentEventIndex, 10 * 1000) // check every 10 seconds
+    setInterval(this.checkCurrentEventIndex, 10 * 1000) // check every 10 seconds
   },
   updated () {
     this.scrollTo(this.currentEventIndex || 3)
@@ -68,7 +68,7 @@ export default {
         fetchNextPage()
       }, function done (err) {
         vm.isFetching = false
-        vm.updateCurrentEventIndex()
+        vm.checkCurrentEventIndex()
         console.log('[Schedule] Sync Airtable every 10 mins')
         if (err) { console.error(err); return }
       })
@@ -77,8 +77,8 @@ export default {
     /**
      * Check for the current event index.
      */
-    updateCurrentEventIndex () {
-      // console.log('updateCurrentEventIndex()')
+    checkCurrentEventIndex () {
+      // console.log('checkCurrentEventIndex()')
       for (let index = 0; index < this.records.length; index++) {
         let i = this.records[index]           // the (i)th event
         let j = this.records[index + 1] || {} // the (i+1)th event (or nothing)
@@ -89,11 +89,24 @@ export default {
         // console.log(index, iStarted, iEnded, jStarted, jEnded)
         if (iStarted && !jStarted) {
           if (!iEnded && !jEnded) {
-            this.currentEventIndex = index
+            this.updateCurrentEventIndex(index)
           } else if (iEnded && !jEnded) {
-            this.currentEventIndex = index + 1
+            this.updateCurrentEventIndex(index + 1)
           }
         }
+      }
+    },
+
+    /**
+     * Update current event index and sent notification
+     */
+    updateCurrentEventIndex (index) {
+      if (this.currentEventIndex !== index) {
+        this.$message({
+          message: `接下來，${this.records[index]['大標題']}`,
+          type: 'success'
+        })
+        this.currentEventIndex = index
       }
     },
 
@@ -127,7 +140,7 @@ export default {
     },
 
     /**
-     * Truncate and
+     * Ellipsis and concatenation of link for text
      */
     formatSubtitle (text, link) {
       if (text) {
