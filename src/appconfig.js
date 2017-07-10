@@ -10,6 +10,10 @@ const appconfig = {
   'discord_config': {
     turnOn: false
   },
+  event_info: {
+    start_date: new Date('Mon Jul 21 2017 00:09:00 GMT+0800 (CST)'),
+    end_date: new Date('Mon Jul 23 2017 00:17:00 GMT+0800 (CST)')
+  },
   /* eslint-disable */
   map: {
     map_width: 842,
