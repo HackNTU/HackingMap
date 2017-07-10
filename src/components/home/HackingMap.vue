@@ -6,12 +6,12 @@
       <router-link to="/projects" tag="el-button">列表</router-link>
     </el-button-group>
 
-    <router-view id="rv"></router-view>
+    <router-view v-bind:filteredPosts="posts"></router-view>
 
     <template v-if="user !== null">
       <el-button icon="edit" id="plusBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
       <el-dialog
-        :title="title"
+        :title="myPostTitle"
         :visible.sync="showDialog"
         :modal='true'
         :close-on-click-modal='false'>
@@ -38,8 +38,17 @@ export default {
       showDialog: false
     }
   },
+  firebase: {
+    posts: {
+      source: FirebaseApp.database().ref('/posts/'),
+      asObject: true,
+      readyCallback: () => {
+        console.log('[HackingMap] Fetched `posts`!')
+      }
+    }
+  },
   computed: {
-    title () {
+    myPostTitle () {
       return (this.user.providerData[0].displayName || this.user.email.split('@')[0]) + '的專案'
     }
   },
@@ -73,10 +82,6 @@ export default {
   position: absolute
   bottom: 1rem
   right: 1rem
-
-#rv
-  // border: 1px solid green
-  bottom: 0px
 
 #tabs
   margin: 0.5em

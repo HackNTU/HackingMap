@@ -8,7 +8,7 @@
       <image xlink:href="../../../assets/flora_expo_park.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
-      <template v-for="post in postsData">
+      <template v-for="post in filteredPosts">
         <!-- popper -->
         <el-tooltip
           :value="getFocusStatus(post.table)"
@@ -20,7 +20,7 @@
           <div slot="content">
             <postsummary
             :title="post.name"
-            :subtitle="post.author.split('@')[0]"
+            :subtitle="(post.author || '').split('@')[0]"
             :description="post.desc + ' ('+post.table+'桌)'"
             :postKey="post['.key']"
             :authorId="post.uid"
@@ -29,7 +29,6 @@
             :stars="post.stars"
             :hearts="post.hearts"
             :tags="post.tags"
-            style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif"
             ></postsummary>
           </div>
 
@@ -37,8 +36,8 @@
           <circle ref="circle"
             :v-popover="post.table"
             @click="onClick(post.table)"
-            :cx="getX(post.table)"
-            :cy="getY(post.table)"
+            :cx="(post.table ? getX(post.table) : null)"
+            :cy="(post.table ? getY(post.table) : null)"
             :class="getColor(post.status)"
             r="3"/>
         </el-tooltip>
@@ -71,7 +70,7 @@
 
 <script>
 import appconfig from '../../../appconfig'
-import firebase from 'firebase'
+// import firebase from 'firebase'
 import SvgPanZoom from 'svg-pan-zoom'
 import PostSummary from '@/components/home/hackingmap/postsummary'
 import Icon from 'vue-awesome/components/Icon'
@@ -97,14 +96,7 @@ export default {
       clicked: null
     }
   },
-  firebase () {
-    return {
-      postsData: {
-        source: firebase.database().ref('posts'),
-        asObject: false
-      }
-    }
-  },
+  props: ['filteredPosts'],
   mounted () {
     // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
     console.log('[MapView] mounted')

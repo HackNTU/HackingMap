@@ -2,7 +2,7 @@
   <div class="listview">
 
     <main class="flex-container">
-      <article v-for="p, key in posts" :span="6" :gutter="20" :key="p.id" class="atk">
+      <article v-for="p, key in filteredPosts" :span="6" :gutter="20" :key="p.id" class="atk">
 
         <!-- Card (PostSummary.vue) -->
         <el-card v-if="key !== '.key'"
@@ -11,7 +11,7 @@
           @click.native="showDialog(key)">
           <postsummary
           :title="p.name"
-          :subtitle="p.author.split('@')[0] + ' @ ' + p.table + '桌'"
+          :subtitle="(p.author || '').split('@')[0] + ' @ ' + p.table + '桌'"
           :description="p.desc"
           :table="Number(p.table)"
           :postKey="key"
@@ -29,10 +29,10 @@
 
     <!-- Details (PostDetails) -->
     <el-dialog
-      :title="(posts[dialogPostKey] ? posts[dialogPostKey].name : null)"
+      :title="(filteredPosts[dialogPostKey] ? filteredPosts[dialogPostKey].name : null)"
       :visible.sync="dialogVisible"
       size="full">
-      <postdetail :post="posts[dialogPostKey]"></postdetail>
+      <postdetail :post="filteredPosts[dialogPostKey]"></postdetail>
     </el-dialog>
 
   </div>
@@ -51,18 +51,13 @@ export default {
       dialogPostKey: null
     }
   },
-  firebase: {
-    posts: {
-      source: firebase.database().ref('/posts/'),
-      asObject: true
-    }
-  },
+  props: ['filteredPosts'],
   created () {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.msg = ''
+        //
       } else {
-        this.msg = 'Login to vote!'
+        this.$message('登入後可投票歐 👉 ')
       }
     })
   },
@@ -88,9 +83,11 @@ export default {
 
 .listview
   background-color: $list_bg_color
-  height: 100%
-  position: absolute
   overflow-y: scroll
+  position: relative
+  top: -52px
+  width: 100%
+  height: 100%
 
 .flex-container
   padding-top: 48px
