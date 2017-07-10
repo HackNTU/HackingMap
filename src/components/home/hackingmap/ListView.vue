@@ -1,8 +1,6 @@
 <template>
   <div class="listview">
 
-    <code>{{ msg }}</code>
-
     <main class="flex-container">
       <article v-for="p, key in posts" :span="6" :gutter="20" :key="p.id" class="atk">
 
@@ -31,11 +29,11 @@
 
     <!-- Details (PostDetails) -->
     <el-dialog
-    :title="(posts[dialogPostKey] ? posts[dialogPostKey].name : null)"
-    :visible.sync="dialogVisible"
-    size="full">
-    <postdetail :post="posts[dialogPostKey]"></postdetail>
-  </el-dialog>
+      :title="(posts[dialogPostKey] ? posts[dialogPostKey].name : null)"
+      :visible.sync="dialogVisible"
+      size="full">
+      <postdetail :post="posts[dialogPostKey]"></postdetail>
+    </el-dialog>
 
   </div>
 </template>
@@ -49,7 +47,6 @@ export default {
   name: 'listview',
   data () {
     return {
-      msg: 'Login to vote!',
       dialogVisible: false,
       dialogPostKey: null
     }

@@ -10,7 +10,7 @@
 
 <script>
 // import store from './vuex'
-import Banner from '@/components/Banner.vue'
+import Banner from '@/components/banner/Banner.vue'
 import Sponsor from '@/components/Sponsor.vue'
 import Home from '@/components/home/Home.vue'
 export default {

@@ -1,22 +1,24 @@
 <template>
   <div class="banner vertical-container">
 
-    <a href="https://www.facebook.com/hackNTU/" target="_blank"><img src="../assets/hackntu-logo-title.png" alt="hackntu_logo"></a>
-    <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtn }}</el-button>
+    <a href="https://www.facebook.com/hackNTU/" target="_blank">
+      <img src="../../assets/hackntu-logo-title.png" alt="hackntu_logo">
+    </a>
+    <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtnText }}</el-button>
 
     <el-dialog
       :visible.sync="visible"
-      title="登入 HackingMap"
-      :modal='false'
+      :title="dialogTitle"
+      :modal-append-to-body="true"
       :close-on-click-modal='false'>
-      <signup v-on:closeDialog="visible = false"></signup>
+      <oauthlogin></oauthlogin>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
-import Signup from '@/components/Signup.vue'
+import OAuthLogin from '@/components/banner/OAuthLogin'
 import { FirebaseApp } from '@/service/firebase.js'
 
 export default {
@@ -24,18 +26,21 @@ export default {
   data () {
     return {
       visible: false,
-      loginBtn: '登入'
+      loginBtnText: '登入',
+      dialogTitle: '登入 HackingMap'
     }
   },
   components: {
-    signup: Signup
+    oauthlogin: OAuthLogin
   },
   created () {
     FirebaseApp.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.loginBtn = user.email.split('@')[0]
+        this.loginBtnText = user.providerData[0].displayName || user.email.split('@')[0]
+        this.dialogTitle = '歡迎登入, ' + user.providerData[0].displayName || user.email.split('@')[0]
       } else {
-        this.loginBtn = '登入'
+        this.loginBtnText = '登入'
+        this.dialogTitle = '登入 HackingMap'
       }
     })
   }
