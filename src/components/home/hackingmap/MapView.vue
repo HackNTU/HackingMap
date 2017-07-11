@@ -73,7 +73,6 @@ import appconfig from '../../../appconfig'
 // import firebase from 'firebase'
 import SvgPanZoom from 'svg-pan-zoom'
 import PostSummary from '@/components/home/hackingmap/postsummary'
-import Icon from 'vue-awesome/components/Icon'
 
 export default {
   name: 'mapview',
@@ -160,8 +159,7 @@ export default {
     }
   },
   components: {
-    postsummary: PostSummary,
-    Icon
+    postsummary: PostSummary
   }
 }
 </script>

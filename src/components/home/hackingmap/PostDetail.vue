@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome/components/Icon'
 export default {
   name: 'postdetail',
   data () {
@@ -33,9 +32,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    Icon
   }
 }
 </script>

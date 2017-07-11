@@ -29,8 +29,6 @@
 
 <script>
 import firebase from 'firebase'
-import 'vue-awesome/icons'
-import Icon from 'vue-awesome/components/Icon'
 
 export default {
   name: 'postsummary',
@@ -198,9 +196,6 @@ export default {
         // console.log(snapshot.val())  // hearts更新以後的post
       })
     }
-  },
-  components: {
-    Icon
   }
 }
 </script>
