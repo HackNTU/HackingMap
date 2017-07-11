@@ -2,19 +2,19 @@
   <div class="listview">
 
     <main class="flex-container">
-      <article v-for="p, key in filteredPosts" :span="6" :gutter="20" :key="p.id" class="atk">
+      <article v-for="p, index in filteredPosts" :span="6" :gutter="20" :key="index" class="atk">
 
         <!-- Card (PostSummary.vue) -->
-        <el-card v-if="key !== '.key'"
+        <el-card
           class="box-card"
           body-style="height:inherit;padding:0px"
-          @click.native="showDialog(key)">
+          @click.native="showDialog(index)">
           <postsummary
           :title="p.name"
           :subtitle="(p.author || '').split('@')[0] + ' @ ' + p.table + '桌'"
           :description="p.desc"
           :table="Number(p.table)"
-          :postKey="key"
+          :postKey="p['.key']"
           :authorId="p.uid"
           :starCount="p.starCount"
           :stars="p.stars"
@@ -29,10 +29,10 @@
 
     <!-- Details (PostDetails) -->
     <el-dialog
-      :title="(filteredPosts[dialogPostKey] ? filteredPosts[dialogPostKey].name : null)"
+      :title="(filteredPosts[dialogPostIndex] ? filteredPosts[dialogPostIndex].name : null)"
       :visible.sync="dialogVisible"
       size="full">
-      <postdetail :post="filteredPosts[dialogPostKey]"></postdetail>
+      <postdetail :post="filteredPosts[dialogPostIndex]"></postdetail>
     </el-dialog>
 
   </div>
@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      dialogPostKey: null
+      dialogPostIndex: null
     }
   },
   props: ['filteredPosts'],
@@ -65,9 +65,9 @@ export default {
     console.log('[ListView] mounted')
   },
   methods: {
-    showDialog (key) {
-      console.log('showDetail()', key)
-      this.dialogPostKey = key
+    showDialog (index) {
+      console.log('showDetail()', index)
+      this.dialogPostIndex = index
       this.dialogVisible = true
     }
   },

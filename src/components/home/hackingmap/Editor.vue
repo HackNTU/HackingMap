@@ -206,6 +206,8 @@ export default {
         updates[path2 + 'status'] = status
         updates[path1 + 'tags'] = tags
         updates[path2 + 'tags'] = tags
+        updates[path1 + 'timestamp'] = new Date()
+        updates[path2 + 'timestamp'] = new Date()
 
         return db.ref().update(updates)
       }

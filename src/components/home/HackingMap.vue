@@ -28,15 +28,15 @@
         <!-- 排序方法 -->
         <el-col :span="8">
           <el-radio-group v-model="sortKey">
-            <el-radio label="heart"><icon name="heart"></icon>數量</el-radio>
-            <el-radio label="star"><icon name="star"></icon>數量</el-radio>
-            <el-radio label="time">建立時間</el-radio>
+            <el-radio label="timestamp">最近更新</el-radio>
+            <el-radio label="heartCount"><icon name="heart"></icon>數量</el-radio>
+            <el-radio label="starCount"><icon name="star"></icon>數量</el-radio>
           </el-radio-group>
         </el-col>
       </el-row>
     </div>
 
-    <router-view v-bind:filteredPosts="filteredPosts"></router-view>
+    <router-view v-bind:filteredPosts="filteredSortedPosts"></router-view>
 
     <template v-if="user !== null">
       <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
@@ -45,7 +45,6 @@
         :visible.sync="showDialog"
         :modal='true'
         :close-on-click-modal='false'>
-        <!-- <editor :uid='user.uid'></editor> -->
         <myposts></myposts>
       </el-dialog>
     </template>
@@ -59,7 +58,6 @@
 <script>
 import { FirebaseApp } from '@/service/firebase.js'
 import MyPosts from '@/components/home/hackingmap/MyPosts.vue'
-import _ from 'lodash'
 
 export default {
   name: 'hackingmap',
@@ -70,13 +68,12 @@ export default {
       searchScope: [''],
       query: '',
       scope: 'tags',
-      sortKey: 'heart'
+      sortKey: 'timestamp'
     }
   },
   firebase: {
     posts: {
       source: FirebaseApp.database().ref('/posts/'),
-      asObject: true,
       readyCallback: () => {
         console.log('[HackingMap] Fetched `posts`!')
       }
@@ -86,13 +83,19 @@ export default {
     myPostTitle () {
       return (this.user.providerData[0].displayName || this.user.email.split('@')[0]) + '的專案'
     },
+    filteredSortedPosts () {
+      let key = this.sortKey || 'heartCount'
+      return this.filteredPosts.sort((a, b) => {
+        return (a[key] === b[key] ? 0 : (a[key] > b[key] ? -1 : 1))
+      })
+    },
     filteredPosts () {
       if (!this.query) {
         return this.posts
       }
       switch (this.scope) {
         case 'tags':
-          return _.pickBy(this.posts, post => {
+          return this.posts.filter(post => {
             if (post.tags) {
               let wasFound = false
               post.tags.forEach((tag) => {
@@ -104,13 +107,13 @@ export default {
             }
           })
         case 'name':
-          return _.pickBy(this.posts, post => {
+          return this.posts.filter(post => {
             if (post.name) {
               return post.name.toLowerCase().includes(this.query.toLowerCase())
             }
           })
         case 'desc':
-          return _.pickBy(this.posts, post => {
+          return this.posts.filter(post => {
             if (post.desc) {
               return post.desc.toLowerCase().includes(this.query.toLowerCase())
             }

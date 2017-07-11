@@ -66,7 +66,7 @@ export default {
           author: u.email,
           starCount: 0,
           heartCount: 0,
-          timestamp: new Date().toString(),
+          timestamp: new Date(),
           version: 1,
           desc: '超酷project',
           iframe: 'http://bit.ly/hackingmap_get_started',
