@@ -72,7 +72,7 @@
       <!-- 更新按鈕 -->
       <el-form-item>
         <el-button type="primary" @click="submitPost()">更新</el-button>
-        <el-button @click="resetForm('newPost')">清空</el-button>
+        <el-button @click="$emit('cancel')">取消</el-button>
       </el-form-item>
 
     </el-form>
@@ -211,10 +211,6 @@ export default {
 
         return db.ref().update(updates)
       }
-    },
-
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     },
 
     handleDeleteTag (tag) {

@@ -2,15 +2,13 @@
   <div class="myposts">
     <template v-if="user !== null">
 
-      <div v-if="isFetching">
-        <h5>isFetching...</h5>
-      </div>
+      <div v-if="isFetching" v-loading="true"></div>
       <div v-else-if="myPosts.length === 0"><!-- 限制使用者最多能發 1 篇 post -->
         <el-input v-model.trim="newPostTitle" placeholder="新增一個Project!" @keyup.enter="newPostForCurrentUser"></el-input>
         <el-button @click="newPostForCurrentUser">建立</el-button>
       </div>
       <div v-else>
-        <editor :postkey="myPosts[0]['.key']"></editor>
+        <editor :postkey="myPosts[0]['.key']" @cancel="$emit('close')"></editor>
       </div>
 
     </template>

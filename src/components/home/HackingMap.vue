@@ -53,7 +53,7 @@
         :visible.sync="showDialog"
         :modal='true'
         :close-on-click-modal='false'>
-        <myposts></myposts>
+        <myposts @close="showDialog = false"></myposts>
       </el-dialog>
     </template>
     <template v-else>
