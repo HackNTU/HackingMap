@@ -3,9 +3,10 @@
 
     <!-- SVG容器 -->
     <svg ref="svg" id="svg-map" class=".svg-pan-zoom_viewport" :viewBox="'0 0 '+map.map_width+' '+map.map_height">
-
+    <g class="svg-pan-zoom_viewport">
       <!-- 地圖 -->
       <image xlink:href="../../../assets/hacking_area_scaled.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
+      </image>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
       <template v-for="post in filteredPosts">
@@ -39,9 +40,11 @@
             :cx="(post.table ? getX(post.table) : null)"
             :cy="(post.table ? getY(post.table) : null)"
             :class="getColor(post.status)"
-            r="3"/>
+            r="3">
+          </circle>
         </el-tooltip>
       </template>
+    </g>
     </svg>
 
     <!-- 圖例 -->
@@ -76,6 +79,9 @@ import PostSummary from '@/components/home/hackingmap/postsummary'
 
 export default {
   name: 'mapview',
+  created () {
+
+  },
   data () {
     return {
       map: appconfig.map,
@@ -96,10 +102,18 @@ export default {
     }
   },
   props: ['filteredPosts'],
+  watch: {
+    filteredPosts: function (val, oldVal) {
+      // console.log('[filteredPosts] Updated!', 'new: %s, old: %s', val, oldVal)
+      this.$nextTick(() => {
+        this.setSvgPanZoom()
+      })
+    }
+  },
   mounted () {
     // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
     console.log('[MapView] mounted')
-    this.setSvgPanZoom()
+    // this.setSvgPanZoom()
   },
   computed: {
     focus () {
@@ -109,7 +123,7 @@ export default {
   updated () {
     // case 1：初次造訪 /map 在 updated() 時才能加SvgPanZoom
     console.log('[MapView] updated')
-    this.setSvgPanZoom()
+    // this.setSvgPanZoom()
   },
   methods: {
     setSvgPanZoom () {
