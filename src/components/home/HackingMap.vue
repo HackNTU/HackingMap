@@ -6,7 +6,7 @@
       <el-row type="flex" justify="center" align="middle">
 
         <!-- 搜尋框 -->
-        <el-col :span="8">
+        <el-col :lg="8" :md="8" :sm="8" :xs="12">
           <el-input placeholder="篩選" v-model.lazy.trim="query" :disabled="$route.path === '/full_map'">
             <el-select v-model="scope" slot="prepend" placeholder="請選擇" size="large">
               <el-option label="Tag" value="tags"></el-option>
@@ -18,17 +18,24 @@
         </el-col>
 
         <!-- 地圖/列表切換 -->
-        <el-col :span="8">
-          <el-button-group>
-            <router-link to="/projects" tag="el-button">專案</router-link>
-            <router-link to="/map" tag="el-button">HackingMap</router-link>
-            <router-link to="/full_map" tag="el-button">場地</router-link>
-          </el-button-group>
+        <el-col :lg="8" :md="8" :sm="8" :xs="8">
+          <!-- 電腦、平板：分頁標籤 -->
+          <el-radio-group @change="goTo($event)" class="regular-toolbar" v-model="foo">
+            <el-radio-button label="專案"></el-radio-button>
+            <el-radio-button label="HackingMap"></el-radio-button>
+            <el-radio-button label="場地"></el-radio-button>
+          </el-radio-group>
+          <!-- 手機：下拉選單 -->
+          <el-select @change="goTo($event)" class="phone-toolbar" v-model="bar">
+            <el-option key="projects" label="專案" value="專案"></el-option>
+            <el-option key="map" label="HackingMap" value="HackingMap"></el-option>
+            <el-option key="full_map" label="場地" value="場地"></el-option>
+          </el-select>
         </el-col>
 
         <!-- 排序方法 -->
-        <el-col :span="8">
-          <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'" style="vertical-align:middle !important;">
+        <el-col :lg="8" :md="8" :sm="8" :xs="4">
+          <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'">
             <el-radio label="timestamp">最近更新</el-radio>
             <el-radio label="heartCount">最多<icon name="heart"></icon></el-radio>
             <el-radio label="starCount">最多<icon name="star"></icon></el-radio>
@@ -69,7 +76,9 @@ export default {
       searchScope: [''],
       query: '',
       scope: 'tags',
-      sortKey: 'timestamp'
+      sortKey: 'timestamp',
+      foo: 'HackingMap',
+      bar: 'HackingMap'
     }
   },
   firebase: {
@@ -133,6 +142,21 @@ export default {
       }
     })
   },
+  methods: {
+    goTo (tabName) {
+      switch (tabName) {
+        case '專案':
+          this.$router.push('/projects')
+          break
+        case 'HackingMap':
+          this.$router.push('/map')
+          break
+        case '場地':
+          this.$router.push('/full_map')
+          break
+      }
+    }
+  },
   components: {
     myposts: MyPosts
   }
@@ -158,6 +182,20 @@ export default {
     padding: 0.5em
     position: relative
     z-index: 100
+
+  // Laptop & horizontal iPad
+  @media screen and (min-width: 730px)
+    .phone-toolbar
+      display: none
+
+  // vertical iPad
+  // hide Schedule.vue & Sponser.vue
+
+  // Smaller then vertical iPad
+  @media screen and (max-width: 730px)
+    .regular-toolbar
+      display: none
+
 </style>
 <style>
 .el-select .el-input {
