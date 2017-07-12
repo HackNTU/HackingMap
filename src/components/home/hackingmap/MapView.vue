@@ -5,7 +5,7 @@
     <svg ref="svg" id="svg-map" class=".svg-pan-zoom_viewport" :viewBox="'0 0 '+map.map_width+' '+map.map_height">
 
       <!-- 地圖 -->
-      <image xlink:href="../../../assets/flora_expo_park.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
+      <image xlink:href="../../../assets/hacking_area_scaled.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
       <template v-for="post in filteredPosts">
