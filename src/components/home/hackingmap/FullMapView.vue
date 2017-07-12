@@ -59,6 +59,7 @@ export default {
   @import "../../../style_config.sass"
 
   .fullmapview
+    position: relative
     top: -52px
     width: 100%
     height: 100%

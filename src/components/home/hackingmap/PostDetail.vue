@@ -43,10 +43,6 @@ export default {
   margin-top: 0
   margin-bottom: 0.5em
 
-svg
-  position: relative
-  top: 0.2em
-
 #wrap
   position: fixed
   left: 0

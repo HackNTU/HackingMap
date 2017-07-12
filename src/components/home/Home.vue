@@ -33,10 +33,10 @@ s
   height: 100%
 
 .hackingmap
-  flex: 7 0px
+  flex: 80 0px
 
 .schedule
-  flex: 3 0px
+  flex: 20 0px
 
 // Hide Chat in tablet/modile
 @media screen and (max-width: 768px)

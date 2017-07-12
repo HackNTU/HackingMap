@@ -3,11 +3,11 @@
 
 
     <div id="toolbar">
-      <el-row>
+      <el-row type="flex" justify="center" align="middle">
 
         <!-- 搜尋框 -->
         <el-col :span="8">
-          <el-input placeholder="搜尋專案" v-model.lazy.trim="query">
+          <el-input placeholder="篩選" v-model.lazy.trim="query" :disabled="$route.path === '/full_map'">
             <el-select v-model="scope" slot="prepend" placeholder="請選擇" size="large">
               <el-option label="Tag" value="tags"></el-option>
               <el-option label="標題" value="name"></el-option>
@@ -28,7 +28,7 @@
 
         <!-- 排序方法 -->
         <el-col :span="8">
-          <el-radio-group v-model="sortKey">
+          <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'" style="vertical-align:middle !important;">
             <el-radio label="timestamp">最近更新</el-radio>
             <el-radio label="heartCount">最多<icon name="heart"></icon></el-radio>
             <el-radio label="starCount">最多<icon name="star"></icon></el-radio>
@@ -154,7 +154,8 @@ export default {
     right: 1rem
 
   #toolbar
-    margin: 0.5em
+    background-color: $toolbar_bg_color
+    padding: 0.5em
     position: relative
     z-index: 100
 </style>

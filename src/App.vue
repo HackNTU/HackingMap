@@ -53,3 +53,8 @@ export default {
   .sponsor
     display: none
 </style>
+<style lang="sass">
+  .fa-icon
+    vertical-align: text-bottom
+  
+</style>
