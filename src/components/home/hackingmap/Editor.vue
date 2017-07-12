@@ -11,28 +11,49 @@
       v-loading="isLoading"
       element-loading-text="Loading...">
 
-      <!-- 專案名稱 -->
-      <el-form-item label="專案名稱" prop="name">
-        <el-input v-model.lazy="newPost.name"></el-input>
+      <!-- 專案名 -->
+      <el-form-item label="專案名" prop="name">
+        <el-input v-model.lazy="newPost.name" placeholder="限10字"></el-input>
       </el-form-item>
 
-      <!-- 專案描述 -->
-      <el-form-item label="30字簡介" prop="desc">
-        <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem">
-        </el-input>
-      </el-form-item>
-
-      <!-- 專案頁面/共編(iframe) -->
-      <el-form-item label="專案頁面(iframe)" prop="iframe">
-        <el-input v-model.lazy="newPost.iframe" class="url">
-        </el-input>
-      </el-form-item>
-
-      <!-- Git  -->
-      <el-form-item label="Git" prop="git">
+      <!-- GitHub  -->
+      <el-form-item label="GitHub" prop="git">
         <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
-          <template slot="prepend">https://github.com/</template>
+          <template slot="prepend">github.com/</template>
         </el-input>
+      </el-form-item>
+
+      <!-- 提案人 -->
+      <el-form-item label="提案人" prop="host">
+        <el-input v-model.lazy="newPost.host" placeholder="請輸入與會者編號"></el-input>
+      </el-form-item>
+
+      <!-- 簡介 -->
+      <el-form-item label="簡介" prop="desc">
+        <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem"
+         placeholder="請簡要介紹專案內容（100字以內，約前30字會顯示於卡片預覽）">
+        </el-input>
+      </el-form-item>
+
+      <!-- 專案介紹URL（專案頁面顯示） -->
+      <el-form-item label="專案介紹URL（專案頁面顯示）" prop="iframe">
+        <el-input v-model.lazy="newPost.iframe" class="url" @change="isLoadingIframe = true"
+         placeholder="請輸入可內嵌之網頁網址，如 Google Doc, HackMD, YouTube 等。">
+        </el-input>
+      </el-form-item>
+
+      <!-- iframe預覽顯示區 -->
+      <el-form-item label="iframe預覽顯示區">
+        <el-card class="box-card" :body-style="{ padding: '0px' }">
+          <div v-loading="true" v-if="isLoadingIframe">
+            &nbsp;<br>&nbsp;<br>&nbsp;<br>
+          </div>
+          <iframe
+           :src="newPost.iframe"
+           width="100%" height="100%"
+           v-show="!isLoadingIframe"
+           @load="isLoadingIframe = false"></iframe>
+        </el-card>
       </el-form-item>
 
       <!-- 標籤 -->
@@ -47,11 +68,26 @@
           v-show="!newPost.tags || newPost.tags.length < 3"
           @keyup.enter.native="handleNewTagConfirm"
           @blur="handleNewTagConfirm"></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showNewTagInput" v-show="!newPost.tags || newPost.tags.length < 3">+ New Tag</el-button>
+        <el-button v-else class="button-new-tag" size="small" @click="showNewTagInput" v-show="!newPost.tags || newPost.tags.length < 3">+ 新增標籤</el-button>
       </el-form-item>
 
-      <!-- 專案所在位置 -->
-      <el-form-item label="位置" prop="table">
+      <!-- 參與人 -->
+      <el-form-item label="參與人" prop="teammates">
+        <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
+        >{{teammate}}</el-tag>
+        <el-input class="input-new-tag"
+          v-if="inputVisibleTeammate"
+          v-model.lazy="inputNewTeammate"
+          ref="saveTeammateInput"
+          size="mini"
+          v-show="!newPost.teammates || newPost.teammates.length < 20"
+          @keyup.enter.native="handleNewTeammateConfirm"
+          @blur="handleNewTeammateConfirm"></el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showNewTeammateInput" v-show="!newPost.teammates || newPost.teammates.length < 20">+ 新增隊員</el-button>
+      </el-form-item>
+
+      <!-- 座位 -->
+      <el-form-item label="座位" prop="table">
         <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號">
           <el-option label="尋找中" value="0"></el-option>
           <el-option v-for="i in tables" :label="i + '桌'" :value="String(i)" :key="i"></el-option>
@@ -61,11 +97,24 @@
       <!-- 專案狀態 -->
       <el-form-item label="進度狀態" prop="status">
         <el-radio-group v-model.lazy="newPost.status">
-          <el-radio label="提案"></el-radio>
           <el-radio label="徵人"></el-radio>
           <el-radio label="趕工"></el-radio>
-          <el-radio label="展示"></el-radio>
+          <el-radio label="完工"></el-radio>
           <el-radio label="放棄"></el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <!-- 企業獎 -->
+      <el-form-item label="企業獎" prop="award" v-show="false">
+        <el-radio-group v-model.lazy="newPost.award">
+          <el-radio label="無"></el-radio>
+          <el-radio label="中信金控"></el-radio>
+          <el-radio label="北市交通局"></el-radio>
+          <el-radio label="微軟"></el-radio>
+          <el-radio label="HITCON"></el-radio>
+          <el-radio label="經濟部"></el-radio>
+          <el-radio label="農委會"></el-radio>
+          <el-radio label="威盛電子"></el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -95,17 +144,23 @@ export default {
       postData: null,
       newPost: {
         name: null,
+        host: '',
         desc: null,
         iframe: null,
         git: '',
         table: null,
         status: null,
-        tags: []
+        tags: [],
+        teammates: []
       },
       rules: {
         name: [
           { required: true, message: '請輸入專案名稱', trigger: 'blur' },
-          { min: 3, max: 10, message: '長度在 3 到 10 個字', trigger: 'blur' }
+          { min: 3, max: 10, message: '需介於 3 到 10 個字元', trigger: 'blur' }
+        ],
+        host: [
+          { required: true, message: '請輸入提案人之與會者編號', trigger: 'blur' },
+          { min: 4, max: 4, message: '格式為 `#999`', trigger: 'blur' }
         ],
         table: [
           { required: true, message: '請選擇專案所在位置', trigger: 'change' }
@@ -113,13 +168,20 @@ export default {
         status: [
           { required: true, message: '請選擇專案目前狀態', trigger: 'change' }
         ],
+        award: [
+          { required: true, message: '請選擇是否參與企業獎', trigger: 'change' }
+        ],
         desc: [
-          { required: true, message: '請簡單介紹專案內容(約30字)', trigger: 'blur' }
+          { required: true, message: '需介於 1 到 100 個字元', trigger: 'blur' },
+          { min: 1, max: 100, message: '需介於 1 到 100 個字元', trigger: 'blur' }
         ]
       },
       inputNewTag: '',
+      inputNewTeammate: '#',
       inputVisible: false,
+      inputVisibleTeammate: false,
       isLoading: true,
+      isLoadingIframe: false,
       loadingUpdate: false
     }
   },
@@ -127,15 +189,6 @@ export default {
     postkey: {
       type: String,
       required: true
-    }
-  },
-  computed: {
-    postKeyReady () {
-      if (this.postKey) {
-        return this.postKey
-      } else {
-        return null
-      }
     }
   },
   firebase: function () {
@@ -161,19 +214,22 @@ export default {
     restoreForm (postData) {
       console.log('[Editor] 載入post舊資料', postData.name)
       this.newPost.name = postData.name
+      this.newPost.host = postData.host
       this.newPost.desc = postData.desc
       this.newPost.iframe = postData.iframe
       this.newPost.git = postData.git || ''
       this.newPost.table = postData.table
       this.newPost.status = postData.status
+      this.newPost.award = postData.award
       this.newPost.tags = postData.tags || []
+      this.newPost.teammates = postData.teammates || []
       this.isLoading = false
     },
 
     submitPost () {
       this.loadingUpdate = true
       let p = this.newPost
-      let promise = this.updatePostForCurrentUser(this.postkey, p.name, p.desc, p.iframe, p.git, p.table, p.status, p.tags)
+      let promise = this.updatePostForCurrentUser(this.postkey, p.name, p.host, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates)
       promise.then(() => {
         this.loadingUpdate = false
         this.$message({message: '更新成功', type: 'success'})
@@ -184,7 +240,7 @@ export default {
       })
     },
 
-    updatePostForCurrentUser (postKey, name, desc, iframe, git, table, status, tags) {
+    updatePostForCurrentUser (postKey, name, host, desc, iframe, git, table, status, award, tags, teammates) {
       let u = FirebaseApp.auth().currentUser
       if (!u.uid || !postKey) {
         throw new Error('Invalid currentUser or postkey', u, postKey)
@@ -194,6 +250,8 @@ export default {
         const path2 = '/user-posts/' + u.uid + '/' + postKey + '/'
         updates[path1 + 'name'] = name
         updates[path2 + 'name'] = name
+        updates[path1 + 'host'] = host
+        updates[path2 + 'host'] = host
         updates[path1 + 'desc'] = desc
         updates[path2 + 'desc'] = desc
         updates[path1 + 'iframe'] = iframe
@@ -204,8 +262,12 @@ export default {
         updates[path2 + 'table'] = table
         updates[path1 + 'status'] = status
         updates[path2 + 'status'] = status
+        updates[path1 + 'award'] = award
+        updates[path2 + 'award'] = award
         updates[path1 + 'tags'] = tags
         updates[path2 + 'tags'] = tags
+        updates[path1 + 'teammates'] = teammates
+        updates[path2 + 'teammates'] = teammates
         updates[path1 + 'timestamp'] = new Date()
         updates[path2 + 'timestamp'] = new Date()
 
@@ -213,17 +275,26 @@ export default {
       }
     },
 
+    // ElmentUI tags utils
     handleDeleteTag (tag) {
       this.newPost.tags.splice(this.newPost.tags.indexOf(tag), 1)
     },
-
+    handleDeleteTeammate (teammate) {
+      this.newPost.teammates.splice(this.newPost.teammates.indexOf(teammate), 1)
+    },
     showNewTagInput () {
       this.inputVisible = true
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
-
+    showNewTeammateInput () {
+      this.inputVisibleTeammate = true
+      this.$nextTick(_ => {
+        this.inputNewTeammate = '#'
+        this.$refs.saveTeammateInput.$refs.input.focus()
+      })
+    },
     handleNewTagConfirm () {
       let inputNewTag = this.inputNewTag
       if (inputNewTag) {
@@ -231,6 +302,14 @@ export default {
       }
       this.inputVisible = false
       this.inputNewTag = ''
+    },
+    handleNewTeammateConfirm () {
+      let inputNewTeammate = this.inputNewTeammate
+      if (inputNewTeammate) {
+        this.newPost.teammates.push(inputNewTeammate.slice(0, 4))
+      }
+      this.inputVisibleTeammate = false
+      this.inputNewTeammate = ''
     }
   }
 }
