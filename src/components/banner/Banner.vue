@@ -1,8 +1,8 @@
 <template>
   <div class="banner vertical-container">
 
-    <a href="https://www.facebook.com/hackNTU/" target="_blank">
-      <img src="../../assets/hackntu-logo-title.png" alt="hackntu_logo">
+    <a href="https://www.facebook.com/hackNTU/" target="_blank" class="hackntu_logo">
+      <img src="../../assets/hackntu-logo.png" alt="hackntu_logo">
     </a>
     <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtnText }}</el-button>
 
@@ -66,5 +66,17 @@ $h: 48px
           justify-content: center
 
 img
-  height: $h*0.8
+  height: $h * 0.6
+
+// Align logo to left for mobile
+.hackntu_logo
+  position: fixed
+  left: 1rem
+
+// Centering logo for iPad/Laptop
+@media screen and (min-width: 768px)
+  .hackntu_logo
+    position: relative
+    margin-left: auto
+    margin-right: auto
 </style>
