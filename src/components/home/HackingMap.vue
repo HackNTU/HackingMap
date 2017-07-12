@@ -20,8 +20,9 @@
         <!-- 地圖/列表切換 -->
         <el-col :span="8">
           <el-button-group>
-            <router-link to="/map" tag="el-button">地圖</router-link>
-            <router-link to="/projects" tag="el-button">列表</router-link>
+            <router-link to="/projects" tag="el-button">專案</router-link>
+            <router-link to="/map" tag="el-button">HackingMap</router-link>
+            <router-link to="/full_map" tag="el-button">場地</router-link>
           </el-button-group>
         </el-col>
 
@@ -29,8 +30,8 @@
         <el-col :span="8">
           <el-radio-group v-model="sortKey">
             <el-radio label="timestamp">最近更新</el-radio>
-            <el-radio label="heartCount"><icon name="heart"></icon>數量</el-radio>
-            <el-radio label="starCount"><icon name="star"></icon>數量</el-radio>
+            <el-radio label="heartCount">最多<icon name="heart"></icon></el-radio>
+            <el-radio label="starCount">最多<icon name="star"></icon></el-radio>
           </el-radio-group>
         </el-col>
       </el-row>
