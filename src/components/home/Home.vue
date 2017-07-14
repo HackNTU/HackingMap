@@ -2,13 +2,18 @@
   <div class="home">
 
     <hackingmap></hackingmap>
-    <schedule></schedule>
+
+    <span class="right">
+      <announcement></announcement>
+      <schedule></schedule>
+    </span>
 
   </div>
 </template>
 
 <script>
 import HackingMap from '@/components/home/HackingMap.vue'
+import Announcement from '@/components/home/Announcement.vue'
 import Schedule from '@/components/home/Schedule.vue'
 export default {
   name: 'home',
@@ -19,6 +24,7 @@ export default {
   },
   components: {
     hackingmap: HackingMap,
+    announcement: Announcement,
     schedule: Schedule
   }
 }
@@ -35,12 +41,15 @@ s
 .hackingmap
   flex: 80 0px
 
-.schedule
+.right
   flex: 20 0px
+  display: flex
+  flex-flow: column nowrap
+  height: 100%
 
 // Hide Chat in tablet/modile
 @media screen and (max-width: 768px)
-  .schedule
+  .right
     display: none
 
 </style>
