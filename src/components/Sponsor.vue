@@ -1,29 +1,62 @@
 <template>
-  <div class="sponsor">
+  <div class="sponsor flex-container">
 
-    <div class="flex-container">
-      <h2>Sponsors</h2>
-      <span v-for="s in sponsors" class="logo">
-        <a :href="s.link" target="_blank"><img class="img-circle" :src="s.img" :alt="s.name"></a>
-      </span>
-    </div>
+    <h2 class="title">Sponsors</h2>
+    <span
+    v-for="sponsor in records"
+    :key="sponsor.id"
+    v-if="sponsor['商標png'] !== undefined">
+      <a :href="sponsor['URL']" target="_blank">
+        <img
+        class="logo"
+        :src="sponsor['商標png'][0].thumbnails.small.url"
+        :alt="sponsor['贊助商']">
+      </a>
+    </span>
 
   </div>
 </template>
 
 <script>
-import { VueFireDB } from '@/service/firebase'
-let sponsorRef = VueFireDB.ref('sponsors')
+import Airtable from 'Airtable'
+const db = new Airtable({ apiKey: 'keyC0ndMttA3rW78D' }).base('appTGjW5XhtMQa2t0')
 
 export default {
   name: 'sponsor',
   data () {
     return {
-      msg: 'Sponsor.vue'
+      isFetching: true,
+      records: []
     }
   },
-  firebase: {
-    sponsors: sponsorRef
+  created () {
+    this.syncAirtable()
+  },
+  methods: {
+
+    /**
+     * Sync Airtable data to `records`
+     */
+    syncAirtable () {
+      let vm = this
+      vm.isFetching = true
+      vm.records = []
+      db('Sponser').select({
+        view: 'Grid view',
+        filterByFormula: '{顯示} = TRUE()',
+        sort: [{field: '順序', direction: 'asc'}]
+      }).eachPage(function page (records, fetchNextPage) {
+        records.forEach(function (record) {
+          record.fields.id = record.id
+          vm.records.push(record.fields)
+        })
+        fetchNextPage()
+      }, function done (err) {
+        vm.isFetching = false
+        if (err) { console.error('[Sponser] Airtable fetch fail:', err); return }
+      })
+    }
+
   }
 }
 </script>
@@ -31,18 +64,20 @@ export default {
 <style lang="sass" scoped>
 @import "../style_config.sass"
 
+.sponsor
 .flex-container
-  height: $footer_height
-  margin-top: auto
-  margin-bottom: auto
   display: flex
+  justify-content: flex-start
+  align-items: center
 
-.logo
-  // border: 1px red solid
-  // margin: 0.5em 0.1em
+  .title
+    margin: 0 15px 0 15px
 
-.img-circle
-  // border: 1px solid lightGrey
-  border-radius: 50%
-  height: $footer_height*0.8
+  .logo
+    margin: 0 8px 0 8px
+    height: $footer_height * 0.6
+
+  .img-circle
+    border-radius: 50%
+
 </style>

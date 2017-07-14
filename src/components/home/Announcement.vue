@@ -25,6 +25,7 @@
             type="text"
             class="button"
             v-for="(announcement, index) in announcements"
+            :key="index"
             @click="clickIndex=index;showHistory=false;">
             {{ announcement.title }}
           </el-button>

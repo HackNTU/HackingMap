@@ -51,10 +51,10 @@ export default {
 
 @media screen and (max-width: 768px)
   .sponsor
-    display: none
+    display: none !important
 </style>
 <style lang="sass">
   .fa-icon
     vertical-align: text-bottom
-  
+
 </style>
