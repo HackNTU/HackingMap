@@ -1,14 +1,15 @@
 <template>
   <div class="listview">
 
-    <main class="flex-container">
-      <article v-for="p, index in filteredPosts" :span="6" :gutter="20" :key="index" class="atk">
+    <transition-group name="el-fade-in" class="flex-container" tag="span">
+      <article v-for="p, index in filteredPosts" :key="index">
 
-        <!-- Card (PostSummary.vue) -->
+        <!-- Card -->
         <el-card
           class="box-card"
           body-style="height:inherit;padding:0px"
           @click.native="showDialog(index)">
+          <!-- {{index}} --><!-- TODO: https://cn.vuejs.org/v2/guide/transitions.html#列表的位移过渡  -->
           <postsummary
           :title="p.name"
           :subtitle="(p.author || '').split('@')[0] + ' @ ' + p.table + '桌'"
@@ -21,11 +22,12 @@
           :heartCount="p.heartCount"
           :hearts="p.hearts"
           :tags="p.tags"
+          @tagClicked="$emit('searchTag', $event)"
           ></postsummary>
         </el-card>
 
       </article>
-    </main>
+    </transition-group>
 
     <!-- Details (PostDetails) -->
     <el-dialog
@@ -95,13 +97,11 @@ export default {
   flex-flow: row wrap
   justify-content: center
 
-article
-  position: relative
-
 .box-card
   width: 13.5rem
   height: 12.5em
   text-align: left
   margin: 0.5em
+  cursor: pointer
 
 </style>

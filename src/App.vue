@@ -56,5 +56,14 @@ export default {
 <style lang="sass">
   .fa-icon
     vertical-align: text-bottom
+    width: auto
+    height: 1.0em
+    padding: 0.1em
 
+  // Scale icon on hover
+  .fa-icon-pointer:hover
+    cursor: pointer
+    width: auto
+    height: 1.2em
+    padding: 0
 </style>

@@ -2,17 +2,17 @@
   <div class="postsummary">
 
     <!-- map icon -->
-    <icon name="map-o" @click.native.stop="goMap(table)" v-if="table"></icon>
+    <icon name="map-o" @click.native.stop="goMap(table)" v-if="table" class="fa-icon-pointer"></icon>
 
     <!-- star icon -->
     <span style="float:right">
-      <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')"></icon>
+      <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')" class="fa-icon-pointer"></icon>
       {{ starCount }}
     </span>
 
     <!-- heart icon -->
     <span style="float:right">
-      <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')"></icon>
+      <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')" class="fa-icon-pointer"></icon>
       {{ heartCount }}
     </span>
 
@@ -21,7 +21,14 @@
     <p class="description">{{ description }}</p>
 
     <span class="tags">
-      <el-tag v-for="t in tags" key="t.id" type="gray">{{ t }}</el-tag>
+      <el-button
+        v-for="tag in tags"
+        :key="tags.indexOf(tag)"
+        class="button-new-tag"
+        size="small"
+        @click.stop="$emit('tagClicked', tag)">
+        {{ tag }}
+      </el-button>
     </span>
 
   </div>

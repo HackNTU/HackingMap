@@ -44,7 +44,10 @@
       </el-row>
     </div>
 
-    <router-view v-bind:filteredPosts="filteredSortedPosts"></router-view>
+    <router-view
+      v-bind:filteredPosts="filteredSortedPosts"
+      @searchTag="scope='tags';query=$event">
+    </router-view>
 
     <template v-if="user !== null">
       <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
@@ -73,7 +76,6 @@ export default {
     return {
       user: null,
       showDialog: false,
-      searchScope: [''],
       query: '',
       scope: 'tags',
       sortKey: 'timestamp',
