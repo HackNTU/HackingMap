@@ -2,7 +2,7 @@
   <div class="postsummary">
 
     <!-- map icon -->
-    <icon name="map-o" @click.native.stop="goMap(table)" v-if="table" class="fa-icon-pointer"></icon>
+    <icon id="location" name="map-o" @click.native.stop="goMap(table)" v-if="table" class="fa-icon-pointer"></icon>
 
     <!-- star icon -->
     <span style="float:right">
@@ -16,8 +16,8 @@
       {{ heartCount }}
     </span>
 
-    <h3>{{ title }}</h3>
-    <h5>{{ subtitle }}</h5>
+    <h3 id="title">{{ title }}</h3>
+    <!-- <h5>{{ subtitle }}</h5> -->
     <p class="description">{{ description }}</p>
 
     <span class="tags">
@@ -210,7 +210,7 @@ export default {
 <style lang="sass" scoped>
 .postsummary
   // border: 1px solid red
-  padding: 1rem
+  padding: 6px // 1rem
   margin: 0
   height: 100%
 
@@ -218,15 +218,26 @@ export default {
     margin: 0.1rem
 
   p
-    margin: 0.5rem 0 0.5rem 0
+    // margin: 0.5rem 0 0.5rem 0
+    margin: 3px 0 4px 0
 
   // multiline ellipsis, only supports webkit.
   .description
     // border: 1px solid yellow
+    height: 50px
+    font-size: 12px
     overflow : hidden
     text-overflow: ellipsis
     display: -webkit-box
     -webkit-line-clamp: 3
     -webkit-box-orient: vertical
+
+
+#location
+  display: inline-block
+
+#title
+  display: inline-block
+  font-size: 16px
 
 </style>
