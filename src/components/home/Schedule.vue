@@ -45,7 +45,12 @@ export default {
     setInterval(this.checkCurrentEventIndex, 10 * 1000) // check every 10 seconds
   },
   updated () {
-    this.scrollTo(this.currentEventIndex || 3)
+    let component = this.$refs[`step${this.currentEventIndex}ref`][0]
+    if (component) {
+      let px = this.$refs[`step${this.currentEventIndex}ref`][0].$el.offsetTop - 16
+      this.$refs['scroll-area'].scrollTop = px
+      // console.log('[Schedule] scrollTo(): ', px) // NOTE: dev
+    }
   },
   methods: {
 
@@ -108,14 +113,6 @@ export default {
         })
         this.currentEventIndex = index
       }
-    },
-
-    /**
-     * Scroll to current active Step component.
-     */
-    scrollTo (stepIndex) {
-      let px = this.$refs[`step${stepIndex}ref`][0].$el.offsetTop - 16
-      this.$refs['scroll-area'].scrollTop = px
     },
 
     /**
