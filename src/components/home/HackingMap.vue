@@ -43,11 +43,13 @@
         </el-col>
       </el-row>
     </div>
-
-    <router-view
-      v-bind:filteredPosts="filteredSortedPosts"
-      @searchTag="scope='tags';query=$event">
-    </router-view>
+    
+    <keep-alive>
+      <router-view
+        v-bind:filteredPosts="filteredSortedPosts"
+        @searchTag="scope='tags';query=$event">
+      </router-view>
+    </keep-alive>
 
     <template v-if="user !== null">
       <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
