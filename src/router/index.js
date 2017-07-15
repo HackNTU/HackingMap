@@ -19,7 +19,7 @@ export default new Router({
         { path: 'map', component: MapView },
         { path: 'projects', component: ListView },
         { path: 'full_map', component: FullMapView },
-        { path: '', component: MapView }
+        { path: '', redirect: '/map' }
       ]
     }
     // {

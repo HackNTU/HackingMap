@@ -3,128 +3,170 @@
 
     <!-- <code>[dev] you are editing {{ postkey }}</code> -->
 
-    <el-form
-      :model="newPost"
-      :rules="rules"
-      ref="newPost"
-      label-width="100px"
-      v-loading="isLoading"
-      element-loading-text="Loading...">
+    <el-row :gutter="20" v-loading="loadingUpdate">
+      <el-form
+        :model="newPost"
+        :rules="rules"
+        ref="newPost"
+        label-width="100px"
+        v-loading="isLoading"
+        element-loading-text="Loading..."
+      >
+        <el-col :span="12">
 
-      <!-- 專案名 -->
-      <el-form-item label="專案名" prop="name">
-        <el-input v-model.lazy="newPost.name" placeholder="限10字"></el-input>
-      </el-form-item>
+          <!-- 專案名 -->
+          <el-form-item label="專案名" prop="name">
+            <el-input v-model.lazy="newPost.name" placeholder="限10字"></el-input>
+          </el-form-item>
 
-      <!-- GitHub  -->
-      <el-form-item label="GitHub" prop="git">
-        <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
-          <template slot="prepend">github.com/</template>
-        </el-input>
-      </el-form-item>
+          <!-- GitHub  -->
+          <el-form-item label="GitHub" prop="git">
+            <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
+              <template slot="prepend">github.com/</template>
+            </el-input>
+          </el-form-item>
 
-      <!-- 提案人 -->
-      <el-form-item label="提案人" prop="host">
-        <el-input v-model.lazy="newPost.host" placeholder="請輸入與會者編號"></el-input>
-      </el-form-item>
+          <!-- 提案人 -->
+          <el-form-item label="提案人" prop="host">
+            <el-input v-model.lazy="newPost.host" style="width:100%" placeholder="請輸入與會者編號 例如 #999"></el-input>
+          </el-form-item>
 
-      <!-- 簡介 -->
-      <el-form-item label="簡介" prop="desc">
-        <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem"
-         placeholder="請簡要介紹專案內容（100字以內，約前30字會顯示於卡片預覽）">
-        </el-input>
-      </el-form-item>
+          <!-- 標籤 -->
+          <el-form-item label="標籤" prop="tags">
+            <el-tag
+              :key="tag"
+              v-for="tag in newPost.tags"
+              :closable="true"
+              type="gray"
+              :close-transition="false"
+              @close="handleDeleteTag(tag)"
+            >{{tag}}</el-tag>
+            <el-input class="input-new-tag"
+              v-if="inputVisible"
+              v-model.lazy="inputNewTag"
+              ref="saveTagInput"
+              size="mini"
+              v-show="!newPost.tags || newPost.tags.length < 3"
+              @keyup.enter.native="handleNewTagConfirm"
+              @blur="handleNewTagConfirm"></el-input
+            >
+            <el-button v-else
+              class="button-new-tag"
+              size="small"
+              @click="showNewTagInput"
+              v-show="!newPost.tags || newPost.tags.length < 3"
+            >+ 新增標籤</el-button>
+          </el-form-item>
 
-      <!-- 專案介紹URL（專案頁面顯示） -->
-      <el-form-item label="專案介紹URL（專案頁面顯示）" prop="iframe">
-        <el-input v-model.lazy="newPost.iframe" class="url" @change="isLoadingIframe = true"
-         placeholder="請輸入可內嵌之網頁網址，如 Google Doc, HackMD, YouTube 等。">
-        </el-input>
-      </el-form-item>
+          <!-- 座位 -->
+          <el-form-item label="座位" prop="table">
+            <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號">
+              <el-option label="尋找中" value="0"></el-option>
+              <el-option v-for="i in tables" :label="i + '桌'" :value="String(i)" :key="i"></el-option>
+            </el-select>
+          </el-form-item>
 
-      <!-- iframe預覽顯示區 -->
-      <el-form-item label="iframe預覽顯示區">
-        <el-card class="box-card" :body-style="{ padding: '0px' }">
-          <div v-loading="true" v-if="isLoadingIframe">
-            &nbsp;<br>&nbsp;<br>&nbsp;<br>
-          </div>
-          <iframe
-           :src="newPost.iframe"
-           width="100%" height="100%"
-           v-show="!isLoadingIframe"
-           @load="isLoadingIframe = false"></iframe>
-        </el-card>
-      </el-form-item>
+          <!-- 專案狀態 -->
+          <el-form-item label="進度狀態" prop="status">
+            <el-radio-group v-model.lazy="newPost.status">
+              <el-radio label="徵人"></el-radio>
+              <el-radio label="趕工"></el-radio>
+              <el-radio label="完工"></el-radio>
+              <el-radio label="放棄"></el-radio>
+            </el-radio-group>
+          </el-form-item>
 
-      <!-- 標籤 -->
-      <el-form-item label="標籤" prop="tags">
-        <el-tag :key="tag" v-for="tag in newPost.tags" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTag(tag)"
-        >{{tag}}</el-tag>
-        <el-input class="input-new-tag"
-          v-if="inputVisible"
-          v-model.lazy="inputNewTag"
-          ref="saveTagInput"
-          size="mini"
-          v-show="!newPost.tags || newPost.tags.length < 3"
-          @keyup.enter.native="handleNewTagConfirm"
-          @blur="handleNewTagConfirm"></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showNewTagInput" v-show="!newPost.tags || newPost.tags.length < 3">+ 新增標籤</el-button>
-      </el-form-item>
+          <!-- 參與人 -->
+          <el-form-item label="參與人" prop="teammates">
+            <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
+            >{{teammate}}</el-tag>
+            <el-input class="input-new-tag"
+              v-if="inputVisibleTeammate"
+              v-model.lazy="inputNewTeammate"
+              ref="saveTeammateInput"
+              size="mini"
+              v-show="!newPost.teammates || newPost.teammates.length < 20"
+              @keyup.enter.native="handleNewTeammateConfirm"
+              @blur="handleNewTeammateConfirm"></el-input
+            >
+            <el-button v-else
+              class="button-new-tag"
+              size="small"
+              @click="showNewTeammateInput"
+              v-show="!newPost.teammates || newPost.teammates.length < 20"
+            >+ 新增隊員</el-button>
+          </el-form-item>
 
-      <!-- 參與人 -->
-      <el-form-item label="參與人" prop="teammates">
-        <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
-        >{{teammate}}</el-tag>
-        <el-input class="input-new-tag"
-          v-if="inputVisibleTeammate"
-          v-model.lazy="inputNewTeammate"
-          ref="saveTeammateInput"
-          size="mini"
-          v-show="!newPost.teammates || newPost.teammates.length < 20"
-          @keyup.enter.native="handleNewTeammateConfirm"
-          @blur="handleNewTeammateConfirm"></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showNewTeammateInput" v-show="!newPost.teammates || newPost.teammates.length < 20">+ 新增隊員</el-button>
-      </el-form-item>
+          <!-- 企業獎 -->
+          <el-form-item label="企業獎" prop="award" v-show="false">
+            <el-radio-group v-model.lazy="newPost.award">
+              <el-radio label="無"></el-radio>
+              <el-radio label="中信金控"></el-radio>
+              <el-radio label="北市交通局"></el-radio>
+              <el-radio label="微軟"></el-radio>
+              <el-radio label="HITCON"></el-radio>
+              <el-radio label="經濟部"></el-radio>
+              <el-radio label="農委會"></el-radio>
+              <el-radio label="威盛電子"></el-radio>
+            </el-radio-group>
+          </el-form-item>
 
-      <!-- 座位 -->
-      <el-form-item label="座位" prop="table">
-        <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號">
-          <el-option label="尋找中" value="0"></el-option>
-          <el-option v-for="i in tables" :label="i + '桌'" :value="String(i)" :key="i"></el-option>
-        </el-select>
-      </el-form-item>
+        </el-col>
+      </el-form>
+      <el-form :model="newPost" :rules="rules">
+        <el-col :span="12">
 
-      <!-- 專案狀態 -->
-      <el-form-item label="進度狀態" prop="status">
-        <el-radio-group v-model.lazy="newPost.status">
-          <el-radio label="徵人"></el-radio>
-          <el-radio label="趕工"></el-radio>
-          <el-radio label="完工"></el-radio>
-          <el-radio label="放棄"></el-radio>
-        </el-radio-group>
-      </el-form-item>
+          <!-- 50字簡介 -->
+          <el-form-item :label="`專案簡介 (${newPost.desc.length}/50字)`" prop="desc">
+            <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem"
+              placeholder="請簡要介紹專案內容（100字以內，約前30字會顯示於卡片預覽）">
+            </el-input>
+          </el-form-item>
 
-      <!-- 企業獎 -->
-      <el-form-item label="企業獎" prop="award" v-show="false">
-        <el-radio-group v-model.lazy="newPost.award">
-          <el-radio label="無"></el-radio>
-          <el-radio label="中信金控"></el-radio>
-          <el-radio label="北市交通局"></el-radio>
-          <el-radio label="微軟"></el-radio>
-          <el-radio label="HITCON"></el-radio>
-          <el-radio label="經濟部"></el-radio>
-          <el-radio label="農委會"></el-radio>
-          <el-radio label="威盛電子"></el-radio>
-        </el-radio-group>
-      </el-form-item>
+          <!-- 專案介紹URL（專案頁面顯示） -->
+          <el-form-item label="專案介紹URL（專案頁面顯示）" prop="iframe">
+            <el-input
+              v-model.lazy="newPost.iframe"
+              class="url"
+              @change="loadIframe = false; isLoadingIframe = false"
+              placeholder="請輸入可內嵌之網頁網址，如 Google Doc, HackMD, YouTube 等。">
+            </el-input>
+          </el-form-item>
 
-      <!-- 更新按鈕 -->
-      <el-form-item>
-        <el-button type="primary" @click="submitPost()">更新</el-button>
-        <el-button @click="$emit('cancel')">取消</el-button>
-      </el-form-item>
+          <!-- iframe預覽顯示區 -->
+          <el-form-item>
+            <el-card class="box-card" :body-style="{ padding: '0px' }">
+              <el-button
+                @click="loadIframe = true; isLoadingIframe = true"
+                v-if="!loadIframe"
+              >iframe預覽</el-button>
+              <div v-if="isLoadingIframe" v-loading="true">
+                &nbsp;<br>&nbsp;<br>&nbsp;<br>
+              </div>
+              <iframe
+                v-if="loadIframe"
+                :src="newPost.iframe"
+                width="100%" height="100%"
+                v-show="!isLoadingIframe"
+                @load="isLoadingIframe = false"
+              ></iframe>
+            </el-card>
+          </el-form-item>
 
-    </el-form>
+        </el-col>
+      </el-form>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="end">
+      <el-col :span="24">
+
+        <!-- 更新按鈕 -->
+        <div align=right>
+          <el-button type="primary" @click="submitPost()">更新</el-button>
+          <el-button @click="$emit('cancel')">取消</el-button>
+        </div>
+
+      </el-col>
+    </el-row>
 
   </div>
 </template>
@@ -172,8 +214,8 @@ export default {
           { required: true, message: '請選擇是否參與企業獎', trigger: 'change' }
         ],
         desc: [
-          { required: true, message: '需介於 1 到 100 個字元', trigger: 'blur' },
-          { min: 1, max: 100, message: '需介於 1 到 100 個字元', trigger: 'blur' }
+          { required: true, message: '需介於 1 到 50 個字元', trigger: 'blur' },
+          { min: 1, max: 50, message: '需介於 1 到 50 個字元', trigger: 'change' }
         ]
       },
       inputNewTag: '',
@@ -182,6 +224,7 @@ export default {
       inputVisibleTeammate: false,
       isLoading: true,
       isLoadingIframe: false,
+      loadIframe: false,
       loadingUpdate: false
     }
   },
@@ -324,5 +367,4 @@ export default {
     width: 5rem
   .el-tag
     margin-left: 4px
-
 </style>

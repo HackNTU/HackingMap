@@ -52,9 +52,10 @@
     <template v-if="user !== null">
       <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
       <el-dialog
-        :title="myPostTitle"
+        title="專案編輯"
         :visible.sync="showDialog"
         :modal='true'
+        size="large"
         :close-on-click-modal='false'>
         <myposts @close="showDialog = false"></myposts>
       </el-dialog>
