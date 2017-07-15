@@ -31,10 +31,10 @@
 
     <!-- Details (PostDetails) -->
     <el-dialog
-      :title="(filteredPosts[dialogPostIndex] ? filteredPosts[dialogPostIndex].name : null)"
       :visible.sync="dialogVisible"
-      size="full">
-      <postdetail :post="filteredPosts[dialogPostIndex]"></postdetail>
+      custom-class="larger-dialog"
+      size="large">
+      <postdetail :post="filteredPosts[dialogPostIndex]" :isOpen="dialogVisible"></postdetail>
     </el-dialog>
 
   </div>
@@ -104,4 +104,25 @@ export default {
   margin: 0.5em
   cursor: pointer
 
+</style>
+
+<!-- 90vh dialog for PostDetail -->
+<style lang="sass">
+  .larger-dialog
+    height: 94vh
+    width: 95%
+    top: 3vh !important
+    margin-bottom: 0
+    .el-dialog__headerbtn
+      position: relative
+      z-index: 3000
+    .el-dialog__body
+      // background-color: orange
+      position: absolute
+      padding: 1vw
+      // top: 38px
+      top: 0px
+      left: 0
+      right: 0
+      bottom: 0
 </style>
