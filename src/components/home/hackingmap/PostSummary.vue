@@ -84,17 +84,27 @@ export default {
       type: Object,
       default: null
     },
-    starCount: {
-      type: Number
-    },
-    heartCount: {
-      type: Number
-    },
+    // Deprecated
+    // starCount: {
+    //   type: Number
+    // },
+    // Deprecated
+    // heartCount: {
+    //   type: Number
+    // },
     tags: {
       type: Array
     }
   },
   computed: {
+    starCount () {
+      return (this.stars ? Object.keys(this.stars).length : '0')
+    },
+
+    heartCount () {
+      return (this.hearts ? Object.keys(this.hearts).length : '0')
+    },
+
     isStaredByMe () {
       // 檢查登入
       if (this.currentUser) {
@@ -151,54 +161,40 @@ export default {
     },
 
     togglePostStarForCurrentUser (postRef, uid) {
-      postRef.transaction(function (post) {
-        if (post) {
-          if (post.stars && post.stars[uid]) {
-            post.starCount--
-            post.stars[uid] = null
-          } else {
-            post.starCount++
-            if (!post.stars) {
-              post.stars = {}
-            }
-            post.stars[uid] = true
-          }
+      postRef.child('stars').child(uid).transaction(function (val) {
+        if (val) {
+          val = null
+        } else {
+          val = true
         }
-        return post
+        return val
       }, function (error, committed, snapshot) {
         if (error) {
           console.log('[Card.vue] Transaction failed abnormally!', error)
         } else if (!committed) {
           console.log('[Card.vue] Aborted the transaction.')
         } else {
-          console.log('[Card.vue] Star toggled for' + snapshot.val())
+          console.log('[Card.vue] Star toggled for ' + snapshot.val())
         }
         // console.log(snapshot.val())  // stars更新以後的post
       })
     },
 
     togglePostHeartForCurrentUser (postRef, uid) {
-      postRef.transaction(function (post) {
-        if (post) {
-          if (post.hearts && post.hearts[uid]) {
-            post.heartCount--
-            post.hearts[uid] = null
-          } else {
-            post.heartCount++
-            if (!post.hearts) {
-              post.hearts = {}
-            }
-            post.hearts[uid] = true
-          }
+      postRef.child('hearts').child(uid).transaction(function (val) {
+        if (val) {
+          val = null
+        } else {
+          val = true
         }
-        return post
+        return val
       }, function (error, committed, snapshot) {
         if (error) {
           console.log('[Card.vue] Heart transaction failed abnormally!', error)
         } else if (!committed) {
           console.log('[Card.vue] Aborted the heart transaction.')
         } else {
-          console.log('[Card.vue] Heart toggled for' + snapshot.val())
+          console.log('[Card.vue] Heart toggled for ' + snapshot.val())
         }
         // console.log(snapshot.val())  // hearts更新以後的post
       })

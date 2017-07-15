@@ -1,0 +1,74 @@
+{
+  "rules": {
+    "public": {
+      ".read": true,
+      ".write": false
+    },
+    "sponsor": {
+      ".read": true,
+      ".write": false
+    },
+    "posts": {
+      ".read": true,
+      "$post_id": {
+      ".write": "!data.exists() || !newData.exists()",
+        "hearts": {
+          "$uid": {
+           	".write": "$uid === auth.uid"
+          }
+        },
+        "stars": {
+          "$uid": {
+            ".write": "$uid === auth.uid"
+          }
+        },
+				// Deprecated (dummy value)
+        "starCount": {
+          ".write": true
+        },
+				// Deprecated (dummy value)
+        "heartCount": {
+          ".write": true
+        },
+        "$other": {
+          ".write": "data.parent().child('uid').val() === auth.uid"
+        }
+      }
+    },
+    "user-posts": {
+      "$uid": {
+        ".read": true,
+        "$post_id": {
+        ".write": "!data.exists() || !newData.exists()",
+          "hearts": {
+            "$uid": {
+              ".write": "$uid === auth.uid"
+            }
+          },
+          "stars": {
+            "$uid": {
+              ".write": "$uid === auth.uid"
+            }
+          },
+          // Deprecated dummy value
+          "starCount": {
+            ".write": true
+          },
+          // Deprecated dummy value
+          "heartCount": {
+            ".write": true
+          },
+          "$other": {
+            ".write": "data.parent().child('uid').val() === auth.uid"
+          }
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    }
+  }
+}
