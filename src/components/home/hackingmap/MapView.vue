@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 import appconfig from '../../../appconfig'
 // import firebase from 'firebase'
 import SvgPanZoom from 'svg-pan-zoom'
@@ -118,6 +120,10 @@ export default {
   computed: {
     focus () {
       return this.$route.query.focus
+    },
+    tablePosts () {
+      return _.groupBy(this.filteredPosts, (gb) => gb.table
+      )
     }
   },
   updated () {
