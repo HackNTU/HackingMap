@@ -22,16 +22,16 @@
         <!-- 地圖/列表切換 -->
         <el-col :lg="8" :md="8" :sm="8" :xs="8">
           <!-- 電腦、平板：分頁標籤 -->
-          <el-radio-group @change="goTo($event)" class="regular-toolbar" v-model="foo">
-            <el-radio-button label="專案"></el-radio-button>
-            <el-radio-button label="HackingMap"></el-radio-button>
-            <el-radio-button label="場地"></el-radio-button>
+          <el-radio-group class="regular-toolbar" v-model="path">
+            <el-radio-button label="/projects">列表</el-radio-button>
+            <el-radio-button label="/map">地圖</el-radio-button>
+            <!-- <el-radio-button label="場地"></el-radio-button> -->
           </el-radio-group>
           <!-- 手機：下拉選單 -->
-          <el-select @change="goTo($event)" class="phone-toolbar" v-model="bar">
-            <el-option key="projects" label="專案" value="專案"></el-option>
-            <el-option key="map" label="HackingMap" value="HackingMap"></el-option>
-            <el-option key="full_map" label="場地" value="場地"></el-option>
+          <el-select class="phone-toolbar" v-model="path">
+            <el-option key="projects" label="列表" value="/projects"></el-option>
+            <el-option key="map" label="地圖" value="/map"></el-option>
+            <!-- <el-option key="full_map" label="場地" value="場地"></el-option> -->
           </el-select>
         </el-col>
 
@@ -84,8 +84,7 @@ export default {
       query: '',
       scope: 'all',
       sortKey: 'timestamp',
-      foo: 'HackingMap',
-      bar: 'HackingMap'
+      path: this.$route.path
     }
   },
   firebase: {
@@ -146,8 +145,11 @@ export default {
     }
   },
   watch: {
+    path (value) {
+      this.$router.push(value)
+    },
     $route: function (to, from) {
-      // console.log('to:', to, 'from:', from)
+      console.log('to:', to, 'from:', from)
       const query = to.query.query
       if (query) {
         console.log(`[watch $route] set query: query`)
@@ -170,19 +172,6 @@ export default {
     })
   },
   methods: {
-    goTo (tabName) {
-      switch (tabName) {
-        case '專案':
-          this.$router.push('/projects')
-          break
-        case 'HackingMap':
-          this.$router.push('/map')
-          break
-        case '場地':
-          this.$router.push('/full_map')
-          break
-      }
-    }
   },
   components: {
     myposts: MyPosts
