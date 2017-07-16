@@ -7,11 +7,13 @@
 
         <!-- 搜尋框 -->
         <el-col :lg="8" :md="8" :sm="8" :xs="12">
-          <el-input placeholder="篩選" v-model.lazy.trim="query" :disabled="$route.path === '/full_map'">
+          <el-input placeholder="搜尋" v-model.lazy.trim="query" :disabled="$route.path === '/full_map'">
             <el-select v-model="scope" slot="prepend" placeholder="請選擇" size="large">
-              <el-option label="Tag" value="tags"></el-option>
-              <el-option label="標題" value="name"></el-option>
+              <el-option label="全部" value="all"></el-option>
+              <el-option label="專案名" value="name"></el-option>
               <el-option label="簡介" value="desc"></el-option>
+              <el-option label="Tag" value="tags"></el-option>
+              <el-option label="參與者" value="teammates"></el-option>
             </el-select>
             <!-- <el-button slot="append" icon="search"></el-button> -->
           </el-input>
@@ -73,7 +75,6 @@
 <script>
 import { FirebaseApp } from '@/service/firebase.js'
 import MyPosts from '@/components/home/hackingmap/MyPosts.vue'
-
 export default {
   name: 'hackingmap',
   data () {
@@ -81,7 +82,7 @@ export default {
       user: null,
       showDialog: false,
       query: '',
-      scope: 'tags',
+      scope: 'all',
       sortKey: 'timestamp',
       foo: 'HackingMap',
       bar: 'HackingMap'
@@ -113,26 +114,31 @@ export default {
         case 'tags':
           return this.posts.filter(post => {
             if (post.tags) {
-              let wasFound = false
-              post.tags.forEach((tag) => {
-                if (tag.toLowerCase().includes(this.query.toLowerCase())) {
-                  wasFound = true
-                }
-              })
-              return wasFound
+              return post.tags.reduce((a, b) => '$$' + a + b, '') // concate all tags
+                .toLowerCase().includes(this.query.toLowerCase())
+            }
+          })
+        case 'teammates':
+          return this.posts.filter(post => {
+            if (post.teammates) {
+              return post.teammates.reduce((a, b) => '$$' + a + b, post.host) // concate host and all teammates
+                .toLowerCase().includes(this.query.toLowerCase())
             }
           })
         case 'name':
           return this.posts.filter(post => {
-            if (post.name) {
-              return post.name.toLowerCase().includes(this.query.toLowerCase())
-            }
+            return post.name.toLowerCase().includes(this.query.toLowerCase())
           })
         case 'desc':
           return this.posts.filter(post => {
-            if (post.desc) {
-              return post.desc.toLowerCase().includes(this.query.toLowerCase())
-            }
+            return (post.desc || '').toLowerCase().includes(this.query.toLowerCase())
+          })
+        case 'all':
+          return this.posts.filter(post => {
+            let everything = post.name + '$$' + post.desc
+            everything += (post.tags || []).reduce((a, b) => a + b + '$$', '')
+            everything += (post.teammates || []).reduce((a, b) => a + b + '$$', post.host)
+            return everything.toLowerCase().includes(this.query.toLowerCase())
           })
         default:
           return this.posts
@@ -149,6 +155,9 @@ export default {
       } else {
         // console.log('[watch $route] no query')
       }
+    },
+    scope (value) {
+      this.query = (value === 'teammates' ? '#' : '')
     }
   },
   created () {
@@ -223,6 +232,6 @@ export default {
 </style>
 <style>
 .el-select .el-input {
-  width: 80px;
+  width: 90px;
 }
 </style>
