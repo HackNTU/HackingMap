@@ -2,9 +2,9 @@
   <div id="app">
 
     <banner></banner>
-    <router-view class="main"></router-view>
+    <router-view class="main" @loaded="loaded"></router-view>
     <sponsor></sponsor>
-    <loading v-if="loading"></loading>
+    <loading v-if="loading" :ready="ready"></loading>
 
   </div>
 </template>
@@ -21,13 +21,19 @@ export default {
   // store,
   data () {
     return {
-      loading: true
+      loading: true,
+      ready: false
     }
   },
-  mounted () {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+  mounted () {},
+  methods: {
+    loaded () {
+      console.log('loaded')
+      this.ready = true
+      setTimeout(() => {
+        this.loading = false
+      }, 1500)
+    }
   },
   components: {
     banner: Banner,

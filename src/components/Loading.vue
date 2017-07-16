@@ -1,5 +1,5 @@
 <template>
-  <div id="loading">
+  <div id="loading" :class="{ready}">
     <div id="cover" class="flipLoading">
       <svg id="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 160 160">
       <defs>
@@ -18,7 +18,7 @@
       <g class="cls-1">
         <rect class="cls-7" width="160" height="160"/>
         <g id="Group_349" data-name="Group 349" transform="translate(-163 -414)">
-          <g class="cls-8" transform="matrix(1, 0, 0, 1, 163, 414)">
+          <g v-show="!ready" class="cls-8" transform="matrix(1, 0, 0, 1, 163, 414)">
             <g class="cls-2" transform="translate(10 10)">
               <rect class="cls-5" width="140" height="140" rx="3"/>
               <rect class="cls-6" x="1.5" y="1.5" width="137" height="137" rx="1.5"/>
@@ -36,8 +36,8 @@
 
 export default {
   name: 'loading',
-  mounted () {
-
+  props: {
+    ready: Boolean
   },
   data () {
     return {
@@ -54,11 +54,15 @@ export default {
   height: 100vh;
   position: absolute;
   top: 0px;
-  z-index: 100;
-  background: white;
-  transition: background 0.2s ease-out;
-  &.loaded {
-    background: rgba(0, 0, 0, 0)
+  z-index: 12000;
+  background-color: white;
+  &.ready {
+    transition: background-color 1.2s ease-in;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  &.ready * {
+    transition: fill-opacity 0.8s ease-in;
+    fill-opacity: 0;
   }
 }
 

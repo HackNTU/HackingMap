@@ -87,11 +87,15 @@ export default {
       path: this.$route.path
     }
   },
-  firebase: {
-    posts: {
-      source: FirebaseApp.database().ref('/posts/'),
-      readyCallback: () => {
-        console.log('[HackingMap] Fetched `posts`!')
+  firebase () {
+    const that = this
+    return {
+      posts: {
+        source: FirebaseApp.database().ref('/posts/'),
+        readyCallback: () => {
+          console.log('[HackingMap] Fetched `posts`!')
+          that.$emit('loaded')
+        }
       }
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
 
-    <hackingmap></hackingmap>
+    <hackingmap @loaded="$emit('loaded')"></hackingmap>
 
     <span class="right">
       <announcement></announcement>
