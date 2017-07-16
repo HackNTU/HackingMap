@@ -20,7 +20,7 @@
     <!-- <h5>{{ subtitle }}</h5> -->
     <p class="description">{{ description }}</p>
 
-    <span class="tags">
+    <div class="tags" style="width:100%;">
       <el-button
         v-for="tag in tags"
         :key="tags.indexOf(tag)"
@@ -29,7 +29,7 @@
         @click.stop="$emit('tagClicked', tag)">
         {{ tag }}
       </el-button>
-    </span>
+    </div>
 
   </div>
 </template>
@@ -231,9 +231,23 @@ export default {
 
 #location
   display: inline-block
+  vertical-align: baseline
 
 #title
   display: inline-block
+  width: 59%
+  white-space: nowrap
+  line-height: 1.2em
+  text-overflow: ellipsis
+  overflow: hidden
   font-size: 16px
+
+.tags
+  position: relative
+  white-space: nowrap
+  overflow-x: scroll
+  padding-bottom: 30px // hide scrollbar
+  .button-new-tag
+    display: inline-block
 
 </style>
