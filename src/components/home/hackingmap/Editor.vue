@@ -41,15 +41,20 @@
               :close-transition="false"
               @close="handleDeleteTag(tag)"
             >{{tag}}</el-tag>
-            <el-input class="input-new-tag"
-              v-if="inputVisible"
-              v-model.lazy="inputNewTag"
-              ref="saveTagInput"
-              size="mini"
-              v-show="!newPost.tags || newPost.tags.length < 3"
-              @keyup.enter.native="handleNewTagConfirm"
-              @blur="handleNewTagConfirm"></el-input
-            >
+            <template v-if="inputVisible">
+              <el-tooltip effect="dark" :value="tagListTooltip.length > 0" placement="right-start">
+                <div slot="content" v-html="tagListTooltip"></div>
+                <el-input class="input-new-tag"
+                  v-model.lazy="inputNewTag"
+                  ref="saveTagInput"
+                  size="mini"
+                  v-show="!newPost.tags || newPost.tags.length < 3"
+                  @keypress.enter.native="handleNewTagConfirm"
+                  @blur="handleNewTagConfirm"
+                >
+                </el-input>
+              </el-tooltip>  
+            </template>
             <el-button v-else
               class="button-new-tag"
               size="small"
@@ -77,7 +82,7 @@
           </el-form-item>
 
           <!-- 參與人 -->
-          <el-form-item label="參與人" prop="teammates">
+          <el-form-item label="專案成員" prop="teammates">
             <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
             >{{teammate}}</el-tag>
             <el-input class="input-new-tag"
@@ -86,7 +91,7 @@
               ref="saveTeammateInput"
               size="mini"
               v-show="!newPost.teammates || newPost.teammates.length < 20"
-              @keyup.enter.native="handleNewTeammateConfirm"
+              @keypress.enter.native="handleNewTeammateConfirm"
               @blur="handleNewTeammateConfirm"></el-input
             >
             <el-button v-else
@@ -225,13 +230,22 @@ export default {
       isLoading: true,
       isLoadingIframe: false,
       loadIframe: false,
-      loadingUpdate: false
+      loadingUpdate: false,
+      tagList: ['資訊安全', '公民參與', '開放資料', '機器學習', '社群', '社會服務', '物聯網', '資料分析', '消費者', '資料視覺化', '數位人文', '人工智慧', '虛擬實境', '教育', '金融']
     }
   },
   props: {
     postkey: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    tagListTooltip () {
+      return this.tagList
+      .filter((f) => f.indexOf(this.inputNewTag) > -1)
+      .toString()
+      .replace(/,/g, '<br/>')
     }
   },
   firebase: function () {
