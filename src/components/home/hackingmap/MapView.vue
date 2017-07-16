@@ -9,39 +9,42 @@
       </image>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
-      <template v-for="post in filteredPosts">
+      <template v-for="(post, index) in tablePosts">
         <!-- popper -->
         <el-tooltip
-          :value="getFocusStatus(post.table)"
+          :value="getFocusStatus(index)"
           placement="top"
           effect="light"
           popper-class="mypopper">
 
           <!-- 專案卡片 -->
           <div slot="content">
-            <postsummary
-            :title="post.name"
-            :subtitle="(post.author || '').split('@')[0]"
-            :description="post.desc + ' ('+post.table+'桌)'"
-            :postKey="post['.key']"
-            :authorId="post.uid"
-            :starCount="post.starCount"
-            :heartCount="post.heartCount"
-            :stars="post.stars"
-            :hearts="post.hearts"
-            :tags="post.tags"
-            ></postsummary>
+            <template v-for="postummary in post">
+              <postsummary
+                :title="postummary.name"
+                :subtitle="(postummary.author || '').split('@')[0]"
+                :description="postummary.desc + ' ('+postummary.table+'桌)'"
+                :postKey="postummary['.key']"
+                :authorId="postummary.uid"
+                :starCount="postummary.starCount"
+                :heartCount="postummary.heartCount"
+                :stars="postummary.stars"
+                :hearts="postummary.hearts"
+                :tags="postummary.tags"
+              ></postsummary>
+            </template>
           </div>
 
           <!-- 桌子圖點 -->
           <circle ref="circle"
-            :v-popover="post.table"
-            @click="onClick(post.table)"
-            :cx="(post.table ? getX(post.table) : null)"
-            :cy="(post.table ? getY(post.table) : null)"
+            :v-popover="index"
+            @click="onClick(index)"
+            :cx="(index ? getX(index) : null)"
+            :cy="(index ? getY(index) : null)"
             :class="getColor(post.status)"
             r="3">
           </circle>
+          <!-- TODO: Check index -->
         </el-tooltip>
       </template>
     </g>
