@@ -12,11 +12,11 @@
       <template v-for="(post, index) in tablePosts">
         <!-- popper -->
         <el-tooltip
-          :value="getFocusStatus(index)"
+          :value="index === focus"
           placement="top"
           effect="light"
-          popper-class="mypopper">
-
+          popper-class="mypopper"
+        >
           <!-- 專案卡片 -->
           <div slot="content">
             <template v-for="postummary in post">
@@ -113,6 +113,21 @@ export default {
       this.$nextTick(() => {
         this.setSvgPanZoom()
       })
+    },
+    $route: function (to, from) { // no use
+      // console.log('to:', to, 'from:', from)
+      const focus = to.query.focus
+      if (focus) {
+        if (this.tablePosts[focus]) {
+          console.log(`[watch $route] set table[${focus}] focus`)
+          this.tablePosts[focus].focus = true
+          console.log(this.tablePosts[focus])
+        } else {
+          console.log('[watch $route] no table')
+        }
+      } else {
+        console.log('[watch $route] no focus')
+      }
     }
   },
   mounted () {
@@ -152,13 +167,6 @@ export default {
     getY (table) {
       let y = this.map.table_coor[Number(table)].y
       return y || 10
-    },
-    getFocusStatus (table) {
-      let isFocus = (Number(table) === Number(this.focus)) || (Number(table) === Number(this.clicked))
-      if (isFocus) {
-        console.log('[MapView] getFocusStatus(' + table + ') -> TRUE')
-      }
-      return isFocus
     },
     onClick (tableNo) {
       alert(tableNo)
