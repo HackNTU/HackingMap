@@ -1,6 +1,12 @@
 <template>
   <section class="mapview">
 
+    <div id="grey-cover">
+      <div id="info-card">
+        <h1>尚未開放，敬請期待</h1>
+      </div>
+    </div>
+
     <!-- SVG容器 -->
     <svg ref="svg" id="svg-map" class=".svg-pan-zoom_viewport" :viewBox="'0 0 '+map.map_width+' '+map.map_height">
     <g class="svg-pan-zoom_viewport">
@@ -192,6 +198,26 @@ export default {
 //   border: 10px green solid !important
 //   background-color: red !important
 //   color: yellow !important
+
+#grey-cover
+  background-color: rgba(5, 5, 5, 0.5)
+  position: absolute
+  z-index: 999
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  display: flex
+  justify-content: center
+  align-items: center
+  #info-card
+    background-color: #ffffff
+    padding: 16px
+    border-radius: 5px
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)
+    transition: 0.3s
+    &:hover
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2)
 
 .mapview
   position: relative
