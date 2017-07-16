@@ -246,7 +246,9 @@ export default {
   position: relative
   white-space: nowrap
   overflow-x: scroll
-  padding-bottom: 30px // hide scrollbar
+  // padding-bottom: 1000px // hide scrollbar // invalid in Safari
+  // margin-bottom: -1000px // hide scrollbar
+  // overflow-y: hidden     // hide scrollbar // invalid in FireFox
   .button-new-tag
     display: inline-block
 
