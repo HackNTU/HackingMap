@@ -48,7 +48,7 @@
       <router-view
         id="router-view"
         v-bind:filteredPosts="filteredSortedPosts"
-        @searchTag="scope='tags';query=$event">
+        @searchTag="scope='tags'; query=$event">
       </router-view>
     </keep-alive>
 
@@ -136,6 +136,18 @@ export default {
           })
         default:
           return this.posts
+      }
+    }
+  },
+  watch: {
+    $route: function (to, from) {
+      // console.log('to:', to, 'from:', from)
+      const query = to.query.query
+      if (query) {
+        console.log(`[watch $route] set query: query`)
+        this.query = query
+      } else {
+        // console.log('[watch $route] no query')
       }
     }
   },
