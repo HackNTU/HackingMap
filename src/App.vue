@@ -4,6 +4,7 @@
     <banner></banner>
     <router-view class="main"></router-view>
     <sponsor></sponsor>
+    <loading v-if="loading"></loading>
 
   </div>
 </template>
@@ -13,13 +14,26 @@
 import Banner from '@/components/banner/Banner.vue'
 import Sponsor from '@/components/Sponsor.vue'
 import Home from '@/components/home/Home.vue'
+import Loading from '@/components/Loading.vue'
+
 export default {
   name: 'app',
   // store,
+  data () {
+    return {
+      loading: true
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.loading = false
+    }, 1000)
+  },
   components: {
     banner: Banner,
     sponsor: Sponsor,
-    home: Home
+    home: Home,
+    Loading
   }
 }
 </script>
