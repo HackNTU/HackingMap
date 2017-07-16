@@ -43,9 +43,10 @@
         </el-col>
       </el-row>
     </div>
-    
+
     <keep-alive>
       <router-view
+        id="router-view"
         v-bind:filteredPosts="filteredSortedPosts"
         @searchTag="scope='tags';query=$event">
       </router-view>
@@ -176,6 +177,8 @@ export default {
   position: relative
   height: 100%
   width: 100%
+  display: flex
+  flex-direction: column
 
   #editBtn
     position: absolute
@@ -185,8 +188,12 @@ export default {
   #toolbar
     background-color: $toolbar_bg_color
     padding: 0.5em
-    position: relative
     z-index: 100
+    flex: 0
+
+  #router-view
+    flex: 100
+    overflow-y: scroll
 
   // Laptop & horizontal iPad
   @media screen and (min-width: 730px)

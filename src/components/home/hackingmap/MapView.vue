@@ -195,7 +195,7 @@ export default {
 
 .mapview
   position: relative
-  top: -52px
+  // overflow: hidden
   width: 100%
   height: 100%
   #svg-map

@@ -85,14 +85,8 @@ export default {
 
 .listview
   background-color: $list_bg_color
-  overflow-y: scroll
-  position: relative
-  top: -52px
-  width: 100%
-  height: 100%
 
 .flex-container
-  padding-top: 48px
   display: flex
   flex-flow: row wrap
   justify-content: center
