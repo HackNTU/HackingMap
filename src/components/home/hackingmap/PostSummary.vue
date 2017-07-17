@@ -5,15 +5,19 @@
     <icon id="location" name="map-o" @click.native.stop="goMap(table)" v-if="table" class="fa-icon-pointer"></icon>
 
     <!-- star icon -->
-    <span style="float:right">
-      <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')" class="fa-icon-pointer"></icon>
-      {{ starCount }}
+    <span class="reaction">
+      <span class="raIcon">
+        <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')" class="icon fa-icon-pointer"></icon>
+      </span>
+      <span class="raCount">{{ starCount }}</span>
     </span>
 
     <!-- heart icon -->
-    <span style="float:right">
-      <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')" class="fa-icon-pointer"></icon>
-      {{ heartCount }}
+    <span class="reaction">
+      <span class="raIcon">
+        <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')" class="fa-icon-pointer"></icon>
+      </span>
+      <span class="raCount">{{ heartCount }}</span>
     </span>
 
     <h3 id="title">{{ title }}</h3>
@@ -215,11 +219,11 @@ export default {
 
   p
     // margin: 0.5rem 0 0.5rem 0
-    margin: 3px 0 4px 0
 
   // multiline ellipsis, only supports webkit.
   .description
     // border: 1px solid yellow
+    margin: 3px 0 4px 0
     height: 50px
     font-size: 12px
     overflow : hidden
@@ -228,19 +232,48 @@ export default {
     -webkit-line-clamp: 3
     -webkit-box-orient: vertical
 
-
 #location
   display: inline-block
   vertical-align: baseline
+  width: 15px
+  float: left
+  margin-right: 2px
 
 #title
   display: inline-block
-  width: 59%
+  width: 116px
   white-space: nowrap
   line-height: 1.2em
   text-overflow: ellipsis
   overflow: hidden
-  font-size: 16px
+  font-size: 14px
+
+.reaction
+  float: right
+  width: 40px
+  height: 20px
+  margin-left: 0px !important
+  margin-right: 2px !important
+  > *
+    position: relative
+    display: inline-block
+    float: left
+    vertical-align: middle
+  .raIcon
+    margin: 0px
+    width: 20px
+    height: 16px
+    .fa-icon
+      height: 16px
+  .raCount
+    font-size: 12px
+    width: 16px
+    height: 16px
+    line-height: 16px
+    text-align: center
+    vertical-align: bottom
+    margin-left: 1px
+    margin-right: 0px
 
 .tags
   position: relative

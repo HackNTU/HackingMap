@@ -92,7 +92,7 @@ export default {
   justify-content: center
 
 .box-card
-  width: 260px // 13.5rem
+  width: 236px // 13.5rem
   height: 120px // 12.5em
   text-align: left
   margin: 0.5em
