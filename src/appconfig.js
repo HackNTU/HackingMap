@@ -20,27 +20,9 @@ const appconfig = {
     table_coor: null // added below
   }
 }
-/* eslint-disable */
-//               1    2    3    4    5    6    7    8
-const x_coor = [295, 341, 384, 430, 523, 569, 614, 660]
-const y_coor = [
-            293,  293  + 16,  // 1
-            356,  356  + 16,  // 2
-            421,  421  + 16,  // 3
-            484,  484  + 16,  // 4
-            549,  549  + 16,  // 5
-            613,  613  + 16,  // 6
-            677,  677  + 16,  // 7
-            740,  740  + 16,  // 8
-            804,  804  + 16,  // 9
-            868,  868  + 16,  // 10
-            932,  932  + 16,  // 11
-            996,  996  + 16,  // 12
-            1060, 1060 + 16,  // 13
-            1124, 1124 + 16,  // 14
-            1188, 1188 + 16   // 15
-          ]
-/* eslint-enable */
+
+const coorX = [295, 341, 384, 430, 523, 569, 614, 660]
+const coorY = [301, 364, 429, 492, 557, 621, 685, 748, 812, 876, 940, 1004, 1068, 1132, 1196]
 
 // Generate table coordinate
 function generateTableCoor (xs, ys) {
@@ -60,6 +42,6 @@ function generateTableCoor (xs, ys) {
   }
   return tableCoor
 }
-appconfig.map.table_coor = generateTableCoor(x_coor, y_coor)
+appconfig.map.table_coor = generateTableCoor(coorX, coorY)
 
 export default appconfig
