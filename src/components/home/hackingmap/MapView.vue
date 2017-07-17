@@ -9,8 +9,41 @@
       </image>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
-      <template v-for="(post, index) in tablePosts">
+      <template v-for="(post, index) in tablePosts[0]">
+          <!-- popper -->
+        <el-tooltip
+          placement="top"
+          effect="light"
+          popper-class="mypopper"
+        >
+          <!-- 專案卡片 -->
+          <div slot="content">
+            <postsummary
+              :title="post.name"
+              :subtitle="(post.author || '').split('@')[0]"
+              :description="post.desc + ' (' + post.table + '桌)'"
+              :authorId="post.uid"
+              :starCount="post.starCount"
+              :heartCount="post.heartCount"
+              :stars="post.stars"
+              :hearts="post.hearts"
+              :tags="post.tags"
+            ></postsummary>
+          </div>
 
+          <!-- 無座位專案圖點 -->
+          <circle
+            @click="onClick(0)"
+            :cx="(getX(0) + getNoSeatXY('dx', index))"
+            :cy="(getY(0) + getNoSeatXY('dy', index))"
+            class="tableCircle noSeat"
+            :class="{blinkTable: post.status == blinkStatus}"
+          >
+          </circle>
+        </el-tooltip>
+      </template>
+
+      <template v-for="(post, index) in tablePosts" v-if="index > 0">
         <text
           :dx="(index ? getX(index) : null)"
           :dy="(index ? getY(index) : null) + 3"
@@ -34,7 +67,7 @@
               <postsummary
                 :title="postummary.name"
                 :subtitle="(postummary.author || '').split('@')[0]"
-                :description="postummary.desc + ' ('+postummary.table+'桌)'"
+                :description="postummary.desc + ' (' + postummary.table + '桌)'"
                 :postKey="postummary['.key']"
                 :authorId="postummary.uid"
                 :starCount="postummary.starCount"
@@ -52,16 +85,11 @@
             @click="onClick(index)"
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
-            r="6"
-            fill-opacity="0.5"
-            stroke-opacity="0.8"
             class="tableCircle"
             :class="{blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1}"
           >
-          <!-- TODO: Check index -->
           </circle>
         </el-tooltip>
-
 
       </template>
     </g>
@@ -183,6 +211,18 @@ export default {
       let y = this.map.table_coor[Number(table)].y
       return y || 10
     },
+    getNoSeatXY (xy, index) {
+      const gutter = 30
+      const cols = 3
+      switch (xy) {
+        case 'dx':
+          return (index % cols) * gutter
+        case 'dy':
+          return Math.floor(index / cols) * gutter
+        default:
+          return 0
+      }
+    },
     onClick (tableNo) {
       alert('桌號 ' + tableNo)
       this.clicked = tableNo
@@ -287,7 +327,9 @@ export default {
       margin-top: 0.5rem
 
 .tableCircle
+  r: 6
   fill: white
+  fill-opacity: 0.5
   stroke-linecap: round 
   stroke-width: 1
   stroke-opacity: 0.8
@@ -295,7 +337,10 @@ export default {
   &.blinkTable
     r: 15
     stroke-dasharray: 5,2
-
+  &.noSeat
+    stroke: #663399
+    stroke-width: 1.5
+    r: 8
 
 
 hr
