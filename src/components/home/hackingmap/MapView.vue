@@ -30,7 +30,7 @@
         >
           <!-- 專案卡片 -->
           <div slot="content">
-            <template v-for="postummary in post">
+            <template v-for="(postummary, index) in post">
               <postsummary
                 :title="postummary.name"
                 :subtitle="(postummary.author || '').split('@')[0]"
@@ -43,6 +43,7 @@
                 :hearts="postummary.hearts"
                 :tags="postummary.tags"
               ></postsummary>
+              <hr v-if="(index + 1) != post.length ">
             </template>
           </div>
 
@@ -148,7 +149,7 @@ export default {
   mounted () {
     // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
     console.log('[MapView] mounted')
-    // this.setSvgPanZoom()
+    this.setSvgPanZoom()
   },
   computed: {
     focus () {
@@ -179,7 +180,7 @@ export default {
       return y || 10
     },
     onClick (tableNo) {
-      alert(tableNo)
+      alert('桌號 ' + tableNo)
       this.clicked = tableNo
     },
     getColor (status) {
@@ -255,5 +256,14 @@ export default {
     li
       list-style-type: none
       margin-top: 0.5rem
+
+
+hr
+  width: 97%
+  align: center
+  border: 0
+  height: 1px 
+  background-color: #d4d4d4
+  color: #d4d4d4
 
 </style>
