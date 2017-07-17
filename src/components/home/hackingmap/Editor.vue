@@ -42,7 +42,12 @@
               @close="handleDeleteTag(tag)"
             >{{tag}}</el-tag>
             <template v-if="inputVisible">
-              <el-tooltip effect="dark" :value="tagListTooltip.length > 0" placement="right-start">
+              <el-tooltip 
+                effect="dark" 
+                :value="tagListTooltip.length > 0" 
+                placement="right-start" 
+                :visible-arrow="true"
+              >
                 <div slot="content" v-html="tagListTooltip"></div>
                 <el-input class="input-new-tag"
                   v-model.lazy="inputNewTag"
