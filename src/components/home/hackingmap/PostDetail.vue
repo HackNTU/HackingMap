@@ -18,49 +18,63 @@
         <p>{{ msg }}</p>
       </iframe>
     </div>
-    <!-- starCount:0
-    .key:"-KorA6VxhpXtynXN1A9D"
-    status:"完工"
-    author:"lawrencechou1024@gmail.com"
-    table:"87"
-    desc:"HackingMap 是黑客松現場的專案地圖，即時呈現各專案的進度與成果，促進參加者間的交流互動。"
-    award:"無"
-    teammate:Object
-    heartCount:0
-    hearts:Object
-    host:"#999"
-    iframe:"http://bit.ly/hackingmap_get_started"
-    name:"HackingMap"
-    tags:Array[2]
-    teammates:Array[3]
-    timestamp:"2017-07-16T15:20:29.112Z" -->
+
     <!-- Right side: info -->
-
-
     <div id="info">
 
-      <h1>{{ post.name }}</h1>
-      <!-- map icon -->
-      <icon id="location" name="map-o" @click.native.stop="goMap(post.table)" v-if="post.table" class="fa-icon-pointer"></icon>
-      <p>{{ post.desc }} <small>@第{{ post.table }}桌</small></p>
-      <ul>
-        <li class="link-ellipsis">
-          <icon name="link"></icon>
-          共編/作品:<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
-        </li>
-        <li class="link-ellipsis">
-          <icon name="github"></icon>
-          GitHub:<a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
-          <span v-else>N/A</span>
-        </li>
-        <li>最近更新： <time> {{ new Date(post.timestamp).toLocaleString() }}</time></li>
-      </ul>
+      <div id="header">
+        <!-- 專案名 -->
+        <h1>{{ post.name }}</h1>
+        <!-- 愛心 -->
+        <h3>
+          <icon @click.native.stop="toggleHeart" :name="(isLovedByMe ? 'heart' : 'heart-o')" class="fa-icon-pointer"></icon>
+          <span>{{ heartCount }}</span>
+        </h3>
+        <!-- 星星 -->
+        <h3>
+          <icon @click.native.stop="toggleStar" :name="(isStaredByMe ? 'star' : 'star-o')" class="fa-icon-pointer"></icon>
+          <span>{{ starCount }}</span>
+        </h3>
+        <!-- 地圖 -->
+        <h3>
+          <icon id="location" name="map-o" @click.native.stop="goMap(post.table)"></icon>
+          <span>{{ post.table ? post.table + '桌' : '未選桌號' }}</span>
+        </h3>
+      </div>
+
+      <div id="content">
+
+        <!-- 專案簡介、標籤 -->
+        <div id="desc-block">
+          <el-tag v-for="tag in post.tags" type="gray" color="white" :key="tag">{{ tag }}</el-tag>
+          <p>{{ post.desc }}</p>
+        </div>
+
+        <span id="gutter"></span>
+
+        <!-- 列表：共編、GitHub、更新時間... -->
+        <ul id="ul-block" class="link-ellipsis">
+          <li>
+            <icon name="link"></icon>
+            共編/作品:<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
+          </li>
+          <li>
+            <icon name="github"></icon>
+            GitHub:<a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
+            <span v-else>N/A</span>
+          </li>
+          <li>最近更新： <time> {{ new Date(post.timestamp).toLocaleString() }}</time></li>
+          <li v-if="post.award !== '無'">參加企業獎：{{ post.award }}</li>
+        </ul>
+
+      </div>
     </div>
 
   </section>
 </template>
 
 <script>
+import firebase from 'firebase'
 export default {
   name: 'postdetail',
   data () {
@@ -73,6 +87,9 @@ export default {
     }
   },
   computed: {
+    postKey () {
+      return this.post['.key'] || null
+    },
     src () {
       return (this.loadIframe ? this.post.iframe || this.default_iframe : null)
     },
@@ -82,6 +99,34 @@ export default {
       } else {
         return (this.post.iframe ? 'load-fail-bg' : 'no-iframe-bg')
       }
+    },
+    starCount () {
+      return (this.post.stars ? Object.keys(this.post.stars).length : '0')
+    },
+    heartCount () {
+      return (this.post.hearts ? Object.keys(this.post.hearts).length : '0')
+    },
+    isStaredByMe () {
+      // 檢查登入
+      if (firebase.auth().currentUser) {
+        let uid = firebase.auth().currentUser.uid
+        // 排除stars為null的狀況
+        if (this.post.stars) {
+          return Object.keys(this.post.stars).includes(uid)
+        }
+      }
+      return false
+    },
+    isLovedByMe () {
+      // 檢查登入
+      if (firebase.auth().currentUser) {
+        let uid = firebase.auth().currentUser.uid
+        // 排除stars為null的狀況
+        if (this.post.hearts) {
+          return Object.keys(this.post.hearts).includes(uid)
+        }
+      }
+      return false
     }
   },
   watch: {
@@ -99,6 +144,72 @@ export default {
     goMap (tableNo) {
       this.$emit('closeDialog')
       this.$router.push('/map?focus=' + tableNo)
+    },
+
+    toggleStar () {
+      // 檢查登入
+      if (!firebase.auth().currentUser) {
+        alert('Please login first') // TODO: 導向登入視窗
+        return
+      }
+      let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
+      let userPostRef = firebase.database().ref('/user-posts/' + this.authorId + '/' + this.postKey)
+      let uid = firebase.auth().currentUser.uid
+      this.togglePostStarForCurrentUser(globalPostRef, uid)
+      this.togglePostStarForCurrentUser(userPostRef, uid)
+    },
+
+    toggleHeart () {
+      // 檢查登入
+      if (!firebase.auth().currentUser) {
+        alert('Please login first') // TODO: 導向登入視窗
+        return
+      }
+      let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
+      let userPostRef = firebase.database().ref('/user-posts/' + this.authorId + '/' + this.postKey)
+      let uid = firebase.auth().currentUser.uid
+      this.togglePostHeartForCurrentUser(globalPostRef, uid)
+      this.togglePostHeartForCurrentUser(userPostRef, uid)
+    },
+
+    togglePostStarForCurrentUser (postRef, uid) {
+      postRef.child('stars').child(uid).transaction(function (val) {
+        if (val) {
+          val = null
+        } else {
+          val = true
+        }
+        return val
+      }, function (error, committed, snapshot) {
+        if (error) {
+          console.log('[Card.vue] Transaction failed abnormally!', error)
+        } else if (!committed) {
+          console.log('[Card.vue] Aborted the transaction.')
+        } else {
+          console.log('[Card.vue] Star toggled for ' + snapshot.val())
+        }
+        // console.log(snapshot.val())  // stars更新以後的post
+      })
+    },
+
+    togglePostHeartForCurrentUser (postRef, uid) {
+      postRef.child('hearts').child(uid).transaction(function (val) {
+        if (val) {
+          val = null
+        } else {
+          val = true
+        }
+        return val
+      }, function (error, committed, snapshot) {
+        if (error) {
+          console.log('[Card.vue] Heart transaction failed abnormally!', error)
+        } else if (!committed) {
+          console.log('[Card.vue] Aborted the heart transaction.')
+        } else {
+          console.log('[Card.vue] Heart toggled for ' + snapshot.val())
+        }
+        // console.log(snapshot.val())  // hearts更新以後的post
+      })
     }
   },
   props: {
@@ -126,8 +237,21 @@ export default {
     min-width: 100px
     overflow-wrap: break-word !important
     word-wrap: break-word !important
-    & > ul
+    #ul-block
       list-style-type: none
+      padding: 0
+      // centering <ul> as block, align <li> to left inside
+      display: inline-block !important
+      margin-left: auto
+      margin-right: auto
+      text-align: left
+    #header
+      h1, h3
+        display: inline
+      padding-top: 10px
+      padding-bottom: 10px
+    .el-tag
+      margin: 2px
 
   .loading-bg
     background:url(../../../assets/loading.gif) center center no-repeat
@@ -181,7 +305,7 @@ export default {
     display: block
     white-space: nowrap
     text-overflow: ellipsis
-    width: 100%
+    max-width: 100%
     overflow: hidden
 
 // 直立iPad、手機改為上下排列
@@ -191,6 +315,17 @@ export default {
     #info
       flex: 0 0px
       order: 1
+      #content
+        display: flex
+        #desc-block
+          flex: 60
+          text-align: left
+          p
+            margin: 1px
+        #gutter
+          flex: 0 0 20px
+        #ul-block
+          flex: 40
     #wrap
       flex: 100 0px
       order: 2

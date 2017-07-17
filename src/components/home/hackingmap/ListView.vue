@@ -2,14 +2,14 @@
   <div class="listview">
 
     <transition-group name="el-fade-in" class="flex-container" tag="span">
-      <article v-for="p, index in filteredPosts" :key="index">
+      <article v-for="p, index in filteredPosts" :key="p['.key']">
 
         <!-- Card -->
         <el-card
           class="box-card"
           body-style="height:inherit;padding:0px"
-          @click.native="showDialog(index)">
-          <!-- {{index}} --><!-- TODO: https://cn.vuejs.org/v2/guide/transitions.html#列表的位移过渡  -->
+          @click.native="showDialog(p['.key'])">
+          <!-- {{key}} --><!-- TODO: https://cn.vuejs.org/v2/guide/transitions.html#列表的位移过渡  -->
           <postsummary
           :title="p.name"
           :subtitle="(p.author || '').split('@')[0] + ' @ ' + p.table + '桌'"
@@ -35,7 +35,7 @@
       custom-class="larger-dialog"
       size="large">
       <postdetail
-        :post="filteredPosts[dialogPostIndex]"
+        :post="getPost(dialogPostKey)"
         :isOpen="dialogVisible"
         @closeDialog="hideDialog()"
       ></postdetail>
@@ -54,7 +54,7 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      dialogPostIndex: null
+      dialogPostKey: null
     }
   },
   props: ['filteredPosts'],
@@ -68,12 +68,21 @@ export default {
     })
   },
   methods: {
-    showDialog (index) {
-      this.dialogPostIndex = index
+    showDialog (key) {
+      this.dialogPostKey = key
       this.dialogVisible = true
     },
     hideDialog () {
       this.dialogVisible = false
+    },
+    getPost (key) {
+      for (let index in this.filteredPosts) {
+        let obj = this.filteredPosts[index]
+        if (obj['.key'] === key) {
+          return obj
+        }
+      }
+      return null
     }
   },
   components: {
