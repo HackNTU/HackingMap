@@ -52,10 +52,11 @@
             @click="onClick(index)"
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
-            :class="getColor(post.status)"
             r="6"
             fill-opacity="0.5"
             stroke-opacity="0.8"
+            class="tableCircle"
+            :class="{blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1}"
           >
           <!-- TODO: Check index -->
           </circle>
@@ -68,7 +69,10 @@
 
     <!-- 圖例 -->
     <div class="legand">
-      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em">
+      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
+        @mouseenter="setBlinkStatus(true, symble)"
+        @mouseleave="setBlinkStatus(false, symble)"
+      >
         <circle :class="getColor(symble)" cx="1em" cy="0.7em" :r="7"/>
         <text x="2em" y="1em">{{ symble }}</text>
       </svg>
@@ -119,7 +123,8 @@ export default {
         maxZoom: 5,
         fit: true
       },
-      clicked: null
+      clicked: null,
+      blinkStatus: ''
     }
   },
   props: ['filteredPosts'],
@@ -156,8 +161,7 @@ export default {
       return this.$route.query.focus
     },
     tablePosts () {
-      return _.groupBy(this.filteredPosts, (gb) => gb.table
-      )
+      return _.groupBy(this.filteredPosts, (gb) => gb.table)
     }
   },
   updated () {
@@ -197,6 +201,31 @@ export default {
           return 'statue_giveup'
         default:
           return 'status_avalible'
+      }
+    },
+    getStatus (status) { // never used
+      switch (status) {
+        case '徵人':
+          return 'recruit'
+        case '趕工':
+          return 'hacking'
+        case '展示':
+          return 'demo'
+        case '放棄':
+          return 'giveup'
+        default:
+          return 'avalible'
+      }
+    },
+    getTableStatus (table) {
+      return table.map((m) => m.status)
+    },
+    setBlinkStatus (set, status) {
+      console.log(`setBlinkStatus(${set}, ${status})`)
+      if (set) {
+        this.blinkStatus = status
+      } else {
+        this.blinkStatus = ''
       }
     }
   },
@@ -256,6 +285,17 @@ export default {
     li
       list-style-type: none
       margin-top: 0.5rem
+
+.tableCircle
+  fill: white
+  stroke-linecap: round 
+  stroke-width: 1
+  stroke-opacity: 0.8
+  transition: r 0.2s ease-out;
+  &.blinkTable
+    r: 15
+    stroke-dasharray: 5,2
+
 
 
 hr
