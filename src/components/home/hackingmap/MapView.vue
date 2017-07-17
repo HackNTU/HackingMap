@@ -10,6 +10,17 @@
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
 
       <template v-for="(post, index) in tablePosts">
+
+        <text
+          :dx="(index ? getX(index) : null)"
+          :dy="(index ? getY(index) : null) + 3"
+          text-anchor="middle"
+          font-size="8px"
+          fill="#888"
+        >
+        {{post.length}}
+        </text>
+
         <!-- popper -->
         <el-tooltip
           :value="index === focus"
@@ -36,23 +47,27 @@
           </div>
 
           <!-- 桌子圖點 -->
-          <circle ref="circle"
-            :v-popover="index"
+          <circle 
             @click="onClick(index)"
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
             :class="getColor(post.status)"
-            r="3">
-          </circle>
+            r="6"
+            fill-opacity="0.5"
+            stroke-opacity="0.8"
+          >
           <!-- TODO: Check index -->
+          </circle>
         </el-tooltip>
+
+
       </template>
     </g>
     </svg>
 
     <!-- 圖例 -->
     <div class="legand">
-      <svg v-for="symble in ['提案', '徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em">
+      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em">
         <circle :class="getColor(symble)" cx="1em" cy="0.7em" :r="7"/>
         <text x="2em" y="1em">{{ symble }}</text>
       </svg>
@@ -151,14 +166,9 @@ export default {
   },
   methods: {
     setSvgPanZoom () {
-      let domReady = (this.$refs.svg && this.$refs.circle)
-      if (domReady) {
-        // 為#svg元素加上縮放功能
-        this.panZoomObj = SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
-        console.log('[MapView] setSvgPanZoom() TRUE')
-      } else {
-        console.log('[MapView] setSvgPanZoom() FALSE')
-      }
+      // 為#svg元素加上縮放功能
+      this.panZoomObj = SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
+      console.log('[MapView] setSvgPanZoom() TRUE')
     },
     getX (table) {
       let x = this.map.table_coor[Number(table)].x
