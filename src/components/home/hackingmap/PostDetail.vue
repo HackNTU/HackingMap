@@ -3,8 +3,11 @@
 
     <!-- Left side: iframe -->
     <div id="wrap" :class="wrapBackground">
-      <div v-if="isLoading" class="loading-msg">
-        正在載入 <a :href="post.iframe" target="_blank">{{ post.iframe || '預設iframe' }} </a>
+      <div v-if="isLoading" class="loading-msg link-ellipsis">
+        正在載入網址：<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A' }} </a>
+      </div>
+      <div v-else class="loading-msg link-ellipsis">
+        共編/作品網址：<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A' }} </a>
       </div>
       <iframe
         id="iframe"
@@ -15,21 +18,42 @@
         <p>{{ msg }}</p>
       </iframe>
     </div>
-
+    <!-- starCount:0
+    .key:"-KorA6VxhpXtynXN1A9D"
+    status:"完工"
+    author:"lawrencechou1024@gmail.com"
+    table:"87"
+    desc:"HackingMap 是黑客松現場的專案地圖，即時呈現各專案的進度與成果，促進參加者間的交流互動。"
+    award:"無"
+    teammate:Object
+    heartCount:0
+    hearts:Object
+    host:"#999"
+    iframe:"http://bit.ly/hackingmap_get_started"
+    name:"HackingMap"
+    tags:Array[2]
+    teammates:Array[3]
+    timestamp:"2017-07-16T15:20:29.112Z" -->
     <!-- Right side: info -->
+
+
     <div id="info">
+
       <h1>{{ post.name }}</h1>
+      <!-- map icon -->
+      <icon id="location" name="map-o" @click.native.stop="goMap(post.table)" v-if="post.table" class="fa-icon-pointer"></icon>
       <p>{{ post.desc }} <small>@第{{ post.table }}桌</small></p>
       <ul>
-        <li>
-          <icon name="link"></icon>共編/作品:
-          <a :href="post.iframe" target="_blank">{{ post.iframe || 'N/A'}}</a>
+        <li class="link-ellipsis">
+          <icon name="link"></icon>
+          共編/作品:<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
         </li>
-        <li>
-          <icon name="github"></icon>GitHub:
-          <a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
+        <li class="link-ellipsis">
+          <icon name="github"></icon>
+          GitHub:<a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
           <span v-else>N/A</span>
         </li>
+        <li>最近更新： <time> {{ new Date(post.timestamp).toLocaleString() }}</time></li>
       </ul>
     </div>
 
@@ -41,7 +65,7 @@ export default {
   name: 'postdetail',
   data () {
     return {
-      loadIframe: false,
+      loadIframe: true,
       isLoading: true,
       // default_iframe: 'https://bit.ly/hackingmap_get_started',
       default_iframe: '',
@@ -61,19 +85,20 @@ export default {
     }
   },
   watch: {
-    isOpen (yes) {
-      if (yes) {
-        this.loadIframe = true
-        this.isLoading = true
-      } else {
+    isOpen (isOpen) {
+      if (!isOpen) {
         // kill iframe as soon as dialog close
         this.loadIframe = false
+      } else {
+        this.loadIframe = true
+        this.isLoading = true
       }
     }
   },
   methods: {
-    sayHi (msg) {
-      console.log('Hi, ' + msg + '. Loaded ' + this.src)
+    goMap (tableNo) {
+      this.$emit('closeDialog')
+      this.$router.push('/map?focus=' + tableNo)
     }
   },
   props: {
@@ -92,11 +117,17 @@ export default {
 .post-detail
   display: flex
   height: 100%
+  width: 100%
   align-items: stretch
 
   #info
-    flex: 20 0px
-    list-style-type: none
+    flex: 1 30%
+    padding: 5px
+    min-width: 100px
+    overflow-wrap: break-word !important
+    word-wrap: break-word !important
+    & > ul
+      list-style-type: none
 
   .loading-bg
     background:url(../../../assets/loading.gif) center center no-repeat
@@ -125,8 +156,9 @@ export default {
       z-index: -1
 
   #wrap
-    flex: 80 0px
-    // border: 1px solid Grey
+    flex: 1 60%
+    min-width: 100px
+    border: 1px solid Grey
 
     // for the loading message
     display: flex
@@ -135,15 +167,22 @@ export default {
     justify-content: center
 
     #iframe
-      flex: 100
+      flex: 1 0 80%
+      overflow: hidden
       width: 100%
       height: 100%
-      // background-color: WhiteSmoke
+      border: none
 
     .loading-msg
-      display: block
-      background-color: Yellow
-      // background-color: #20A0FF
+      flex: 0 0 1.5em
+      background-color: Gainsboro
+
+  .link-ellipsis
+    display: block
+    white-space: nowrap
+    text-overflow: ellipsis
+    width: 100%
+    overflow: hidden
 
 // 直立iPad、手機改為上下排列
 @media screen and (max-device-width : 768px)

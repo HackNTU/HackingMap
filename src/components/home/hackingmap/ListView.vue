@@ -34,7 +34,11 @@
       :visible.sync="dialogVisible"
       custom-class="larger-dialog"
       size="large">
-      <postdetail :post="filteredPosts[dialogPostIndex]" :isOpen="dialogVisible"></postdetail>
+      <postdetail
+        :post="filteredPosts[dialogPostIndex]"
+        :isOpen="dialogVisible"
+        @closeDialog="hideDialog()"
+      ></postdetail>
     </el-dialog>
 
   </div>
@@ -63,14 +67,13 @@ export default {
       }
     })
   },
-  mounted () {
-    console.log('[ListView] mounted')
-  },
   methods: {
     showDialog (index) {
-      console.log('showDetail()', index)
       this.dialogPostIndex = index
       this.dialogVisible = true
+    },
+    hideDialog () {
+      this.dialogVisible = false
     }
   },
   components: {
