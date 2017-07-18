@@ -1,4 +1,8 @@
 const appconfig = {
+  general: {
+    sponsor: false,
+    discord: false
+  },
   'firebase_config': {
     apiKey: 'AIzaSyCK5_1a6NghhFZxL4a6csnrzHLkiouOQM4',
     authDomain: 'hacking-map.firebaseapp.com',
@@ -6,9 +10,6 @@ const appconfig = {
     projectId: 'hacking-map',
     storageBucket: 'hacking-map.appspot.com',
     messagingSenderId: '729739716516'
-  },
-  'discord_config': {
-    turnOn: false
   },
   event_info: {
     start_date: new Date('Mon Jul 21 2017 00:09:00 GMT+0800 (CST)'),

@@ -97,6 +97,7 @@ export default {
 
 .listview
   background-color: $list_bg_color
+  padding-bottom: 50px
 
 .flex-container
   display: flex

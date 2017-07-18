@@ -3,14 +3,14 @@
 
     <banner></banner>
     <router-view class="main" @loaded="loaded"></router-view>
-    <sponsor></sponsor>
+    <sponsor v-if="config.sponsor"></sponsor>
     <loading v-if="loading" :ready="ready"></loading>
 
   </div>
 </template>
 
 <script>
-// import store from './vuex'
+import appconfig from '@/appconfig'
 import Banner from '@/components/banner/Banner.vue'
 import Sponsor from '@/components/Sponsor.vue'
 import Home from '@/components/home/Home.vue'
@@ -21,6 +21,7 @@ export default {
   // store,
   data () {
     return {
+      config: appconfig,
       loading: true,
       ready: false
     }
@@ -48,6 +49,11 @@ export default {
 @import "./style_config.sass"
 
 #app
+  // TODO: 支援 Safari 和 Firefox 排版
+  // position: fixed
+  // height: 100vh
+  // width: 100vw
+
   // font-family: 'Avenir', Helvetica, Arial, sans-serif
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif
   -webkit-font-smoothing: antialiased

@@ -219,7 +219,7 @@ export default {
 
   // Smaller then vertical iPad
   @media screen and (max-width: 730px)
-    .regular-toolbar
+    .regular-toolbar, #editBtn
       display: none
 
 </style>
