@@ -8,6 +8,24 @@
       <image xlink:href="../../../assets/hacking_area_scaled.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
       </image>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
+      
+      <g id="noSeatZone">
+        <text
+          x="-177"
+          y="359"
+        >
+          未選座位的專案
+        </text>
+        <rect
+          fill="none"
+          stroke="red"
+          x="-180"
+          y="370"
+          :width="3 * 30 + 30"
+          :height="Math.round(tablePosts[0].length / 3) * 30 + 30"
+          rx="1.5"
+        />
+      </g>
 
       <template v-for="(post, index) in tablePosts[0]">
           <!-- popper -->
