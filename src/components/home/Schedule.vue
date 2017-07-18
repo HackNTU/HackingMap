@@ -10,11 +10,15 @@
         process-status="finish"
         finish-status="wait">
         <template v-for="(record, index) in records">
-          <el-step :title="record['大標題']" :ref="'step' + index + 'ref'">
-            <span slot="description">
+          <el-step :ref="'step' + index + 'ref'">
+            <a :class="(record['連結'] ? 'step_title_link' : '')" slot="title" :href="record['連結']">{{ record['大標題'] }}</a>
+            <div slot="icon" class="schedule-fa-icon">
+              <icon :name="record['fa-icon'] || default_icon"></icon>
+            </div>
+            <div slot="description">
               {{ formatDates(record['開始時間'], record['結束時間']) }}<br>
-              <span v-html="formatSubtitle(record['副標題'], record['相關連結'])"></span>
-            </span>
+              <span v-html="clipSubtitle(record['副標題'])"></span>
+            </div>
           </el-step>
         </template>
       </el-steps>
@@ -36,6 +40,7 @@ export default {
       records: [],
       active: null,
       isFetching: true,
+      default_icon: 'circle-o',
       num: 10
     }
   },
@@ -139,16 +144,11 @@ export default {
     /**
      * Ellipsis and concatenation of link for text
      */
-    formatSubtitle (text, link) {
+    clipSubtitle (text) {
       if (text) {
-        let html = text.slice(0, 15)
-        html += '</br>'
-        html += text.slice(15, 25)
-        html += '...'
-        if (link) {
-          html += `<a href="${link}" target="_blank">more</a>`
-        }
-        return html
+        let row1 = text.slice(0, 13)
+        let row2 = text.slice(13, 25)
+        return row1 + (row2 ? `</br>${row2}...` : '')
       }
     }
   }
@@ -162,9 +162,13 @@ export default {
   text-align: left
   padding: 2em
   overflow-y: scroll
-
+  .step_title_link
+    color: inherit
+    text-decoration: none
+    font-weight: bold
 </style>
 <style lang="sass">
 .el-step__main
-
+.schedule-fa-icon
+  vertical-align: top
 </style>

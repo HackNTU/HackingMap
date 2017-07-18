@@ -9,16 +9,7 @@ import 'element-ui/lib/theme-default/index.css'
 import './service/firebase'
 
 // vue-awesome icons
-import 'vue-awesome/icons/star'
-import 'vue-awesome/icons/star-o'
-import 'vue-awesome/icons/heart'
-import 'vue-awesome/icons/heart-o'
-import 'vue-awesome/icons/plus'
-import 'vue-awesome/icons/minus'
-import 'vue-awesome/icons/arrows-alt'
-import 'vue-awesome/icons/link'
-import 'vue-awesome/icons/github'
-import 'vue-awesome/icons/map-o'
+import 'vue-awesome/icons/'
 import Icon from 'vue-awesome/components/Icon'
 
 Vue.use(ElementUI)
