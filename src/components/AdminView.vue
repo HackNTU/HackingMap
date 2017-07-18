@@ -4,19 +4,21 @@
       <el-col :span="8">
         <el-form :model="announcement" :rules="rules">
           <el-form-item :label="`公告標題 (${titleLength}/15字)`" prop="title">
-            <el-input v-model.lazy="announcement.title" placeholder="限10字"></el-input>
+            <el-input v-model.lazy="title['.value']" placeholder="限10字"></el-input>
           </el-form-item> 
           <el-form-item :label="`公告內容 (${detailLength}/50字)`" prop="detail">
             <el-input
               type="textarea"
               :rows="5"
               placeholder="請輸入公告內容"
-              v-model="announcement.detail">
+              v-model="detail['.value']">
             </el-input>
+          </el-form-item>
+          <el-form-item label="密碼">
+            <el-input v-model.lazy="pwd" placeholder="密碼"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="updateAnnouncement()">更新</el-button>
-        <el-button type="success" @click="newAnnouncement()">新增</el-button>
       </el-col>
       <el-col :span="8">
         <announcement></announcement>
@@ -26,7 +28,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+// import _ from 'lodash'
 
 import { FirebaseApp } from '@/service/firebase.js'
 
@@ -48,73 +50,55 @@ export default {
           { required: false, message: '需介於 1 到 50 個字元', trigger: 'blur' },
           { min: 1, max: 50, message: '需介於 1 到 50 個字元', trigger: 'change' }
         ]
-      }
+      },
+      pwd: ''
     }
   },
   firebase () {
     return {
-      announcements: {
-        source: FirebaseApp.database().ref('/public/announcements/'),
+      title: {
+        source: FirebaseApp.database().ref('/public/announcement/title'),
+        asObject: true,
         readyCallback: () => {
-          console.log('[admin] Fetched `announcements`!')
+          console.log('[admin] Fetched `announcement.title`!')
+        }
+      },
+      detail: {
+        source: FirebaseApp.database().ref('/public/announcement/detail'),
+        asObject: true,
+        readyCallback: () => {
+          console.log('[admin] Fetched `announcement.detail`!')
         }
       }
     }
   },
   computed: {
+    announcement () {
+      return {
+        title: this.title['.value'],
+        detail: this.detail['.value']
+      }
+    },
     titleLength () {
       return this.announcement.title ? this.announcement.title.length : 0
     },
     detailLength () {
       return this.announcement.detail ? this.announcement.detail.length : 0
-    },
-    announcement () {
-      return _.head(
-        _.reverse(
-          _.sortBy(
-            _.filter(this.announcements, 'title')
-            , ['timestamp']
-          )
-        )
-      )
     }
   },
-  watch: {
-
-  },
-  created () {
-    FirebaseApp.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user
-      } else {
-        this.user = null
-      }
-    })
-  },
   methods: {
-    newAnnouncement () {
-      const timestamp = new Date().getTime()
-      this.$firebaseRefs.announcements.push({timestamp})
-    },
     updateAnnouncement () {
-      const announcement = this.announcement
-      const key = announcement['.key']
       const updates = {
-        [`${key}/title`]: announcement.title,
-        [`${key}/detail`]: announcement.detail
+        'title': this.announcement.title,
+        'detail': this.announcement.detail,
+        'pwd': this.pwd
       }
 
-      this.$firebaseRefs.announcements.update(updates)
-    },
-    deleteItem: function (item) {
-      this.$firebaseRefs.items.child(item['.key']).remove()
-    },
-    updateItem: function (item) {
-      // create a copy of the item
-      item = {...item}
-      // remove the .key attribute
-      delete item['.key']
-      this.$firebaseRefs.items.child(item['.key']).set(item)
+      FirebaseApp.database().ref('/public/announcement/')
+        .update(updates)
+        .then(() => { this.$message({ message: '成功更新', type: 'success' }) })
+        .then(() => { this.$message({ message: '成功更新', type: 'success' }) })
+        .catch((e) => { this.$message.error('更新失敗') })
     }
   },
   components: {

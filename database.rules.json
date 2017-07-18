@@ -1,8 +1,17 @@
 {
   "rules": {
     "public": {
-      ".read": true,
-      ".write": "auth != null"
+      ".read": false,
+      ".write": false,
+      "announcement": {
+        ".write": "newData.child('pwd').val() === data.parent().child('password').val()",
+        "title": {
+          ".read": true
+        },
+        "detail": {
+          ".read": true
+        },
+      }
     },
     "sponsor": {
       ".read": true,
