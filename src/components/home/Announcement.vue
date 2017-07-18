@@ -49,7 +49,7 @@ export default {
     }
   },
   firebase: {
-    announcements: FirebaseApp.database().ref('/public/announcement/')
+    announcements: FirebaseApp.database().ref('/public/announcements/')
   },
   computed: {
     displayIndex () {

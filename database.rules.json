@@ -2,7 +2,7 @@
   "rules": {
     "public": {
       ".read": true,
-      ".write": false
+      ".write": "auth != null"
     },
     "sponsor": {
       ".read": true,
@@ -14,7 +14,7 @@
       ".write": "!data.exists() || !newData.exists()",
         "hearts": {
           "$uid": {
-           	".write": "$uid === auth.uid"
+            ".write": "$uid === auth.uid"
           }
         },
         "stars": {
@@ -22,11 +22,11 @@
             ".write": "$uid === auth.uid"
           }
         },
-				// Deprecated (dummy value)
+        // Deprecated (dummy value)
         "starCount": {
           ".write": true
         },
-				// Deprecated (dummy value)
+        // Deprecated (dummy value)
         "heartCount": {
           ".write": true
         },
@@ -50,11 +50,11 @@
               ".write": "$uid === auth.uid"
             }
           },
-          // Deprecated dummy value
+          // Deprecated (dummy value)
           "starCount": {
             ".write": true
           },
-          // Deprecated dummy value
+          // Deprecated (dummy value)
           "heartCount": {
             ".write": true
           },

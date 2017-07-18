@@ -4,6 +4,7 @@ import Home from '@/components/home/Home'
 import MapView from '@/components/home/hackingmap/MapView.vue'
 import ListView from '@/components/home/hackingmap/ListView.vue'
 import FullMapView from '@/components/home/hackingmap/FullMapView'
+import AdminView from '@/components/AdminView'
 // import User from '@/components/user/User'
 // import Profile from '@/components/user/Profile'
 
@@ -21,7 +22,8 @@ export default new Router({
         { path: 'full_map', component: FullMapView },
         { path: '', redirect: '/map' }
       ]
-    }
+    },
+    { path: '/admin', component: AdminView }
     // {
     //   path: '/user',
     //   component: User,
