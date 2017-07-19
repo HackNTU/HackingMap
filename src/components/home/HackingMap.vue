@@ -22,15 +22,15 @@
         <!-- 地圖/列表切換 -->
         <el-col :lg="8" :md="8" :sm="8" :xs="8">
           <!-- 電腦、平板：分頁標籤 -->
-          <el-radio-group class="regular-toolbar" v-model="path">
-            <el-radio-button @change.native="$router.push($event.target.value)" label="/projects">列表</el-radio-button>
-            <el-radio-button @change.native="$router.push($event.target.value)" label="/map">地圖</el-radio-button>
+          <el-radio-group @change.native="$router.push($event.target.value)" class="regular-toolbar" v-model="path">
+            <el-radio-button label="/projects">列表</el-radio-button>
+            <el-radio-button label="/map">地圖</el-radio-button>
             <!-- <el-radio-button label="場地"></el-radio-button> -->
           </el-radio-group>
           <!-- 手機：下拉選單 -->
-          <el-select class="phone-toolbar" v-model="path">
-            <el-option @change.native="$router.push($event.target.value) "key="projects" label="列表" value="/projects"></el-option>
-            <el-option @change.native="$router.push($event.target.value) "key="map" label="地圖" value="/map"></el-option>
+          <el-select @change="$router.push($event)" class="phone-toolbar" v-model="path">
+            <el-option key="projects" label="列表" value="/projects"></el-option>
+            <el-option key="map" label="地圖" value="/map"></el-option>
             <!-- <el-option key="full_map" label="場地" value="場地"></el-option> -->
           </el-select>
         </el-col>
@@ -175,7 +175,7 @@ export default {
   },
   watch: {
     $route: function (to, from) {
-      console.log('to:', to)
+      console.log('[HackingMap] go to:', to.path)
       this.path = to.path
       const query = to.query.query
       if (query) {
