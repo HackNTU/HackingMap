@@ -2,19 +2,21 @@
   <section class="announcement">
 
     <!-- display announcement if any exist -->
-    <div v-if="announcements[0]">
+    <div v-if="announcements[0] || !enableHistory">
 
       <transition name="el-zoom-in-center" mode="out-in">
 
         <!-- show the latest announcement -->
         <el-card class="box-card" v-if="!showHistory" key="single" :body-style="{ padding: '0px' }">
           <div style="padding: 14px;">
-            <p>{{ announcements[displayIndex].title }}</p>
-            <span>{{ announcements[displayIndex].detail }}</span>
+            <!-- <p>{{ announcements[displayIndex].title}}</p> -->
+            <p>{{ title['.value'] }}</p>
+            <!-- <span>{{ announcements[displayIndex].detail}}</span> -->
+            <span>{{ detail['.value'] }}</span>
             <div class="bottom">
-              <time class="time">{{ HHMM(announcements[displayIndex].timestamp) }}更新</time>
+              <!-- <time class="time">{{ HHMM(announcements[displayIndex].timestamp) }}更新</time> -->
               <div class="spacer"></div>
-              <el-button type="text" class="show-history" @click="showHistory = true">所有公告</el-button>
+              <el-button v-if="enableHistory" type="text" class="show-history" @click="showHistory = true">所有公告</el-button>
             </div>
           </div>
         </el-card>
@@ -44,12 +46,21 @@ export default {
   name: 'announcement',
   data () {
     return {
+      enableHistory: false,
+      announcements: [],
       showHistory: false,
       clickIndex: null
     }
   },
   firebase: {
-    announcements: FirebaseApp.database().ref('/public/announcements/')
+    title: {
+      source: FirebaseApp.database().ref('/public/announcement/title'),
+      asObject: true
+    },
+    detail: {
+      source: FirebaseApp.database().ref('/public/announcement/detail'),
+      asObject: true
+    }
   },
   computed: {
     displayIndex () {
