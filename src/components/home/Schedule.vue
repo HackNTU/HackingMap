@@ -11,7 +11,9 @@
         finish-status="wait">
         <template v-for="(record, index) in records">
           <el-step :ref="'step' + index + 'ref'">
-            <a :class="(record['連結'] ? 'step_title_link' : '')" slot="title" :href="record['連結']">{{ record['大標題'] }}</a>
+            <a :class="(record['連結'] ? 'step_title_link' : '')" slot="title" :href="record['連結']" target="_blank">
+              {{ record['大標題'] }}
+            </a>
             <div slot="icon" class="schedule-fa-icon">
               <icon :name="record['fa-icon'] || default_icon"></icon>
             </div>

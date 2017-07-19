@@ -37,11 +37,14 @@
 
         <!-- 排序方法 -->
         <el-col :lg="8" :md="8" :sm="8" :xs="0" id="sort-radio">
-          <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'">
-            <el-radio label="timestamp">最近更新</el-radio>
-            <el-radio label="heartCount">排序<icon name="heart"></icon></el-radio>
-            <el-radio label="starCount">排序<icon name="star"></icon></el-radio>
-          </el-radio-group>
+          <span v-show="$route.path !== '/map'">
+            排序：
+            <el-radio-group v-model="sortKey">
+              <el-radio label="timestamp">更新</el-radio>
+              <el-radio label="heartCount">人氣<icon name="heart"></icon></el-radio>
+              <el-radio label="starCount">技術<icon name="star"></icon></el-radio>
+            </el-radio-group>
+          </span>
         </el-col>
       </el-row>
     </div>
@@ -55,7 +58,7 @@
     </keep-alive>
 
     <template v-if="user !== null">
-      <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true"></el-button>
+      <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true">編輯專案</el-button>
       <el-dialog
         title="專案編輯"
         :visible.sync="showDialog"
@@ -66,7 +69,7 @@
       </el-dialog>
     </template>
     <template v-else>
-      <el-button icon="edit" id="editBtn" :disabled="true"></el-button>
+      <el-button icon="edit" id="editBtn" :disabled="true">新增專案</el-button>
     </template>
 
     <!-- 使用教學 -->
