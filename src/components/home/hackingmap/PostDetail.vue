@@ -37,7 +37,7 @@
         </h3>
         <!-- 地圖 -->
         <h3>
-          <icon id="location" name="map-o" @click.native.stop="goMap(post.table)"></icon>
+          <icon id="location" name="map-o" @click.native.stop="goMap(post.table)" class="fa-icon-pointer"></icon>
           <span>{{ post.table ? post.table + '桌' : '未選桌號' }}</span>
         </h3>
       </div>

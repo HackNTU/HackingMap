@@ -39,8 +39,8 @@
         <el-col :lg="8" :md="8" :sm="8" :xs="0" id="sort-radio">
           <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'">
             <el-radio label="timestamp">最近更新</el-radio>
-            <el-radio label="heartCount">最多<icon name="heart"></icon></el-radio>
-            <el-radio label="starCount">最多<icon name="star"></icon></el-radio>
+            <el-radio label="heartCount">排序<icon name="heart"></icon></el-radio>
+            <el-radio label="starCount">排序<icon name="star"></icon></el-radio>
           </el-radio-group>
         </el-col>
       </el-row>
@@ -170,6 +170,7 @@ export default {
     },
     $route: function (to, from) {
       console.log('to:', to)
+      this.path = to.path
       const query = to.query.query
       if (query) {
         console.log(`[watch $route] set query: query`)
