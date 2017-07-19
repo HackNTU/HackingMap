@@ -330,4 +330,26 @@ export default {
       flex: 100 0px
       order: 2
 
+// 手機隱藏iframe
+@media screen and (max-device-width : 480px)
+  .post-detail
+    flex-flow: column nowrap
+    #info
+      flex: 1 0px
+      order: 1
+      #content
+        flex-flow: column nowrap
+        display: flex
+        #desc-block
+          flex: 60
+          text-align: left
+          p
+            margin: 1px
+        #gutter
+          flex: 0 0 20px
+        #ul-block
+          flex: 40
+    #wrap
+      display: none
+
 </style>

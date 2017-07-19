@@ -98,6 +98,8 @@ export default {
 .listview
   background-color: $list_bg_color
   padding-bottom: 50px
+  @media screen and (max-device-width : 480px)
+    padding-top: 50px
 
 .flex-container
   display: flex

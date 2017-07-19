@@ -76,10 +76,10 @@
     <el-dialog
       title="HackingMap 功能導覽"
       :visible.sync="showIntro"
-      size="small">
+      size="large">
       <span><intro></intro></span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="showIntro = false">確 定</el-button>
+        <el-button type="primary" @click="showIntro = false">開 始</el-button>
       </span>
     </el-dialog>
 
