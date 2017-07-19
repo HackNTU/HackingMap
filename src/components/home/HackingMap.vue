@@ -29,8 +29,8 @@
           </el-radio-group>
           <!-- 手機：下拉選單 -->
           <el-select class="phone-toolbar" v-model="path">
-            <el-option  @change.native="$router.push($event.target.value)"key="projects" label="列表" value="/projects"></el-option>
-            <el-option  @change.native="$router.push($event.target.value)"key="map" label="地圖" value="/map"></el-option>
+            <el-option @change.native="$router.push($event.target.value) "key="projects" label="列表" value="/projects"></el-option>
+            <el-option @change.native="$router.push($event.target.value) "key="map" label="地圖" value="/map"></el-option>
             <!-- <el-option key="full_map" label="場地" value="場地"></el-option> -->
           </el-select>
         </el-col>
