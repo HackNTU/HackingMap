@@ -8,7 +8,7 @@
 
         <!-- show the latest announcement -->
         <el-card class="box-card" v-if="!showHistory" key="single" :body-style="{ padding: '0px' }">
-          <div style="padding: 14px;">
+          <div id="zone">
             <!-- <p>{{ announcements[displayIndex].title}}</p> -->
             <p id="title">{{ title['.value'] }}</p>
             <hr>
@@ -107,13 +107,20 @@ export default {
         padding: 0
         float: right
 
+    #zone
+      width: 250px
+      padding: 14px 0px
+
     #title
       font-size: 18px
+      margin: 3px 5px
+      margin-bottom: 15px
     #detail
       font-size: 16px
 
     hr
       width: 97%
+      margin: 10px
       align: center
       border: 0
       height: 1px
