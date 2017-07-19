@@ -61,6 +61,7 @@ export default {
           uid: u.uid,
           author: u.email,
           host: '#',
+          contact: '',
           starCount: 0,
           heartCount: 0,
           timestamp: new Date(),

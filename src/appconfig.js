@@ -22,7 +22,7 @@ const appconfig = {
   }
 }
 
-const coorX = [295, 341, 384, 430, 523, 569, 614, 660]
+const coorX = [341, 384, 430, 523, 569, 614, 660]
 const coorY = [301, 364, 429, 492, 557, 621, 685, 748, 812, 876, 940, 1004, 1068, 1132, 1196]
 
 // Generate table coordinate

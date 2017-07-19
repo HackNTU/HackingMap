@@ -331,8 +331,8 @@ export default {
         updates[path2 + 'iframe'] = iframe
         updates[path1 + 'git'] = git.replace('https://github.com/', '')
         updates[path2 + 'git'] = git.replace('https://github.com/', '')
-        updates[path1 + 'table'] = table
-        updates[path2 + 'table'] = table
+        updates[path1 + 'table'] = (Number(table) > 105 ? '0' : table)
+        updates[path2 + 'table'] = (Number(table) > 105 ? '0' : table)
         updates[path1 + 'status'] = status
         updates[path2 + 'status'] = status
         updates[path1 + 'award'] = award
