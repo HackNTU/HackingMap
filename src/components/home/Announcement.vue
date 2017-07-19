@@ -10,10 +10,10 @@
         <el-card class="box-card" v-if="!showHistory" key="single" :body-style="{ padding: '0px' }">
           <div style="padding: 14px;">
             <!-- <p>{{ announcements[displayIndex].title}}</p> -->
-            <p>{{ title['.value'] }}</p>
+            <p id="title">{{ title['.value'] }}</p>
             <hr>
             <!-- <span>{{ announcements[displayIndex].detail}}</span> -->
-            <span>{{ detail['.value'] }}</span>
+            <span id="detail">{{ detail['.value'] }}</span>
             <div class="bottom">
               <!-- <time class="time">{{ HHMM(announcements[displayIndex].timestamp) }}更新</time> -->
               <div class="spacer"></div>
@@ -106,6 +106,11 @@ export default {
         flex: 1
         padding: 0
         float: right
+
+    #title
+      font-size: 18px
+    #detail
+      font-size: 16px
 
     hr
       width: 97%
