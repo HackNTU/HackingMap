@@ -69,18 +69,31 @@
       <el-button icon="edit" id="editBtn" :disabled="true"></el-button>
     </template>
 
+    <!-- 使用教學 -->
+    <el-dialog
+      title="HackingMap 功能導覽"
+      :visible.sync="showIntro"
+      size="small">
+      <span><intro></intro></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showIntro = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { FirebaseApp } from '@/service/firebase.js'
 import MyPosts from '@/components/home/hackingmap/MyPosts.vue'
+import Intro from '@/components/Intro.vue'
 export default {
   name: 'hackingmap',
   data () {
     return {
       user: null,
       showDialog: false,
+      showIntro: false,
       query: '',
       scope: 'all',
       sortKey: 'timestamp',
@@ -94,6 +107,9 @@ export default {
         source: FirebaseApp.database().ref('/posts/'),
         readyCallback: () => {
           console.log('[HackingMap] Fetched `posts`!')
+
+          // 若無登入則跳出使用教學
+          this.showIntro = this.user === null
           that.$emit('loaded')
         }
       }
@@ -153,7 +169,7 @@ export default {
       this.$router.push(value)
     },
     $route: function (to, from) {
-      console.log('to:', to, 'from:', from)
+      // console.log('to:', to)
       const query = to.query.query
       if (query) {
         console.log(`[watch $route] set query: query`)
@@ -178,7 +194,8 @@ export default {
   methods: {
   },
   components: {
-    myposts: MyPosts
+    myposts: MyPosts,
+    intro: Intro
   }
 }
 </script>
