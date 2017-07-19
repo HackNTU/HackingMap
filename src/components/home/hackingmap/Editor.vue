@@ -9,8 +9,6 @@
         :rules="rules"
         ref="newPost"
         label-width="100px"
-        v-loading="isLoading"
-        element-loading-text="Loading..."
       >
         <el-col :span="12">
 
@@ -85,8 +83,8 @@
             >+ 新增標籤</el-button>
           </el-form-item>
 
-          <!-- 座位 -->
-          <el-form-item label="座位" prop="table">
+          <!-- 桌號 -->
+          <el-form-item label="桌號" prop="table">
             <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號" size="small">
               <el-option label="尋找中" value="0"></el-option>
               <el-option v-for="i in tables" :label="i + '桌'" :value="i" :key="i" v-if="i !== '0'"></el-option>
@@ -144,7 +142,7 @@
         <el-col :span="12">
 
           <!-- 50字簡介 -->
-          <el-form-item :label="`專案簡介 (${newPost.desc.length}/50字)`" prop="desc">
+          <el-form-item :label="wordCountMsg" prop="desc">
             <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem"
               placeholder="請簡要介紹專案內容（100字以內，約前30字會顯示於卡片預覽）">
             </el-input>
@@ -271,6 +269,9 @@ export default {
       .filter((f) => f.indexOf(this.inputNewTag) > -1)
       .toString()
       .replace(/,/g, '<br/>')
+    },
+    wordCountMsg () {
+      return this.newPost.desc ? `專案簡介 (${this.newPost.desc.length}/50字)` : '.'
     }
   },
   mounted () {

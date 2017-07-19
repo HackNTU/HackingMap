@@ -60,7 +60,7 @@ export default {
           name: this.newPostTitle,
           uid: u.uid,
           author: u.email,
-          host: '#',
+          host: '',
           contact: '',
           starCount: 0,
           heartCount: 0,
@@ -72,7 +72,7 @@ export default {
           table: 0,
           status: '趕工',
           award: '無',
-          teammates: ['#999'],
+          teammates: [''],
           tags: ['標籤1', '標籤2']
         }
         let newPostKey = userPostsRef.push().key
