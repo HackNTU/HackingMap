@@ -121,10 +121,17 @@
       </svg>
       <svg class="cursor-pointer" v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
         @mouseenter="setBlinkStatus(true, symble)"
-        @mouseleave="setBlinkStatus(false, symble)"
+        @touchstart="setBlinkStatus(true, symble)"
       >
-        <circle :class="getColor(symble)" cx="1em" cy="0.7em" :r="7"/>
+        <circle :class="getColor(symble)" cx="1em" cy="0.7em"/>
         <text x="2em" y="1em">{{ symble }}</text>
+      </svg>
+      <svg class="cursor-pointer" height="1.5em" width="5em"
+        @mousemove="setBlinkStatus(false, '全部')"
+        @touchstart="setBlinkStatus(false, '全部')"
+      >
+        <circle class="tableCircle" cx="1em" cy="0.7em"/>
+        <text x="2em" y="1em">全部</text>
       </svg>
     </div>
 
@@ -323,6 +330,8 @@ export default {
     top: 30px
     right: 30px
     padding: 0.5em
+    circle
+      r: 7  
   .statue_proposal
     fill: $statue_proposal
   .statue_recruit
