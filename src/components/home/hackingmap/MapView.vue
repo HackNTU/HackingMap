@@ -22,7 +22,7 @@
           x="-180"
           y="370"
           :width="3 * 30 + 30"
-          :height="Math.round(tablePosts[0].length / 3) * 30 + 30"
+          :height="Math.round(tablePosts[0].length / 3) * 30 + 60"
           rx="1.5"
         />
       </g>
