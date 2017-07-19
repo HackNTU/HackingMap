@@ -19,6 +19,23 @@
             <el-input v-model.lazy="newPost.name" placeholder="限10字"></el-input>
           </el-form-item>
 
+          <!-- 提案人 -->
+          <el-form-item label="與會者編號" prop="host">
+            <el-row>
+              <el-col :span="7">
+                <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#999">
+                  <el-input size="small" v-model.lazy="newPost.host" style="width:100%" placeholder="提案人"></el-input>
+                </el-tooltip>
+              </el-col>
+              <el-col :span="1">&nbsp;</el-col>
+              <el-col :span="16">
+                <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#123, #456, #789">
+                  <el-input size="small" v-model="newPost.teammates_str" style="width:100%" placeholder="專案成員"></el-input>
+                </el-tooltip>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
           <!-- GitHub  -->
           <el-form-item label="GitHub" prop="git">
             <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
@@ -26,9 +43,9 @@
             </el-input>
           </el-form-item>
 
-          <!-- 提案人 -->
-          <el-form-item label="提案人" prop="host">
-            <el-input v-model.lazy="newPost.host" style="width:100%" placeholder="請輸入與會者編號 例如 #999"></el-input>
+          <!-- 專案聯絡方式 -->
+          <el-form-item label="專案聯絡方式" prop="contact">
+            <el-input v-model.lazy="newPost.contact" style="width:100%" placeholder="Discord ID, 臉書, email等，自由選填，多筆請以逗號分隔"></el-input>
           </el-form-item>
 
           <!-- 標籤 -->
@@ -42,10 +59,10 @@
               @close="handleDeleteTag(tag)"
             >{{tag}}</el-tag>
             <template v-if="inputVisible">
-              <el-tooltip 
-                effect="dark" 
-                :value="tagListTooltip.length > 0" 
-                placement="right-start" 
+              <el-tooltip
+                effect="dark"
+                :value="tagListTooltip.length > 0"
+                placement="right-start"
                 :visible-arrow="true"
               >
                 <div slot="content" v-html="tagListTooltip"></div>
@@ -58,7 +75,7 @@
                   @blur="handleNewTagConfirm"
                 >
                 </el-input>
-              </el-tooltip>  
+              </el-tooltip>
             </template>
             <el-button v-else
               class="button-new-tag"
@@ -70,9 +87,9 @@
 
           <!-- 座位 -->
           <el-form-item label="座位" prop="table">
-            <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號">
+            <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號" size="small">
               <el-option label="尋找中" value="0"></el-option>
-              <el-option v-for="i in tables" :label="i + '桌'" :value="String(i)" :key="i"></el-option>
+              <el-option v-for="i in tables" :label="i + '桌'" :value="i" :key="i" v-if="i !== '0'"></el-option>
             </el-select>
           </el-form-item>
 
@@ -87,7 +104,7 @@
           </el-form-item>
 
           <!-- 參與人 -->
-          <el-form-item label="專案成員" prop="teammates">
+          <!-- <el-form-item label="專案成員" prop="teammates">
             <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
             >{{teammate}}</el-tag>
             <el-input class="input-new-tag"
@@ -105,7 +122,7 @@
               @click="showNewTeammateInput"
               v-show="!newPost.teammates || newPost.teammates.length < 20"
             >+ 新增隊員</el-button>
-          </el-form-item>
+          </el-form-item> -->
 
           <!-- 企業獎 -->
           <el-form-item label="企業獎" prop="award" v-show="false">
@@ -133,8 +150,8 @@
             </el-input>
           </el-form-item>
 
-          <!-- 專案介紹URL（專案頁面顯示） -->
-          <el-form-item label="專案介紹URL（專案頁面顯示）" prop="iframe">
+          <!-- 專案介紹/共編URL（專案頁面顯示） -->
+          <el-form-item label="專案介紹/共編URL（專案頁面顯示）" prop="iframe">
             <el-input
               v-model.lazy="newPost.iframe"
               class="url"
@@ -186,24 +203,24 @@ import appconfig from '@/appconfig'
 import { FirebaseApp } from '@/service/firebase.js'
 
 const db = FirebaseApp.database()
-const postsRef = db.ref('posts/')
 
 export default {
   name: 'editor',
   data () {
     return {
       tables: Object.keys(appconfig.map.table_coor),
-      postData: null,
       newPost: {
         name: null,
         host: '',
+        contact: '',
         desc: null,
         iframe: null,
         git: '',
         table: null,
         status: null,
         tags: [],
-        teammates: []
+        teammates: [],
+        teammates_str: ''
       },
       rules: {
         name: [
@@ -240,12 +257,15 @@ export default {
     }
   },
   props: {
-    postkey: {
-      type: String,
+    postData: {
+      type: Object,
       required: true
     }
   },
   computed: {
+    postKey () {
+      return this.postData['.key']
+    },
     tagListTooltip () {
       return this.tagList
       .filter((f) => f.indexOf(this.inputNewTag) > -1)
@@ -253,36 +273,23 @@ export default {
       .replace(/,/g, '<br/>')
     }
   },
-  firebase: function () {
-    return {
-      userLatestPosts: {
-        source: postsRef.child(this.postkey),
-        asObject: true,
-        readyCallback () {
-          this.postData = this.userLatestPosts
-          this.restoreForm(this.userLatestPosts)
-        },
-        cancelCallback () {
-          alert('cancelCallback ()')
-        }
-      }
-    }
-  },
-  created () {
-
+  mounted () {
+    this.restoreForm(this.postData)
   },
   methods: {
 
     restoreForm (postData) {
       console.log('[Editor] 載入post舊資料', postData.name)
       this.newPost.name = postData.name
-      this.newPost.host = postData.host
-      this.newPost.desc = postData.desc
-      this.newPost.iframe = postData.iframe
+      this.newPost.host = postData.host || ''
+      this.newPost.contact = postData.contact || ''
+      this.newPost.teammates_str = postData.teammates.toString() || ''
+      this.newPost.desc = postData.desc || ''
+      this.newPost.iframe = postData.iframe || ''
       this.newPost.git = postData.git || ''
-      this.newPost.table = postData.table
-      this.newPost.status = postData.status
-      this.newPost.award = postData.award
+      this.newPost.table = postData.table || ''
+      this.newPost.status = postData.status || ''
+      this.newPost.award = postData.award || ''
       this.newPost.tags = postData.tags || []
       this.newPost.teammates = postData.teammates || []
       this.isLoading = false
@@ -290,11 +297,13 @@ export default {
 
     submitPost () {
       this.loadingUpdate = true
+      this.newPost.teammates = this.newPost.teammates_str.split(',')
       let p = this.newPost
-      let promise = this.updatePostForCurrentUser(this.postkey, p.name, p.host, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates)
+      let promise = this.updatePostForCurrentUser(this.postKey, p.name, p.host, p.contact, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates)
       promise.then(() => {
         this.loadingUpdate = false
         this.$message({message: '更新成功', type: 'success'})
+        this.$emit('cancel')
         console.log('[Editor.vue] post成功更新', this.postkey)
       }).catch((err) => {
         this.loadingUpdate = false
@@ -302,7 +311,7 @@ export default {
       })
     },
 
-    updatePostForCurrentUser (postKey, name, host, desc, iframe, git, table, status, award, tags, teammates) {
+    updatePostForCurrentUser (postKey, name, host, contact, desc, iframe, git, table, status, award, tags, teammates) {
       let u = FirebaseApp.auth().currentUser
       if (!u.uid || !postKey) {
         throw new Error('Invalid currentUser or postkey', u, postKey)
@@ -314,6 +323,8 @@ export default {
         updates[path2 + 'name'] = name
         updates[path1 + 'host'] = host
         updates[path2 + 'host'] = host
+        updates[path1 + 'contact'] = contact
+        updates[path2 + 'contact'] = contact
         updates[path1 + 'desc'] = desc
         updates[path2 + 'desc'] = desc
         updates[path1 + 'iframe'] = iframe

@@ -8,7 +8,7 @@
         <el-button @click="newPostForCurrentUser">建立</el-button>
       </div>
       <div v-else>
-        <editor :postkey="myPosts[0]['.key']" @cancel="$emit('close')"></editor>
+        <editor :postData="myPosts[0]" @cancel="$emit('close')"></editor>
       </div>
 
     </template>
@@ -56,8 +56,6 @@ export default {
     newPostForCurrentUser () {
       let u = FirebaseApp.auth().currentUser
       if (this.newPostTitle && u) {
-        let teammateInit = {}
-        teammateInit[u.uid] = true
         let postData = {
           name: this.newPostTitle,
           uid: u.uid,
@@ -74,8 +72,7 @@ export default {
           status: '趕工',
           award: '無',
           teammates: ['#999'],
-          tags: ['標籤1', '標籤2'],
-          teammate: teammateInit
+          tags: ['標籤1', '標籤2']
         }
         let newPostKey = userPostsRef.push().key
         let updates = {}
