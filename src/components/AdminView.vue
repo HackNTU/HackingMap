@@ -1,11 +1,16 @@
 <template>
   <div id="admin">
-    <el-row id="announcement" type="flex" justify="center" align="middle" :gutter="20">
-      <el-col :span="8">
+    <div id="announcement" type="flex" justify="center" align="middle" :gutter="20">
+      <el-row>
+        <h2>預覽：</h2>
+        <announcement></announcement>
+      </el-row><br>
+      <el-row>
+        <h2>設定：</h2>
         <el-form :model="announcement" :rules="rules">
           <el-form-item :label="`公告標題 (${titleLength}/15字)`" prop="title">
             <el-input v-model.lazy="title['.value']" placeholder="限10字"></el-input>
-          </el-form-item> 
+          </el-form-item>
           <el-form-item :label="`公告內容 (${detailLength}/50字)`" prop="detail">
             <el-input
               type="textarea"
@@ -19,11 +24,8 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="updateAnnouncement()">更新</el-button>
-      </el-col>
-      <el-col :span="8">
-        <announcement></announcement>
-      </el-col>
-    </el-row>
+      </el-row>
+    </div>
   </div>
 </template>
 

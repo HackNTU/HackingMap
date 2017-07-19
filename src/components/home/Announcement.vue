@@ -11,6 +11,7 @@
           <div style="padding: 14px;">
             <!-- <p>{{ announcements[displayIndex].title}}</p> -->
             <p>{{ title['.value'] }}</p>
+            <hr>
             <!-- <span>{{ announcements[displayIndex].detail}}</span> -->
             <span>{{ detail['.value'] }}</span>
             <div class="bottom">
@@ -106,4 +107,11 @@ export default {
         padding: 0
         float: right
 
+    hr
+      width: 97%
+      align: center
+      border: 0
+      height: 1px
+      background-color: #d4d4d4
+      color: #d4d4d4
 </style>
