@@ -106,6 +106,8 @@
               blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1,
               [getStatus(blinkStatus)]: true
             }"
+            @mouseenter="setFocus(index)"
+            @touchstart="setFocus(index)"
           >
           </circle>
         </el-tooltip>
@@ -181,7 +183,8 @@ export default {
         fit: true
       },
       clicked: null,
-      blinkStatus: ''
+      blinkStatus: '',
+      focus: ''
     }
   },
   props: ['filteredPosts'],
@@ -194,7 +197,7 @@ export default {
     },
     $route: function (to, from) { // no use
       // console.log('to:', to, 'from:', from)
-      const focus = to.query.focus
+      this.focus = to.query.focus
       if (focus) {
         if (this.tablePosts[focus]) {
           console.log(`[watch $route] set table[${focus}] focus`)
@@ -214,9 +217,6 @@ export default {
     this.setSvgPanZoom()
   },
   computed: {
-    focus () {
-      return this.$route.query.focus
-    },
     tablePosts () {
       return _.groupBy(this.filteredPosts, (gb) => gb.table)
     }
@@ -227,6 +227,10 @@ export default {
     // this.setSvgPanZoom()
   },
   methods: {
+    setFocus (index) {
+      console.log(`setFocus(${index})`)
+      this.focus = index
+    },
     setSvgPanZoom () {
       // 為#svg元素加上縮放功能
       this.panZoomObj = SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
@@ -253,7 +257,7 @@ export default {
       }
     },
     onClick (tableNo) {
-      alert('桌號 ' + tableNo)
+      // alert('桌號 ' + tableNo)
       this.clicked = tableNo
     },
     getColor (status) {
