@@ -133,11 +133,11 @@ export default {
       provider.addScope('email')
       const promise = FirebaseApp.auth().signInWithPopup(provider)
       promise.then((result) => {
-        console.log('Google登入成功: ', result)
-        this.$message({message: 'Google登入成功: ' + result.email, type: 'success'})
+        console.log('Google 登入成功: ', result)
+        this.$message({message: 'Google 登入成功', type: 'success'})
       }).catch((err) => {
-        console.log('Google登入錯誤: ', err.code, err.message)
-        this.$message({message: 'Google登入錯誤:' + err.message, type: 'warning'})
+        console.log('Google 登入錯誤: ', err.code, err.message)
+        this.$message({message: 'Google 登入錯誤', type: 'warning'})
       })
     },
 
@@ -146,11 +146,11 @@ export default {
       const provider = new firebase.auth.FacebookAuthProvider()
       const promise = FirebaseApp.auth().signInWithPopup(provider)
       promise.then((result) => {
-        console.log('Facebook登入成功: ', result)
-        this.$message({message: 'Facebook登入成功: ' + result.email, type: 'success'})
+        console.log('Facebook 登入成功: ', result)
+        this.$message({message: 'Facebook 登入成功', type: 'success'})
       }).catch((err) => {
-        console.log('Facebook登入錯誤: ', err.code, err.message)
-        this.$message({message: 'Facebook登入錯誤:' + err.message, type: 'warning'})
+        console.log('Facebook 登入錯誤: ', err.code, err.message)
+        this.$message({message: 'Facebook 登入錯誤', type: 'warning'})
       })
     },
     // 登出
