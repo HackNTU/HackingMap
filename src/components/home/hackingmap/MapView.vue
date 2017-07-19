@@ -64,10 +64,8 @@
       <template v-for="(post, index) in tablePosts" v-if="index > 0">
         <text
           :dx="(index ? getX(index) : null)"
-          :dy="(index ? getY(index) : null) + 3"
-          text-anchor="middle"
-          font-size="8px"
-          fill="#888"
+          :dy="(index ? getY(index) : null) + 4"
+          class="tableText"
         >
         {{post.length}}
         </text>
@@ -104,7 +102,10 @@
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
             class="tableCircle"
-            :class="{blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1}"
+            :class="{
+              blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1,
+              [getStatus(blinkStatus)]: true
+            }"
           >
           </circle>
         </el-tooltip>
@@ -115,7 +116,10 @@
 
     <!-- 圖例 -->
     <div class="legand">
-      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
+      <svg height="2em" width="5em">
+        <text x="0.4em" y="1em">點擊篩選</text>
+      </svg>
+      <svg class="cursor-pointer" v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
         @mouseenter="setBlinkStatus(true, symble)"
         @mouseleave="setBlinkStatus(false, symble)"
       >
@@ -345,20 +349,38 @@ export default {
       margin-top: 0.5rem
 
 .tableCircle
-  r: 6
+  r: 10
   fill: white
-  fill-opacity: 0.5
+  fill-opacity: 0
   stroke-linecap: round 
   stroke-width: 1
   stroke-opacity: 0.8
   transition: r 0.2s ease-out;
   &.blinkTable
     r: 15
-    stroke-dasharray: 5,2
+    // stroke-dasharray: 5,2
+    fill-opacity: 0.3
+    &.recruit
+      fill: $statue_recruit
+    &.hacking
+      fill: $statue_hacking
+    &.demo
+      fill: $statue_demo
+    &.giveup
+      fill: $statue_giveup
+
   &.noSeat
     stroke: #663399
     stroke-width: 1.5
     r: 8
+
+.tableText
+  text-anchor: middle
+  font-size: 12px
+  fill: #888
+
+.cursor-point
+  cursor: pointer;
 
 
 hr
