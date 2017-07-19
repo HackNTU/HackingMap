@@ -141,7 +141,7 @@ export default {
     toggleStar () {
       // 檢查登入
       if (!this.currentUser) {
-        alert('Please login first') // TODO: 導向登入視窗
+        alert('請先登入') // TODO: 導向登入視窗
         return
       }
       let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
@@ -154,7 +154,7 @@ export default {
     toggleHeart () {
       // 檢查登入
       if (!this.currentUser) {
-        alert('Please login first') // TODO: 導向登入視窗
+        alert('請先登入') // TODO: 導向登入視窗
         return
       }
       let globalPostRef = firebase.database().ref('/posts/' + this.postKey)
