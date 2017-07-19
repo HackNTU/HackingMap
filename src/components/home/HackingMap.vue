@@ -6,7 +6,7 @@
       <el-row type="flex" justify="center" align="middle">
 
         <!-- 搜尋框 -->
-        <el-col :lg="8" :md="8" :sm="8" :xs="12">
+        <el-col :lg="8" :md="8" :sm="8" :xs="16">
           <el-input placeholder="搜尋" v-model.lazy.trim="query" :disabled="$route.path === '/full_map'">
             <el-select v-model="scope" slot="prepend" placeholder="請選擇" size="large">
               <el-option label="全部" value="all"></el-option>
@@ -36,7 +36,7 @@
         </el-col>
 
         <!-- 排序方法 -->
-        <el-col :lg="8" :md="8" :sm="8" :xs="4">
+        <el-col :lg="8" :md="8" :sm="8" :xs="0" id="sort-radio">
           <el-radio-group v-model="sortKey" :disabled="$route.path === '/full_map'">
             <el-radio label="timestamp">最近更新</el-radio>
             <el-radio label="heartCount">最多<icon name="heart"></icon></el-radio>
@@ -169,7 +169,7 @@ export default {
       this.$router.push(value)
     },
     $route: function (to, from) {
-      // console.log('to:', to)
+      console.log('to:', to)
       const query = to.query.query
       if (query) {
         console.log(`[watch $route] set query: query`)
@@ -236,7 +236,7 @@ export default {
 
   // Smaller then vertical iPad
   @media screen and (max-width: 730px)
-    .regular-toolbar, #editBtn
+    .regular-toolbar, #editBtn, #sort-radio
       display: none
 
 </style>

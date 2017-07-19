@@ -51,7 +51,8 @@ export default {
 .banner
 
 #loginBtn
-  padding-right: 2em
+  position: absolute
+  right: 2em
 
 $h: 48px
 
