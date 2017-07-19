@@ -41,8 +41,8 @@
             排序：
             <el-radio-group v-model="sortKey">
               <el-radio label="timestamp">更新</el-radio>
-              <el-radio label="heartCount">人氣<icon name="heart"></icon></el-radio>
-              <el-radio label="starCount">技術<icon name="star"></icon></el-radio>
+              <el-radio label="hearts">人氣<icon name="heart"></icon></el-radio>
+              <el-radio label="stars">技術<icon name="star"></icon></el-radio>
             </el-radio-group>
           </span>
         </el-col>
@@ -79,7 +79,7 @@
       size="small">
       <span><intro></intro></span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="showIntro = false">确 定</el-button>
+        <el-button type="primary" @click="showIntro = false">確 定</el-button>
       </span>
     </el-dialog>
 
@@ -123,9 +123,15 @@ export default {
       return (this.user.providerData[0].displayName || this.user.email.split('@')[0]) + '的專案'
     },
     filteredSortedPosts () {
-      let key = this.sortKey || 'heartCount'
+      let key = this.sortKey
       return this.filteredPosts.sort((a, b) => {
-        return (a[key] === b[key] ? 0 : (a[key] > b[key] ? -1 : 1))
+        if (key === 'timestamp') {
+          return (a.timestamp === b.timestamp ? a.name > b.name : (a.timestamp > b.timestamp ? -1 : 1))
+        } else {
+          let lenA = (a[key] === undefined ? 0 : (Object.keys(a[key]).length))
+          let lenB = (b[key] === undefined ? 0 : (Object.keys(b[key]).length))
+          return lenA === lenB ? (a.name > b.name) : (lenA > lenB ? -1 : 1)
+        }
       })
     },
     filteredPosts () {

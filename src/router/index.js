@@ -12,7 +12,7 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '*', redirect: '/map' },
+    { path: '*', redirect: '/projects' },
     {
       path: '/',
       component: Home,
@@ -20,7 +20,7 @@ export default new Router({
         { path: 'map', component: MapView },
         { path: 'projects', component: ListView },
         { path: 'full_map', component: FullMapView },
-        { path: '', redirect: '/map' }
+        { path: '', redirect: '/projects' }
       ]
     },
     { path: '/admin', component: AdminView }
