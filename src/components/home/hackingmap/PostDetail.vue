@@ -54,17 +54,19 @@
 
         <!-- 列表：共編、GitHub、更新時間... -->
         <ul id="ul-block" class="link-ellipsis">
+          <li>專案狀態：{{ post.status }}</li>
           <li>
-            <icon name="link"></icon>
-            共編/作品:<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
+            <!-- <icon name="link"></icon> -->
+            共編/作品: <a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
           </li>
           <li>
-            <icon name="github"></icon>
-            GitHub:<a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
+            <!-- <icon name="github"></icon> -->
+            GitHub: <a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
             <span v-else>N/A</span>
           </li>
-          <li>最近更新： <time> {{ new Date(post.timestamp).toLocaleString() }}</time></li>
-          <li v-if="post.award !== '無'">參加企業獎：{{ post.award }}</li>
+          <li>聯絡方式：{{ post.contact || 'N/A' }}</li>
+          <li>最近更新：<time>{{ new Date(post.timestamp).toLocaleString() }}</time></li>
+          <!-- <li v-if="post.award !== '無'">參加企業獎：{{ post.award }}</li> -->
         </ul>
 
       </div>
@@ -313,6 +315,7 @@ export default {
   .post-detail
     flex-flow: column nowrap
     #info
+      padding-top: 2em
       flex: 0 0px
       order: 1
       #content
@@ -335,6 +338,7 @@ export default {
   .post-detail
     flex-flow: column nowrap
     #info
+      padding-top: 2em
       flex: 1 0px
       order: 1
       #content

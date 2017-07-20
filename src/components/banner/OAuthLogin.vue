@@ -141,7 +141,7 @@ export default {
         console.log('Google 登入錯誤: ', err.code, err.message)
         this.$notify({
           title: 'Google 登入錯誤',
-          message: `請嘗試使用電腦版的Google Chrome登入。（錯誤原因：${err.message}）`,
+          message: `建議使用電腦版Chrome登入。（錯誤原因：${err.message}）`,
           type: 'warning',
           duration: 0
         })
