@@ -15,17 +15,17 @@
           <div class="text-center">
             <!-- a. 第三方登入 -->
             <template v-if="enableGoogleLoginFlag">
-              <el-button @click="signinWithGoogle" size="large" class="btn-primary-google">
+              <el-button @click="signinWithGoogle" :size="isPhone ? 'small' : 'large'" class="btn-primary-google">
                 <span class="icon-wrap"><img class="icon" src="../../assets/google-logo-bg.png"></span>
                 <span class="label">Google登入</span></el-button>
             </template>
 
             <template v-if="enableFacebookLoginFlag">
-              <el-button @click="signinWithFB" size="large" class="btn-primary-facebook">
+              <el-button @click="signinWithFB" :size="isPhone ? 'small' : 'large'" class="btn-primary-facebook">
                 <span class="icon-wrap"><img class="icon" src="../../assets/facebook-logo.jpg"></span>
                 <span class="label">Facebook登入</span></el-button><br>
             </template>
-            
+
             <!-- b. Email註冊/登入 -->
             <template v-if="enableEmailPassLoginFlag">
               <br><br><hr style="margin:0"><span style="position:relative;top:-0.6rem;background-color:white;"> 或 </span>
@@ -78,6 +78,7 @@
 <script>
 import firebase from 'firebase'
 import { FirebaseApp } from '@/service/firebase.js'
+const max480 = window.matchMedia('(max-device-width: 480px)').matches
 
 export default {
   name: 'oauthlogin',
@@ -91,7 +92,8 @@ export default {
       email: null,
       pwd: null,
       showEmailPassField: false,
-      showResetBtn: false
+      showResetBtn: false,
+      isPhone: max480
     }
   },
   created () {
