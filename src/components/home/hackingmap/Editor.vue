@@ -3,46 +3,78 @@
 
     <!-- <code>[dev] you are editing {{ postkey }}</code> -->
 
+    <el-form
+      :model="newPost"
+      :rules="rules"
+      ref="newPost"
+      label-position="top"
+      label-width="100px"
+    >
     <el-row :gutter="20" v-loading="loadingUpdate">
-      <el-form
-        :model="newPost"
-        :rules="rules"
-        ref="newPost"
-        label-width="100px"
-      >
         <el-col :span="12">
 
-          <!-- 專案名 -->
-          <el-form-item label="專案名" prop="name">
-            <el-input v-model.lazy="newPost.name" placeholder="限10字"></el-input>
-          </el-form-item>
+
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <!-- 專案名 -->
+              <el-form-item label="專案名" prop="name">
+                <el-input v-model.lazy="newPost.name" placeholder="3至10字元" width="100%" size="small"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <!-- 桌號 -->
+              <el-form-item label="桌號" prop="table">
+                <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號" size="small">
+                  <el-option label="尋找中" value="0"></el-option>
+                  <el-option v-for="i in tables" :label="i + '桌'" :value="i" :key="i" v-if="i !== '0'"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <!-- 提案人 -->
-          <el-form-item label="與會者編號" prop="host">
-            <el-row>
-              <el-col :span="7">
-                <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#999">
-                  <el-input size="small" v-model.lazy="newPost.host" style="width:100%" placeholder="提案人"></el-input>
-                </el-tooltip>
-              </el-col>
-              <el-col :span="1">&nbsp;</el-col>
-              <el-col :span="16">
-                <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#123, #456, #789">
-                  <el-input size="small" v-model="newPost.teammates_str" style="width:100%" placeholder="專案成員"></el-input>
-                </el-tooltip>
-              </el-col>
-            </el-row>
-          </el-form-item>
+          <el-row>
+            <el-col :span="7">
 
-          <!-- GitHub  -->
-          <el-form-item label="GitHub" prop="git">
-            <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
-              <template slot="prepend">github.com/</template>
-            </el-input>
-          </el-form-item>
+              <el-form-item label="與會者編號" prop="host">
+                <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#999">
+                  <el-input size="mini" v-model.lazy="newPost.host" style="width:100%" placeholder="提案人"></el-input>
+                </el-tooltip>
+              </el-form-item>
+
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="16">
+              <!-- <el-tooltip effect="dark" placement="top" :visible-arrow="true" content="格式：#123, #456, #789">
+                <el-input size="small" v-model="newPost.teammates_str" style="width:100%" placeholder="專案成員"></el-input>
+              </el-tooltip> -->
+
+              <!-- 專案成員 -->
+              <el-form-item label="專案成員" prop="teammates">
+                <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
+                >{{teammate}}</el-tag>
+                <el-input class="input-new-tag"
+                  v-if="inputVisibleTeammate"
+                  v-model.lazy="inputNewTeammate"
+                  ref="saveTeammateInput"
+                  size="mini"
+                  v-show="!newPost.teammates || newPost.teammates.length < 20"
+                  @keypress.enter.native="handleNewTeammateConfirm"
+                  @blur="handleNewTeammateConfirm"></el-input
+                >
+                <el-button v-else
+                  class="button-new-tag"
+                  size="small"
+                  @click="showNewTeammateInput"
+                  v-show="!newPost.teammates || newPost.teammates.length < 20"
+                >+ 新增成員</el-button>
+              </el-form-item>
+
+            </el-col>
+          </el-row>
 
           <!-- 專案聯絡方式 -->
-          <el-form-item label="專案聯絡方式" prop="contact">
+          <el-form-item label="專案聯絡方式（公開）" prop="contact">
             <el-input v-model.lazy="newPost.contact" style="width:100%" placeholder="Discord ID, 臉書, email等，自由選填，多筆請以逗號分隔"></el-input>
           </el-form-item>
 
@@ -83,14 +115,6 @@
             >+ 新增標籤</el-button>
           </el-form-item>
 
-          <!-- 桌號 -->
-          <el-form-item label="桌號" prop="table">
-            <el-select v-model.lazy="newPost.table" placeholder="請選擇目前所在桌號" size="small">
-              <el-option label="尋找中" value="0"></el-option>
-              <el-option v-for="i in tables" :label="i + '桌'" :value="i" :key="i" v-if="i !== '0'"></el-option>
-            </el-select>
-          </el-form-item>
-
           <!-- 專案狀態 -->
           <el-form-item label="進度狀態" prop="status">
             <el-radio-group v-model.lazy="newPost.status">
@@ -100,27 +124,6 @@
               <el-radio label="放棄"></el-radio>
             </el-radio-group>
           </el-form-item>
-
-          <!-- 參與人 -->
-          <!-- <el-form-item label="專案成員" prop="teammates">
-            <el-tag :key="teammate" v-for="teammate in newPost.teammates" :closable="true" type="gray" :close-transition="false" @close="handleDeleteTeammate(teammate)"
-            >{{teammate}}</el-tag>
-            <el-input class="input-new-tag"
-              v-if="inputVisibleTeammate"
-              v-model.lazy="inputNewTeammate"
-              ref="saveTeammateInput"
-              size="mini"
-              v-show="!newPost.teammates || newPost.teammates.length < 20"
-              @keypress.enter.native="handleNewTeammateConfirm"
-              @blur="handleNewTeammateConfirm"></el-input
-            >
-            <el-button v-else
-              class="button-new-tag"
-              size="small"
-              @click="showNewTeammateInput"
-              v-show="!newPost.teammates || newPost.teammates.length < 20"
-            >+ 新增隊員</el-button>
-          </el-form-item> -->
 
           <!-- 企業獎 -->
           <el-form-item label="企業獎" prop="award" v-show="false">
@@ -137,8 +140,6 @@
           </el-form-item>
 
         </el-col>
-      </el-form>
-      <el-form :model="newPost" :rules="rules">
         <el-col :span="12">
 
           <!-- 50字簡介 -->
@@ -148,13 +149,20 @@
             </el-input>
           </el-form-item>
 
+          <!-- GitHub  -->
+          <el-form-item label="GitHub" prop="git">
+            <el-input v-model.lazy="newPost.git" placeholder="john666/my-project" class="url">
+              <template slot="prepend">github.com/</template>
+            </el-input>
+          </el-form-item>
+
           <!-- 專案介紹/共編URL（專案頁面顯示） -->
-          <el-form-item label="專案介紹/共編URL（專案頁面顯示）" prop="iframe">
+          <el-form-item label="專案介紹/共編URL（內嵌於專案頁面）" prop="iframe">
             <el-input
               v-model.lazy="newPost.iframe"
               class="url"
               @change="loadIframe = false; isLoadingIframe = false"
-              placeholder="請輸入可內嵌之網頁網址，如 Google Doc, HackMD, YouTube 等。">
+              placeholder="請輸入可內嵌之網頁網址（下方可測試）">
             </el-input>
           </el-form-item>
 
@@ -164,7 +172,7 @@
               <el-button
                 @click="loadIframe = true; isLoadingIframe = true"
                 v-if="!loadIframe"
-              >iframe預覽</el-button>
+              >測試URL內嵌</el-button>
               <div v-if="isLoadingIframe" v-loading="true">
                 &nbsp;<br>&nbsp;<br>&nbsp;<br>
               </div>
@@ -176,22 +184,27 @@
                 @load="isLoadingIframe = false"
               ></iframe>
             </el-card>
+            <span>已知支援內嵌：
+              <a target="_blank" href="https://hackmd.io/new">HackMD</a>、
+              <a target="_blank" href="https://www.google.com.tw/intl/zh-TW/docs/about/">Google Doc</a>、
+              <a target="_blank" href="https://www.youtube.com/">YouTube</a>
+            </span>
           </el-form-item>
 
         </el-col>
-      </el-form>
     </el-row>
     <el-row type="flex" class="row-bg" justify="end">
       <el-col :span="24">
 
         <!-- 更新按鈕 -->
         <div align=right>
-          <el-button type="primary" @click="submitPost()">更新</el-button>
+          <el-button type="primary" @click="submitForm('newPost')">更新</el-button>
           <el-button @click="$emit('cancel')">取消</el-button>
         </div>
 
       </el-col>
     </el-row>
+  </el-form>
 
   </div>
 </template>
@@ -294,6 +307,18 @@ export default {
       this.newPost.tags = postData.tags || []
       this.newPost.teammates = postData.teammates || []
       this.isLoading = false
+    },
+
+    submitForm (formName) {
+      // Validate fields
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.submitPost()
+        } else {
+          this.$message.error({message: '資料格式不全'})
+          return false
+        }
+      })
     },
 
     submitPost () {
