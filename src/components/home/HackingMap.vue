@@ -175,8 +175,8 @@ export default {
   },
   watch: {
     $route: function (to, from) {
-      console.log('[HackingMap] go to:', to.path)
-      this.path = to.path
+      console.log('[HackingMap] go to:', to.fullPath)
+      this.path = to.fullPath
       const query = to.query.query
       if (query) {
         console.log(`[watch $route] set query: query`)
