@@ -139,7 +139,11 @@ export default {
         this.$message({message: 'Google 登入成功', type: 'success'})
       }).catch((err) => {
         console.log('Google 登入錯誤: ', err.code, err.message)
-        this.$message({message: 'Google 登入錯誤', type: 'warning'})
+        this.$notify({
+          title: 'Google 登入錯誤',
+          message: `請嘗試使用電腦版的Google Chrome登入。（錯誤原因：${err.message}）`,
+          type: 'warning'
+        })
       })
     },
 
@@ -152,7 +156,11 @@ export default {
         this.$message({message: 'Facebook 登入成功', type: 'success'})
       }).catch((err) => {
         console.log('Facebook 登入錯誤: ', err.code, err.message)
-        this.$message({message: 'Facebook 登入錯誤', type: 'warning'})
+        this.$notify({
+          title: 'Facebook 登入錯誤',
+          message: `請嘗試使用電腦版的Google Chrome登入。（錯誤原因：${err.message}）`,
+          type: 'warning'
+        })
       })
     },
     // 登出
