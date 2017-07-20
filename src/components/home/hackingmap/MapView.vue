@@ -125,7 +125,7 @@
       <svg height="2em" width="5em">
         <text x="0.4em" y="1em">點擊篩選</text>
       </svg>
-      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
+      <svg v-for="symble in ['徵人', '趕工', '完工', '放棄']" height="1.5em" width="5em"
         @mouseenter="setBlinkStatus(true, symble)"
         @touchstart="setBlinkStatus(true, symble)"
       >
@@ -277,7 +277,7 @@ export default {
           return 'statue_recruit'
         case '趕工':
           return 'statue_hacking'
-        case '展示':
+        case '完工':
           return 'statue_demo'
         case '放棄':
           return 'statue_giveup'
@@ -291,7 +291,7 @@ export default {
           return 'recruit'
         case '趕工':
           return 'hacking'
-        case '展示':
+        case '完工':
           return 'demo'
         case '放棄':
           return 'giveup'
