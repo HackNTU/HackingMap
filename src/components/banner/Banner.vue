@@ -1,9 +1,12 @@
 <template>
   <div class="banner vertical-container">
 
-    <a href="https://www.facebook.com/hackNTU/" target="_blank" class="hackntu_logo">
-      <img src="../../assets/hackntu-logo.png" alt="hackntu_logo">
-    </a>
+    <span class="hackntu_logo">
+      <a href="https://github.com/hackntu/hackingmap" target="_blank">
+        <img src="../../assets/hackntu-logo.png" alt="hackntu_logo">
+      </a>
+      <a class="github-button beside-logo" href="https://github.com/hackntu/hackingmap" data-icon="octicon-star" data-show-count="true" aria-label="Star hackntu/hackingmap on GitHub">Star</a>
+    </span>
     <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtnText }}</el-button>
 
     <el-dialog

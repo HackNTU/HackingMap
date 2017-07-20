@@ -72,7 +72,7 @@ export default {
           table: 0,
           status: '趕工',
           award: '無',
-          teammates: [''],
+          teammates: [],
           tags: ['標籤1', '標籤2']
         }
         let newPostKey = userPostsRef.push().key
