@@ -1,6 +1,6 @@
 {
   "name": "hackingmap",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A project map for hackathon events, showing the hacking process.",
   "author": "choznerol <b02611002@ntu.edu.tw>",
   "private": true,
