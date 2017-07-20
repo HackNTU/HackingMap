@@ -220,7 +220,6 @@ export default {
     // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
     console.log('[MapView] mounted')
     this.setSvgPanZoom()
-    this.focus = this.$route.query.focus
   },
   computed: {
     tablePosts () {
@@ -230,8 +229,6 @@ export default {
   updated () {
     // case 1：初次造訪 /map 在 updated() 時才能加SvgPanZoom
     console.log('[MapView] updated')
-    this.focus = this.$route.query.focus
-    // this.setSvgPanZoom()
   },
   methods: {
     setFocus (index) {
@@ -242,6 +239,11 @@ export default {
       // 為#svg元素加上縮放功能
       this.panZoomObj = SvgPanZoom(this.$refs.svg, this.svgPanZoomOpt)
       console.log('[MapView] setSvgPanZoom() TRUE')
+
+      this.$nextTick(() => {
+        console.log('$nextTick(()')
+        this.focus = this.$route.query.focus
+      })
     },
     getX (table) {
       let x = this.map.table_coor[Number(table)].x
