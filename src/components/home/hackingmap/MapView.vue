@@ -149,7 +149,7 @@
       <li><el-button id="zoomOutBtn" @click="panZoomObj.zoomOut()">
         <icon name="minus"></icon>
       </el-button></li>
-      <li><el-button id="zoomResetBtn" @click="panZoomObj.resetZoom();panZoomObj.resetPan()">
+      <li><el-button id="zoomResetBtn" @click="resetPanZoom()">
         <icon name="arrows-alt"></icon>
       </el-button></li>
     </div>
@@ -200,25 +200,27 @@ export default {
       })
     },
     $route: function (to, from) { // no use
-      // console.log('to:', to, 'from:', from)
       this.focus = to.query.focus
-      if (focus) {
-        if (this.tablePosts[focus]) {
-          console.log(`[watch $route] set table[${focus}] focus`)
-          this.tablePosts[focus].focus = true
-          console.log(this.tablePosts[focus])
-        } else {
-          console.log('[watch $route] no table')
-        }
-      } else {
-        console.log('[watch $route] no focus')
-      }
+      this.resetPanZoom()
+      // if (focus) {
+      //   console.log('focus:', focus)
+      //   if (this.tablePosts[focus]) {
+      //     console.log(`[watch $route] set table[${focus}] focus`)
+      //     this.tablePosts[focus].focus = true
+      //     console.log(this.tablePosts[focus])
+      //   } else {
+      //     console.log('[watch $route] no table')
+      //   }
+      // } else {
+      //   console.log('[watch $route] no focus')
+      // }
     }
   },
   mounted () {
     // case 2: 從/projects切換過來，再次造訪/map時，在mounted()時加SvgPanZoom
     console.log('[MapView] mounted')
     this.setSvgPanZoom()
+    this.focus = this.$route.query.focus
   },
   computed: {
     tablePosts () {
@@ -228,6 +230,7 @@ export default {
   updated () {
     // case 1：初次造訪 /map 在 updated() 時才能加SvgPanZoom
     console.log('[MapView] updated')
+    this.focus = this.$route.query.focus
     // this.setSvgPanZoom()
   },
   methods: {
@@ -304,6 +307,11 @@ export default {
       } else {
         this.blinkStatus = ''
       }
+    },
+    resetPanZoom () {
+      console.log('[MapView] resetPanZoom()')
+      this.panZoomObj.resetZoom()
+      this.panZoomObj.resetPan()
     }
   },
   components: {
