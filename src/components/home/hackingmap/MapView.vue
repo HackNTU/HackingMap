@@ -57,7 +57,7 @@
             :cx="(getX(0) + getNoSeatXY('dx', index))"
             :cy="(getY(0) + getNoSeatXY('dy', index))"
             r=10
-            class="tableCircle noSeat"
+            class="tableCircle noSeat cursor-pointer"
             :class="{blinkTable: post.status == blinkStatus}"
           >
           </circle>
@@ -105,7 +105,7 @@
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
             r=10
-            class="tableCircle"
+            class="tableCircle cursor-pointer"
             :class="{
               blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1,
               [getStatus(blinkStatus)]: true
@@ -125,19 +125,19 @@
       <svg height="2em" width="5em">
         <text x="0.4em" y="1em">點擊篩選</text>
       </svg>
-      <svg class="cursor-pointer" v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
+      <svg v-for="symble in ['徵人', '趕工', '展示', '放棄']" height="1.5em" width="5em"
         @mouseenter="setBlinkStatus(true, symble)"
         @touchstart="setBlinkStatus(true, symble)"
       >
-        <circle :class="getColor(symble)" r=7 cx="1em" cy="0.7em"/>
-        <text x="2em" y="1em">{{ symble }}</text>
+        <circle :class="[getColor(symble), 'cursor-pointer']" r=7 cx="1em" cy="0.7em"/>
+        <text x="2em" y="1em" class="cursor-pointer">{{ symble }}</text>
       </svg>
-      <svg class="cursor-pointer" height="1.5em" width="5em"
+      <svg height="1.5em" width="5em"
         @mousemove="setBlinkStatus(false, '全部')"
         @touchstart="setBlinkStatus(false, '全部')"
       >
-        <circle class="tableCircle" r=7 cx="1em" cy="0.7em"/>
-        <text x="2em" y="1em">全部</text>
+        <circle class="tableCircle cursor-pointer" r=7 cx="1em" cy="0.7em"/>
+        <text x="2em" y="1em" class="cursor-pointer">全部</text>
       </svg>
     </div>
 
@@ -365,6 +365,12 @@ export default {
       list-style-type: none
       margin-top: 0.5rem
 
+  @media screen and (max-width: 480px)
+    .legand
+      top: 5px
+      right: 5px
+      padding: 1px
+
 .tableCircle
   r: 10
   fill: white
@@ -372,7 +378,7 @@ export default {
   stroke-linecap: round
   stroke-width: 1
   stroke-opacity: 0.8
-  transition: r 0.2s ease-out;
+  transition: r 0.2s ease-out
   &.blinkTable
     r: 15
     // stroke-dasharray: 5,2
@@ -396,8 +402,8 @@ export default {
   font-size: 12px
   fill: #888
 
-.cursor-point
-  cursor: pointer;
+.cursor-pointer
+  cursor: pointer
 
 
 hr
