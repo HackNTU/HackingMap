@@ -10,7 +10,7 @@
       <image xlink:href="../../../assets/hacking_area_scaled.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/>
       </image>
       <!-- <image xlink:href="../../../assets/hacking_area.png" :x="0" :y="0" :width="map.map_width" :height="map.map_height"/> -->
-      
+
       <g id="noSeatZone">
         <text
           x="-177"
@@ -56,6 +56,7 @@
             @click="onClick(0)"
             :cx="(getX(0) + getNoSeatXY('dx', index))"
             :cy="(getY(0) + getNoSeatXY('dy', index))"
+            r=10
             class="tableCircle noSeat"
             :class="{blinkTable: post.status == blinkStatus}"
           >
@@ -99,10 +100,11 @@
           </div>
 
           <!-- 桌子圖點 -->
-          <circle 
+          <circle
             @click="onClick(index)"
             :cx="(index ? getX(index) : null)"
             :cy="(index ? getY(index) : null)"
+            r=10
             class="tableCircle"
             :class="{
               blinkTable: getTableStatus(post).indexOf(blinkStatus) > -1,
@@ -127,14 +129,14 @@
         @mouseenter="setBlinkStatus(true, symble)"
         @touchstart="setBlinkStatus(true, symble)"
       >
-        <circle :class="getColor(symble)" cx="1em" cy="0.7em"/>
+        <circle :class="getColor(symble)" r=7 cx="1em" cy="0.7em"/>
         <text x="2em" y="1em">{{ symble }}</text>
       </svg>
       <svg class="cursor-pointer" height="1.5em" width="5em"
         @mousemove="setBlinkStatus(false, '全部')"
         @touchstart="setBlinkStatus(false, '全部')"
       >
-        <circle class="tableCircle" cx="1em" cy="0.7em"/>
+        <circle class="tableCircle" r=7 cx="1em" cy="0.7em"/>
         <text x="2em" y="1em">全部</text>
       </svg>
     </div>
@@ -337,7 +339,7 @@ export default {
     right: 30px
     padding: 0.5em
     circle
-      r: 7  
+      r: 7
   .statue_proposal
     fill: $statue_proposal
   .statue_recruit
@@ -367,7 +369,7 @@ export default {
   r: 10
   fill: white
   fill-opacity: 0
-  stroke-linecap: round 
+  stroke-linecap: round
   stroke-width: 1
   stroke-opacity: 0.8
   transition: r 0.2s ease-out;
@@ -402,7 +404,7 @@ hr
   width: 97%
   align: center
   border: 0
-  height: 1px 
+  height: 1px
   background-color: #d4d4d4
   color: #d4d4d4
 
