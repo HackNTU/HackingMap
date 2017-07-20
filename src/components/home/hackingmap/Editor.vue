@@ -18,7 +18,7 @@
             <el-col :span="12">
               <!-- 專案名 -->
               <el-form-item label="專案名" prop="name">
-                <el-input v-model.lazy="newPost.name" placeholder="3至10字元" width="100%" size="small"></el-input>
+                <el-input v-model.lazy="newPost.name" placeholder="3至15字元" width="100%" size="small"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -58,15 +58,15 @@
                   v-model.lazy="inputNewTeammate"
                   ref="saveTeammateInput"
                   size="mini"
-                  v-show="!newPost.teammates || newPost.teammates.length < 20"
+                  v-show="!newPost.teammates || newPost.teammates.length < 15"
                   @keypress.enter.native="handleNewTeammateConfirm"
                   @blur="handleNewTeammateConfirm"></el-input
                 >
                 <el-button v-else
                   class="button-new-tag"
-                  size="small"
+                  size="mini"
                   @click="showNewTeammateInput"
-                  v-show="!newPost.teammates || newPost.teammates.length < 20"
+                  v-show="!newPost.teammates || newPost.teammates.length < 15"
                 >+ 新增成員</el-button>
               </el-form-item>
 
@@ -109,7 +109,7 @@
             </template>
             <el-button v-else
               class="button-new-tag"
-              size="small"
+              size="mini"
               @click="showNewTagInput"
               v-show="!newPost.tags || newPost.tags.length < 3"
             >+ 新增標籤</el-button>
@@ -230,13 +230,13 @@ export default {
         table: null,
         status: null,
         tags: [],
-        teammates: [],
-        teammates_str: ''
+        teammates: []
+        // teammates_str: ''
       },
       rules: {
         name: [
           { required: true, message: '請輸入專案名稱', trigger: 'blur' },
-          { min: 3, max: 10, message: '需介於 3 到 10 個字元', trigger: 'blur' }
+          { min: 3, max: 15, message: '需介於 3 到 15 個字元', trigger: 'blur' }
         ],
         host: [
           { required: true, message: '請輸入提案人之與會者編號', trigger: 'blur' },
@@ -284,7 +284,7 @@ export default {
       .replace(/,/g, '<br/>')
     },
     wordCountMsg () {
-      return this.newPost.desc ? `專案簡介 (${this.newPost.desc.length}/50字)` : '.'
+      return this.newPost.desc ? `專案簡介 (${this.newPost.desc.length}/50字)` : '專案簡介 (0/50字)'
     }
   },
   mounted () {
@@ -297,7 +297,7 @@ export default {
       this.newPost.name = postData.name
       this.newPost.host = postData.host || ''
       this.newPost.contact = postData.contact || ''
-      this.newPost.teammates_str = postData.teammates.toString() || ''
+      // this.newPost.teammates_str = postData.teammates.toString() || ''
       this.newPost.desc = postData.desc || ''
       this.newPost.iframe = postData.iframe || ''
       this.newPost.git = postData.git || ''
@@ -323,7 +323,7 @@ export default {
 
     submitPost () {
       this.loadingUpdate = true
-      this.newPost.teammates = this.newPost.teammates_str.split(',')
+      // this.newPost.teammates = this.newPost.teammates_str.split(',')
       let p = this.newPost
       let promise = this.updatePostForCurrentUser(this.postKey, p.name, p.host, p.contact, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates)
       promise.then(() => {
