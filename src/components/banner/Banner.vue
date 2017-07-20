@@ -7,7 +7,24 @@
       </a>
       <a class="github-button beside-logo" href="https://github.com/hackntu/hackingmap" data-icon="octicon-star" data-show-count="true" aria-label="Star hackntu/hackingmap on GitHub">Star</a>
     </span>
-    <el-button @click="visible = true" type="text" id="loginBtn">{{ loginBtnText }}</el-button>
+
+    <span id="buttons-right">
+      <el-button @click="visible = true" type="text">{{ loginBtnText }}</el-button>&nbsp;&nbsp;
+
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          活動<i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <span v-for="item in dropdownItems">
+            <el-dropdown-item v-if="item.disabled" disabled>{{ item.text }} (敬請期待)</el-dropdown-item>
+            <a v-else :href="item.link" class="dropdown-a" target="_blank">
+              <el-dropdown-item>{{ item.text }}</el-dropdown-item>
+            </a>
+          </span>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </span>
 
     <el-dialog
       :visible.sync="visible"
@@ -30,7 +47,31 @@ export default {
     return {
       visible: false,
       loginBtnText: '登入',
-      dialogTitle: '登入 HackingMap'
+      dialogTitle: '登入 HackingMap',
+      dropdownItems: {
+        1: {
+          text: 'Memtor List',
+          link: 'https://airtable.com/shr95DPYrCMQWe1l0'
+        },
+        2: {
+          text: 'Memtor 駐點',
+          link: 'https://airtable.com/shrrVlkKjBnYOGXkY',
+          disabled: true
+        },
+        3: {
+          text: '加入Discord',
+          link: 'https://discord.gg/9Zf8sYR'
+        },
+        4: {
+          text: '闖關遊戲介紹',
+          link: '#',
+          disabled: true
+        },
+        5: {
+          text: 'HackNTU官網',
+          link: 'https://hackntu.tumblr.com/tagged/intro'
+        }
+      }
     }
   },
   components: {
@@ -53,9 +94,13 @@ export default {
 <style lang="sass" scoped>
 .banner
 
-#loginBtn
+#buttons-right
   position: absolute
-  right: 2em
+  right: 1em
+
+.dropdown-a
+  color: dimGrey
+  text-decoration: none
 
 $h: 48px
 
