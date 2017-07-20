@@ -142,7 +142,8 @@ export default {
         this.$notify({
           title: 'Google 登入錯誤',
           message: `請嘗試使用電腦版的Google Chrome登入。（錯誤原因：${err.message}）`,
-          type: 'warning'
+          type: 'warning',
+          duration: 0
         })
       })
     },
@@ -159,7 +160,8 @@ export default {
         this.$notify({
           title: 'Facebook 登入錯誤',
           message: `請嘗試使用電腦版的Google Chrome登入。（錯誤原因：${err.message}）`,
-          type: 'warning'
+          type: 'warning',
+          duration: 0
         })
       })
     },

@@ -79,7 +79,7 @@
       size="large">
       <span><intro></intro></span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="showIntro = false">開 始</el-button>
+        <el-button type="primary" @click="showIntro = false">關 閉</el-button>
       </span>
     </el-dialog>
 

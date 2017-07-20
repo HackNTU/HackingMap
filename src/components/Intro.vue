@@ -29,7 +29,7 @@ export default {
 
 <style lang="sass">
   .wrap
-    height: 50vh
+    height: 45vh
   .loading-bg
     background:url(../assets/loading.gif) center center no-repeat
   .warp, #intro-iframe
