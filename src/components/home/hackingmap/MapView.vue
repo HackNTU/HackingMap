@@ -48,6 +48,7 @@
               :stars="post.stars"
               :hearts="post.hearts"
               :tags="post.tags"
+              @tagClicked="$emit('searchTag', $event)"
             ></postsummary>
           </div>
 
@@ -94,6 +95,7 @@
                 :stars="postummary.stars"
                 :hearts="postummary.hearts"
                 :tags="postummary.tags"
+                @tagClicked="$emit('searchTag', $event)"
               ></postsummary>
               <hr v-if="(index + 1) != post.length ">
             </template>
