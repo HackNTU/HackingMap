@@ -50,17 +50,17 @@ export default {
       dialogTitle: '登入 HackingMap',
       dropdownItems: {
         1: {
+          text: '加入Discord',
+          link: 'https://discord.gg/9Zf8sYR'
+        },
+        2: {
           text: 'Memtor List',
           link: 'https://airtable.com/shr95DPYrCMQWe1l0'
         },
-        2: {
+        3: {
           text: 'Memtor 駐點',
           link: 'https://airtable.com/shrrVlkKjBnYOGXkY',
           disabled: true
-        },
-        3: {
-          text: '加入Discord',
-          link: 'https://discord.gg/9Zf8sYR'
         },
         4: {
           text: '闖關遊戲介紹',
@@ -71,6 +71,10 @@ export default {
           text: 'HackNTU官網',
           link: 'https://hackntu.tumblr.com/tagged/intro'
         }
+        // 6: {
+        //   text: '廣播系統（內部）',
+        //   link: '#/speak'
+        // }
       }
     }
   },
