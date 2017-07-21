@@ -1,0 +1,114 @@
+<html>
+
+<head>
+    <script src='https://cdn.jsdelivr.net/vue/1.0.26/vue.min.js'></script>
+    <style>
+    #title {
+        position: fixed;
+        font-size: 60px;
+        font-family: serif;
+    }
+    
+    .center {
+        text-align: center;
+        top: 30px;
+        left: 0px;
+        position: fixed;
+        width: 100%;
+    }
+    
+    html,
+    body {
+        height: 100%;
+    }
+    
+    body {
+        align-items: center;
+        background: white;
+        display: flex;
+        font: 10vw/1 "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        justify-content: center;
+    }
+    
+    .clip-text {
+        background-image: url("https://www.colourbox.com/preview/5703107-binary-code-on-world-map.jpg");
+        font-weight: bold;
+        position: relative;
+        display: inline-block;
+        margin: .25em;
+        padding: .5em .75em;
+        text-align: center;
+        color: white;
+        user-select: none;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .clip-text:before,
+    .clip-text:after {
+        position: absolute;
+        content: "";
+    }
+    
+    .clip-text:before {
+        z-index: -2;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: inherit;
+    }
+    
+    .clip-text:after {
+        position: absolute;
+        z-index: -1;
+        top: .125em;
+        right: .125em;
+        bottom: .125em;
+        left: .125em;
+        background-color: #FFF;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="center">
+        <h1 id="title" class="center">Hacking Countdown</h1>
+    </div>
+    <div id="timer">
+        <p class="clip-text" id="time">{{time}}</p>
+    </div>
+    <script>
+    var endDate = new Date("2017/07/23 07:00");
+    console.log(endDate)
+
+    var vm = new Vue({
+        el: '#timer',
+        data: {
+            time: '00:00:00'
+        },
+        methods: {
+            update: function() {
+                console.log("update");
+            }
+        }
+    });
+
+    function zeroPre(num) {
+        return ((num < 10) ? "0" + num : num);
+    }
+
+    function updateTime() {
+        var nowDate = new Date();
+        var until = endDate.getTime() - nowDate.getTime();
+
+        // vm.$data.time = date.toLocaleTimeString();
+        vm.$data.time = zeroPre(Math.floor(until / 3600000)) + ":" + zeroPre(Math.floor(until / 60000) % 60) + ":" + zeroPre(Math.floor(until / 1000) % 60);
+    }
+
+    var timer = setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>
