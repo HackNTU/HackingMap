@@ -32,6 +32,18 @@
             </el-col>
           </el-row>
 
+          <el-form-item label="參與企業獎意願（至多2個，3pm截止）" prop="awards">
+            <el-tooltip effect="dark" placement="top" :visible-arrow="true">
+              <div slot="content" v-html="awardTooltip"></div>
+              <el-checkbox-group
+                v-model="newPost.awards"
+                :min="0"
+                :max="2">
+                <el-checkbox v-for="awardOpt in awardOptions" :label="awardOpt" :key="awardOpt">{{awardOpt}}</el-checkbox>
+              </el-checkbox-group>
+            </el-tooltip>
+          </el-form-item>
+
           <!-- 提案人 -->
           <el-row>
             <el-col :span="7">
@@ -215,12 +227,15 @@ import appconfig from '@/appconfig'
 import { FirebaseApp } from '@/service/firebase.js'
 
 const db = FirebaseApp.database()
+const AWARDS = ['北市交通局', 'HITCON', '經濟部', '中信Jarvis', '中信資料家', '農委會', '威盛OLAMI', '微軟']
 
 export default {
   name: 'editor',
   data () {
     return {
       tables: Object.keys(appconfig.map.table_coor),
+      awardOptions: AWARDS,
+      awardTooltip: '僅供初步線上調查，若超出20組上線將再調整。<br/>調查填寫至3pm止，3-4pm收紙本報名，6pm前<br/>公告確認錄取組別。',
       newPost: {
         name: null,
         host: '',
@@ -231,7 +246,8 @@ export default {
         table: null,
         status: null,
         tags: [],
-        teammates: []
+        teammates: [],
+        awards: []
         // teammates_str: ''
       },
       rules: {
@@ -307,6 +323,7 @@ export default {
       this.newPost.award = postData.award || ''
       this.newPost.tags = postData.tags || []
       this.newPost.teammates = postData.teammates || []
+      this.newPost.awards = postData.awards || []
       this.isLoading = false
     },
 
@@ -326,7 +343,7 @@ export default {
       this.loadingUpdate = true
       // this.newPost.teammates = this.newPost.teammates_str.split(',')
       let p = this.newPost
-      let promise = this.updatePostForCurrentUser(this.postKey, p.name, p.host, p.contact, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates)
+      let promise = this.updatePostForCurrentUser(this.postKey, p.name, p.host, p.contact, p.desc, p.iframe, p.git, p.table, p.status, p.award, p.tags, p.teammates, p.awards)
       promise.then(() => {
         this.loadingUpdate = false
         this.$message({message: '更新成功', type: 'success'})
@@ -338,7 +355,7 @@ export default {
       })
     },
 
-    updatePostForCurrentUser (postKey, name, host, contact, desc, iframe, git, table, status, award, tags, teammates) {
+    updatePostForCurrentUser (postKey, name, host, contact, desc, iframe, git, table, status, award, tags, teammates, awards) {
       let u = FirebaseApp.auth().currentUser
       if (!u.uid || !postKey) {
         throw new Error('Invalid currentUser or postkey', u, postKey)
@@ -368,6 +385,8 @@ export default {
         updates[path2 + 'tags'] = tags
         updates[path1 + 'teammates'] = teammates
         updates[path2 + 'teammates'] = teammates
+        updates[path1 + 'awards'] = awards
+        updates[path2 + 'awards'] = awards
         updates[path1 + 'timestamp'] = new Date()
         updates[path2 + 'timestamp'] = new Date()
 
