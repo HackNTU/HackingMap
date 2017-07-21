@@ -59,8 +59,8 @@ export default {
         },
         3: {
           text: 'Memtor 駐點',
-          link: 'https://airtable.com/shrrVlkKjBnYOGXkY',
-          disabled: true
+          link: 'https://airtable.com/shrrVlkKjBnYOGXkY'
+          // disabled: true
         },
         4: {
           text: '闖關遊戲介紹',
