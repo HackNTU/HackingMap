@@ -34,12 +34,12 @@
 
           <el-form-item label="參與企業獎意願（至多2個，3pm截止）" prop="awards">
             <el-tooltip effect="dark" placement="top" :visible-arrow="true">
-              <div slot="content" v-html="awardTooltip"></div>
+              <div slot="content" v-html="awardsTooltip"></div>
               <el-checkbox-group
                 v-model="newPost.awards"
                 :min="0"
                 :max="2">
-                <el-checkbox v-for="awardOpt in awardOptions" :label="awardOpt" :key="awardOpt">{{awardOpt}}</el-checkbox>
+                <el-checkbox v-for="awardOpt in awardOptions" :label="awardOpt" :key="awardOpt" :disabled="awardsDisable">{{awardOpt}}</el-checkbox>
               </el-checkbox-group>
             </el-tooltip>
           </el-form-item>
@@ -235,7 +235,9 @@ export default {
     return {
       tables: Object.keys(appconfig.map.table_coor),
       awardOptions: AWARDS,
-      awardTooltip: '僅供初步線上調查，若超出20組上線將再調整。<br/>調查填寫至3pm止，3-4pm收紙本報名，6pm前<br/>公告確認錄取組別。',
+      awardsTooltip: '僅供初步線上調查，若超出20組上線將再調整。<br/>調查填寫至3pm止，3-4pm收紙本報名，6pm前<br/>公告確認錄取組別。',
+      awardsDeadline: 'Sat Jul 22 2017 15:00:00 GMT+0800 (CST)',
+      awardsDisable: false,
       newPost: {
         name: null,
         host: '',
@@ -306,8 +308,20 @@ export default {
   },
   mounted () {
     this.restoreForm(this.postData)
+
+    // Check `awards` field availability every 3 if it's before deadline.
+    if (!this.isAfterDeadline()) {
+      setInterval(() => {
+        this.awardsDisable = this.isAfterDeadline()
+      }, 3000)
+    }
   },
   methods: {
+
+    isAfterDeadline () {
+      console.log('[Editor] isAfterDeadline: ', new Date() > new Date(this.awardsDeadline))
+      return new Date() > new Date(this.awardsDeadline)
+    },
 
     restoreForm (postData) {
       console.log('[Editor] 載入post舊資料', postData.name)
