@@ -23,7 +23,7 @@
  /* eslint-disable */
 import xAudio from '@/components/x-audio.vue'
 import _ from 'lodash'
-import Airtable from 'airtable'
+import Airtable from 'Airtable'
 var base = new Airtable({
     apiKey: 'keyTOhP8DLjUFtOFz',
   })

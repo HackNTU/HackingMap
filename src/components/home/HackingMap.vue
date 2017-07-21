@@ -41,7 +41,7 @@
             排序：
             <el-radio-group v-model="sortKey">
               <el-radio label="timestamp">更新</el-radio>
-              <el-radio label="hearts">人氣<icon name="heart"></icon></el-radio>
+              <el-radio label="hearts">創意<icon name="heart"></icon></el-radio>
               <el-radio label="stars">技術<icon name="star"></icon></el-radio>
             </el-radio-group>
           </span>
