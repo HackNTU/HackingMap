@@ -157,12 +157,13 @@
           </el-form-item>
 
           <!-- 專案介紹/共編URL（專案頁面顯示） -->
-          <el-form-item label="專案介紹/共編URL（內嵌於專案頁面）" prop="iframe">
+          <!-- <el-form-item label="專案介紹/共編URL（內嵌於專案頁面）" prop="iframe"> -->
+          <el-form-item label="專案介紹 URL" prop="iframe">
             <el-input
               v-model.lazy="newPost.iframe"
               class="url"
               @change="loadIframe = false; isLoadingIframe = false"
-              placeholder="請輸入可內嵌之網頁網址（下方可測試）">
+              placeholder="請輸入可預覽之網頁網址（下方可測試）">
             </el-input>
           </el-form-item>
 
@@ -172,7 +173,7 @@
               <el-button
                 @click="loadIframe = true; isLoadingIframe = true"
                 v-if="!loadIframe"
-              >測試URL內嵌</el-button>
+              >測試 URL 預覽</el-button>
               <div v-if="isLoadingIframe" v-loading="true">
                 &nbsp;<br>&nbsp;<br>&nbsp;<br>
               </div>
@@ -184,7 +185,7 @@
                 @load="isLoadingIframe = false"
               ></iframe>
             </el-card>
-            <span>已知支援內嵌：
+            <span>已知支援預覽：
               <a target="_blank" href="https://hackmd.io/new">HackMD</a>、
               <a target="_blank" href="https://www.google.com.tw/intl/zh-TW/docs/about/">Google Doc</a>、
               <a target="_blank" href="https://www.youtube.com/">YouTube</a>
@@ -284,7 +285,7 @@ export default {
       .replace(/,/g, '<br/>')
     },
     wordCountMsg () {
-      return this.newPost.desc ? `專案簡介 (${this.newPost.desc.length}/50字)` : '專案簡介 (0/50字)'
+      return this.newPost.desc ? `專案簡介 (${this.newPost.desc.length}/100字)` : '專案簡介 (0/100字)'
     }
   },
   mounted () {
