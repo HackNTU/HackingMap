@@ -239,10 +239,10 @@ export default {
           { required: true, message: '請輸入專案名稱', trigger: 'blur' },
           { min: 3, max: 15, message: '需介於 3 到 15 個字元', trigger: 'blur' }
         ],
-        host: [
-          { required: true, message: '請輸入提案人之與會者編號', trigger: 'blur' },
-          { min: 4, max: 4, message: '格式為 `#999`', trigger: 'blur' }
-        ],
+        // host: [
+        //   { required: true, message: '請輸入提案人之與會者編號', trigger: 'blur' },
+        //   { min: 4, max: 4, message: '格式為 `#999`', trigger: 'blur' }
+        // ],
         table: [
           { required: true, message: '請選擇專案所在位置', trigger: 'change' }
         ],
