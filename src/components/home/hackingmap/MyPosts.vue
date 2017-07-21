@@ -67,13 +67,14 @@ export default {
           timestamp: new Date(),
           version: 1,
           desc: '超酷project',
-          iframe: 'http://bit.ly/hackingmap_get_started',
+          // iframe: 'http://bit.ly/hackingmap_get_started',
+          iframe: '',
           git: '',
           table: 0,
           status: '趕工',
           award: '無',
           teammates: [],
-          tags: ['標籤1', '標籤2']
+          tags: ['自訂標籤1', '自訂標籤2']
         }
         let newPostKey = userPostsRef.push().key
         let updates = {}

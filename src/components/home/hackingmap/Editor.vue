@@ -142,7 +142,7 @@
         </el-col>
         <el-col :span="12">
 
-          <!-- 50字簡介 -->
+          <!-- 100字簡介 -->
           <el-form-item :label="wordCountMsg" prop="desc">
             <el-input type="textarea" v-model.lazy="newPost.desc" width="20rem"
               placeholder="請簡要介紹專案內容（100字以內，約前30字會顯示於卡片預覽）">
@@ -253,8 +253,8 @@ export default {
           { required: true, message: '請選擇是否參與企業獎', trigger: 'change' }
         ],
         desc: [
-          { required: true, message: '需介於 1 到 50 個字元', trigger: 'blur' },
-          { min: 1, max: 50, message: '需介於 1 到 50 個字元', trigger: 'change' }
+          { required: true, message: '需介於 1 到 100 個字元', trigger: 'blur' },
+          { min: 1, max: 100, message: '需介於 1 到 100 個字元', trigger: 'change' }
         ]
       },
       inputNewTag: '',
