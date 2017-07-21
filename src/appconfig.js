@@ -1,7 +1,8 @@
 const appconfig = {
   general: {
     sponsor: false,
-    discord: false
+    discord: false,
+    tutorial_for_non_login: false
   },
   'firebase_config': {
     apiKey: 'AIzaSyCK5_1a6NghhFZxL4a6csnrzHLkiouOQM4',

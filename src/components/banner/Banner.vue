@@ -54,7 +54,7 @@ export default {
           link: 'https://discord.gg/9Zf8sYR'
         },
         2: {
-          text: 'Memtor List',
+          text: 'Memtor 列表',
           link: 'https://airtable.com/shr95DPYrCMQWe1l0'
         },
         3: {
@@ -62,19 +62,19 @@ export default {
           link: 'https://airtable.com/shrrVlkKjBnYOGXkY'
           // disabled: true
         },
-        4: {
-          text: '闖關遊戲介紹',
-          link: '#',
-          disabled: true
-        },
+        // 4: {
+        //   text: '闖關遊戲介紹',
+        //   link: '#',
+        //   disabled: true
+        // },
         5: {
           text: 'HackNTU官網',
           link: 'https://hackntu.tumblr.com/tagged/intro'
+        },
+        6: {
+          text: 'HackingMap導覽',
+          link: 'https://hackmd.io/s/H1_0-tkBZ'
         }
-        // 6: {
-        //   text: '廣播系統（內部）',
-        //   link: '#/speak'
-        // }
       }
     }
   },

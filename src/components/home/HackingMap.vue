@@ -90,6 +90,7 @@
 import { FirebaseApp } from '@/service/firebase.js'
 import MyPosts from '@/components/home/hackingmap/MyPosts.vue'
 import Intro from '@/components/Intro.vue'
+import appconfig from '../../appconfig'
 export default {
   name: 'hackingmap',
   data () {
@@ -112,7 +113,9 @@ export default {
           console.log('[HackingMap] Fetched `posts`!')
 
           // 若無登入則跳出使用教學
-          this.showIntro = this.user === null
+          if (this.user === null && appconfig.general.tutorial_for_non_login) {
+            this.showIntro = true
+          }
           that.$emit('loaded')
         }
       }
