@@ -168,8 +168,8 @@
             </el-input>
           </el-form-item>
 
-          <!-- 專案介紹/共編URL（專案頁面顯示） -->
-          <!-- <el-form-item label="專案介紹/共編URL（內嵌於專案頁面）" prop="iframe"> -->
+          <!-- 專案介紹 URL（專案頁面顯示） -->
+          <!-- <el-form-item label="專案介紹 URL（內嵌於專案頁面）" prop="iframe"> -->
           <el-form-item label="專案介紹 URL" prop="iframe">
             <el-input
               v-model.lazy="newPost.iframe"

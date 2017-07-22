@@ -231,8 +231,8 @@ export default {
 
   #editBtn
     position: absolute
-    bottom: 1rem
-    right: 1rem
+    bottom: 3.5rem
+    right: 2rem
 
   #toolbar
     background-color: $toolbar_bg_color

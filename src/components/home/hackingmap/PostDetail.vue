@@ -57,7 +57,7 @@
           <li>專案狀態：{{ post.status }}</li>
           <li>
             <!-- <icon name="link"></icon> -->
-            共編/作品: <a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || '未填寫'}}</a>
+            專案介紹 URL: <a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || '未填寫'}}</a>
           </li>
           <li>
             <!-- <icon name="github"></icon> -->
