@@ -8,7 +8,9 @@
         <el-card
           class="box-card"
           body-style="height:inherit;padding:0px"
-          @click.native="showDialog(p['.key'])">
+          >
+          <!-- @click.native="$router.push(`/projects?id=${p['.key']}`)"> -->
+          <!-- @click.native="showDialog(p['.key'])"> -->
           <!-- {{key}} --><!-- TODO: https://cn.vuejs.org/v2/guide/transitions.html#列表的位移过渡  -->
           <postsummary
           :title="p.name"
@@ -67,6 +69,16 @@ export default {
         this.$message('登入後可投票歐 👉 ')
       }
     })
+  },
+  watch: {
+    $route (val) {
+      const projectID = val.query['id']
+      if (projectID) {
+        this.showDialog(projectID)
+      } else {
+
+      }
+    }
   },
   methods: {
     showDialog (key) {
