@@ -39,7 +39,7 @@
                 v-model="newPost.awards"
                 :min="0"
                 :max="2">
-                <el-checkbox v-for="awardOpt in awardOptions" :label="awardOpt" :key="awardOpt" :disabled="false">{{awardOpt}}</el-checkbox>
+                <el-checkbox v-for="awardOpt in awardOptions" :label="awardOpt" :key="awardOpt" :disabled="true">{{awardOpt}}</el-checkbox>
               </el-checkbox-group>
             <!-- </el-tooltip> -->
           </el-form-item>
