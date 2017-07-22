@@ -24,9 +24,9 @@
       <span class="raCount">{{ heartCount }}</span>
     </span>
 
-    <h3 id="title" @click="$router.push(`/projects?id=${p['.key']}`)">{{ title }}</h3>
+    <h3 id="title">{{ title }}</h3>
     <!-- <h5>{{ subtitle }}</h5> -->
-    <p class="description" @click="$router.push(`/projects?id=${p['.key']}`)">
+    <p class="description">
       <strong>{{ host }}</strong>
       {{ description }}</p>
 
