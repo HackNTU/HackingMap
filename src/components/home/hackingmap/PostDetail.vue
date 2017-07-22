@@ -54,6 +54,8 @@
 
         <!-- 列表：共編、GitHub、更新時間... -->
         <ul id="ul-block" class="link-ellipsis">
+          <b><li>提案者：{{ post.host }}</li></b>
+          <b><li>參與者： <span v-for="t in post.teammates">{{ t }}, </span></li></b>
           <li>專案狀態：{{ post.status }}</li>
           <li>
             <!-- <icon name="link"></icon> -->

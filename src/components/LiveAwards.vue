@@ -20,6 +20,11 @@
       </el-row>
     </template>
 
+    <span>規則<el-input v-model="regex"></el-input></span>
+    <ol>
+      <li v-for="post in postWithoutHost">{{post}}</li>
+    </ol>
+
   </div>
 </template>
 
@@ -36,7 +41,8 @@ export default {
   data () {
     return {
       label: '企業獎即時分流',
-      awards: ['北市交通局', 'HITCON', '經濟部', '中信Jarvis', '中信資料家', '農委會', '威盛OLAMI', '微軟']
+      awards: ['北市交通局', 'HITCON', '經濟部', '中信Jarvis', '中信資料家', '農委會', '威盛OLAMI', '微軟'],
+      regex: /#?\d{3}$/g
     }
   },
   firebase () {
@@ -58,6 +64,18 @@ export default {
     awardsLength () {
       const awardsLength = _.groupBy(this.postAwards)
       return this.awards.map(m => awardsLength[m] ? awardsLength[m].length : 0)
+    },
+    postWithoutHost () {
+      const regex = this.regex || /#?\d{3}$/g
+      // const regex2 = /^#\d{3}$/g
+      return this.posts.filter((post) => {
+        const pass = regex.test(post.host)
+        console.log(post.host, pass)
+        return !pass
+        // return true
+      }).map((post) => {
+        return `${post.name}:${post.host}`
+      })
     }
   },
   methods: {
