@@ -64,11 +64,10 @@ export default {
           link: 'https://airtable.com/shrrVlkKjBnYOGXkY'
           // disabled: true
         },
-        // 4: {
-        //   text: '闖關遊戲介紹',
-        //   link: '#',
-        //   disabled: true
-        // },
+        4: {
+          text: '企業獎入選名單',
+          link: 'https://airtable.com/shrECgq5cGgL9UJvJ'
+        },
         5: {
           text: 'HackNTU官網',
           link: 'https://hackntu.tumblr.com/tagged/intro'
