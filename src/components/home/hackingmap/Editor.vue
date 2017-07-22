@@ -32,7 +32,7 @@
             </el-col>
           </el-row>
 
-          <el-form-item label="參與企業獎意願（至多2個，調查至3pm截止，詳細流程：https://goo.gl/oWutMs）" prop="awards">
+          <el-form-item label="企業獎調查（至多2個，調查至3pm截止，詳細流程：https://goo.gl/oWutMs）" prop="awards">
             <!-- <el-tooltip effect="dark" placement="top" :visible-arrow="true"> -->
               <!-- <div slot="content" v-html="awardsTooltip"></div> -->
               <el-checkbox-group

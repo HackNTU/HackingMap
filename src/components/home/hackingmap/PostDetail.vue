@@ -65,7 +65,7 @@
             <span v-else>未填寫</span>
           </li>
           <li>聯絡方式：{{ post.contact || '無' }}</li>
-          <li>企業獎意願調查：{{ (post.awards ? `1.${post.awards[0]}  2.${post.awards[1] || '無'}` : '無') }}</li>
+          <li>企業獎調查：{{ (post.awards ? `1.${post.awards[0]}  2.${post.awards[1] || '無'}` : '無') }}</li>
           <li>最近更新：<time>{{ new Date(post.timestamp).toLocaleString() }}</time></li>
           <!-- <li v-if="post.award !== '無'">參加企業獎：{{ post.award }}</li> -->
         </ul>
