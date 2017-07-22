@@ -7,6 +7,7 @@ import FullMapView from '@/components/home/hackingmap/FullMapView'
 import AdminView from '@/components/AdminView'
 import MentorView from '@/components/MentorView'
 import AskMentor from '@/components/AskMentor'
+import LiveAwards from '@/components/LiveAwards'
 import Speaker from '@/components/Speaker'
 // import User from '@/components/user/User'
 // import Profile from '@/components/user/Profile'
@@ -29,6 +30,7 @@ export default new Router({
     { path: '/admin', component: AdminView },
     { path: '/mentor', component: MentorView },
     { path: '/askMentor', component: AskMentor },
+    { path: '/liveAwards', component: LiveAwards },
     { path: '/speaker', component: Speaker }
     // {
     //   path: '/user',
