@@ -2,7 +2,11 @@
   <div class="postsummary">
 
     <!-- map icon -->
-    <icon id="location" name="map-o" @click.native.stop="goMap(table)" v-if="table" class="fa-icon-pointer"></icon>
+    <!-- <el-tooltip content="右鍵複製網址分享自己的專案！" :open-delay="500" placement="top"> -->
+      <a :href="`#/map?focus=${table}`" @click.stop="">
+        <icon id="location" name="map-o" @click.native.stop="goMap(table)" v-if="table"></icon>
+      </a>
+    <!-- </el-tooltip> -->
 
     <!-- star icon -->
     <span class="reaction">
@@ -264,7 +268,7 @@ export default {
     width: 20px
     height: 16px
     .fa-icon
-      height: 16px
+      // height: 16px
   .raCount
     font-size: 12px
     width: 16px

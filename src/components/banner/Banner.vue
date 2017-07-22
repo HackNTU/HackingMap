@@ -5,13 +5,15 @@
       <a href="https://github.com/hackntu/hackingmap" target="_blank">
         <img src="../../assets/hackntu-logo.png" alt="hackntu_logo">
       </a>
-      <a class="github-button beside-logo" href="https://github.com/hackntu/hackingmap" data-icon="octicon-star" data-show-count="true" aria-label="Star hackntu/hackingmap on GitHub">Star</a>
+      <span id="github-star">
+        <a class="github-button beside-logo" href="https://github.com/hackntu/hackingmap" data-icon="octicon-star" data-show-count="true" aria-label="Star hackntu/hackingmap on GitHub">Star</a>
+      </span>
     </span>
 
     <span id="buttons-right">
       <el-button @click="visible = true" type="text">{{ loginBtnText }}</el-button>&nbsp;&nbsp;
 
-      <el-dropdown trigger="click">
+      <el-dropdown trigger="click" id="dropdown-btn">
         <span class="el-dropdown-link">
           活動<i class="el-icon-caret-bottom el-icon--right"></i>
         </span>
@@ -97,6 +99,11 @@ export default {
 
 <style lang="sass" scoped>
 .banner
+
+/* hide dropdown in mobile phone */
+@media screen and (max-width: 480px)
+  #dropdown-btn, #github-star
+    display: none !important
 
 #buttons-right
   position: absolute

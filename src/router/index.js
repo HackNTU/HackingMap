@@ -20,7 +20,7 @@ export default new Router({
       path: '/',
       component: Home,
       children: [
-        { path: 'map', component: MapView },
+        { path: 'map', component: MapView, name: 'Map' },
         { path: 'projects', component: ListView },
         { path: 'full_map', component: FullMapView },
         { path: '', redirect: '/projects' }

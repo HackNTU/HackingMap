@@ -58,7 +58,7 @@
     </keep-alive>
 
     <template v-if="user !== null">
-      <el-button icon="edit" id="editBtn" @click="showDialog = true" type="info" :plain="true">編輯專案</el-button>
+      <el-button icon="edit" id="editBtn" @click="showDialog = true" type="primary" size="large">編輯專案</el-button>
       <el-dialog
         title="專案編輯"
         :visible.sync="showDialog"
@@ -69,7 +69,7 @@
       </el-dialog>
     </template>
     <template v-else>
-      <el-button icon="edit" id="editBtn" :disabled="true">新增專案</el-button>
+      <el-button icon="edit" id="editBtn" :disabled="true" type="primary" size="large">新增專案</el-button>
     </template>
 
     <!-- 使用教學 -->
