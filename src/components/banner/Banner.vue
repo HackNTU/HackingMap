@@ -2,7 +2,7 @@
   <div class="banner vertical-container">
 
     <span class="hackntu_logo">
-      <a href="https://github.com/hackntu/hackingmap" target="_blank">
+      <a href="#/projects">
         <img src="../../assets/hackntu-logo.png" alt="hackntu_logo">
       </a>
       <span id="github-star">
@@ -51,6 +51,10 @@ export default {
       loginBtnText: '登入',
       dialogTitle: '登入 HackingMap',
       dropdownItems: {
+        0: {
+          text: 'HackingMap for Expo',
+          link: '#/expo'
+        },
         1: {
           text: '加入Discord',
           link: 'https://discord.gg/9Zf8sYR'
