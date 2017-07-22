@@ -24,7 +24,7 @@
       <span class="raCount">{{ heartCount }}</span>
     </span>
 
-    <h3 id="title">{{ title }}</h3>
+    <h3 id="title">{{ host }},{{ title }}</h3>
     <!-- <h5>{{ subtitle }}</h5> -->
     <p class="description">{{ description }}</p>
 
@@ -102,6 +102,9 @@ export default {
     // },
     tags: {
       type: Array
+    },
+    host: {
+      type: String
     }
   },
   computed: {

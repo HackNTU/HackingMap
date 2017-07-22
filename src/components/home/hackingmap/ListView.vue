@@ -22,6 +22,7 @@
           :heartCount="p.heartCount"
           :hearts="p.hearts"
           :tags="p.tags"
+          :host="p.host"
           @tagClicked="$emit('searchTag', $event)"
           ></postsummary>
         </el-card>
