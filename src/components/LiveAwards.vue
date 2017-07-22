@@ -58,6 +58,9 @@ export default {
     awardsLength () {
       const awardsLength = _.groupBy(this.postAwards)
       return this.awards.map(m => awardsLength[m] ? awardsLength[m].length : 0)
+    },
+    teammatesLength () {
+      return this.posts.map(m => m.teammates ? m.teammates.length : 0)
     }
   },
   methods: {
