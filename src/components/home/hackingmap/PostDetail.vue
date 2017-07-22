@@ -7,7 +7,7 @@
         正在載入網址：<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A' }} </a>
       </div>
       <div v-else class="loading-msg link-ellipsis">
-        共編/作品網址：<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A' }} </a>
+        共編/作品網址：<a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || '未填寫' }} </a>
       </div>
       <iframe
         id="iframe"
@@ -57,14 +57,15 @@
           <li>專案狀態：{{ post.status }}</li>
           <li>
             <!-- <icon name="link"></icon> -->
-            共編/作品: <a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || 'N/A'}}</a>
+            共編/作品: <a :href="post.iframe" target="_blank" :alt="post.iframe">{{ post.iframe || '未填寫'}}</a>
           </li>
           <li>
             <!-- <icon name="github"></icon> -->
             GitHub: <a  v-if="post.git" :href="'https://github.com/' + post.git" target="_blank">{{ post.git }}</a>
-            <span v-else>N/A</span>
+            <span v-else>未填寫</span>
           </li>
-          <li>聯絡方式：{{ post.contact || 'N/A' }}</li>
+          <li>聯絡方式：{{ post.contact || '無' }}</li>
+          <li>企業獎意願調查：{{ (post.awards ? `1.${post.awards[0]}  2.${post.awards[1] || '無'}` : '無') }}</li>
           <li>最近更新：<time>{{ new Date(post.timestamp).toLocaleString() }}</time></li>
           <!-- <li v-if="post.award !== '無'">參加企業獎：{{ post.award }}</li> -->
         </ul>

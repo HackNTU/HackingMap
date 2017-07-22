@@ -14,6 +14,7 @@
               <el-option label="簡介" value="desc"></el-option>
               <el-option label="Tag" value="tags"></el-option>
               <el-option label="參與者" value="teammates"></el-option>
+              <el-option label="企業獎" value="awards"></el-option>
             </el-select>
             <!-- <el-button slot="append" icon="search"></el-button> -->
           </el-input>
@@ -153,6 +154,13 @@ export default {
           return this.posts.filter(post => {
             if (post.teammates) {
               return post.teammates.reduce((a, b) => '$$' + a + b, post.host) // concate host and all teammates
+                .toLowerCase().includes(this.query.toLowerCase())
+            }
+          })
+        case 'awards':
+          return this.posts.filter(post => {
+            if (post.awards) {
+              return post.awards.reduce((a, b) => '$$' + a + b, '') // concate host and all teammates
                 .toLowerCase().includes(this.query.toLowerCase())
             }
           })
