@@ -23,6 +23,7 @@
     "svg-pan-zoom": "github:ariutta/svg-pan-zoom",
     "vue": "^2.3.3",
     "vue-awesome": "^2.3.1",
+    "vue-keyboard": "^3.1.0",
     "vue-popper": "^0.3.8",
     "vue-router": "^2.3.1",
     "vue-template-compiler": "^2.3.3",
