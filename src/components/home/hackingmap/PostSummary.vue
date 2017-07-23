@@ -24,11 +24,16 @@
       <span class="raCount">{{ heartCount }}</span>
     </span>
 
-    <h3 id="title">{{ title }}</h3>
+    <a :href="'#/projects?id=' + postKey" class="no-blue-link">
+      <h3 id="title">{{ title }}</h3>
+    </a>
     <!-- <h5>{{ subtitle }}</h5> -->
-    <p class="description">
-      <strong>{{ host }}</strong>
-      {{ description }}</p>
+    <a :href="'#/projects?id=' + postKey" class="no-blue-link">
+      <p class="description">
+        <strong>{{ host }}</strong>
+        {{ description }}
+      </p>
+    </a>
 
     <div class="tags" style="width:100%;">
       <el-button
@@ -240,6 +245,10 @@ export default {
     display: -webkit-box
     -webkit-line-clamp: 3
     -webkit-box-orient: vertical
+
+  .no-blue-link
+    color: black
+    text-decoration: none
 
 #location
   display: inline-block
