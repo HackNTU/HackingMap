@@ -7,19 +7,13 @@ HackingMap for HackNTU2017: https://hackntu.github.io/HackingMap/#/projects
 
 ## Features
 ### Post a project and embed custom content
-![](https://i.imgur.com/GmP0NUh.gif)
+<kbd>![](https://i.imgur.com/GmP0NUh.gif)</kbd>
 
 ### Revel project on map
-![](https://i.imgur.com/yEvF2LB.gif)
+<kbd>![](https://i.imgur.com/yEvF2LB.gif)</kbd>
 
 ### Project status filter
-![](https://i.imgur.com/fnBtLzz.gif)
-
-<style>
-img {
-    border: 1px solid Grey;
-}
-</style>
+<kbd>![](https://i.imgur.com/fnBtLzz.gif)</kbd>
 
 ## Tools
 - Vue.js 2.0
